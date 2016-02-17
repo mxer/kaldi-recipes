@@ -51,6 +51,10 @@ class Spl(object):
     def _add_validation(self, i, v):
         self._validations[i] = v.split(self._delimiter)
 
+    def records(self):
+        for key, val in self._records.items():
+            yield self._validations[key], val
+
 if __name__ == "__main__":
     s = Spl("test.spl")
     print(s._validations)
