@@ -3,6 +3,8 @@ import os
 
 import sys
 
+import re
+
 SPECIAL_TIERS = ("BACKGROUND", "COMMENT", "UNKNOWN")
 
 
@@ -31,7 +33,7 @@ class TextGridShort(object):
             for _ in range(num_intervals):
                 start_time = float(lines[i])
                 end_time = float(lines[i+1])
-                transcript = lines[i+2]
+                transcript = lines[i+2].strip('"')
                 tier.append((start_time, end_time, transcript))
                 i += 3
 
@@ -43,8 +45,20 @@ class TextGridShort(object):
 
         for speaker in speakers:
             for i, record in enumerate(self._streams[speaker]):
-                #TODO filter this record if in other streams there is information
-                yield "{}-{}-{:04d}".format(speaker, self.key, i), record[0], record[1], record[2]
+                text = record[2]
+                if "*" in text:
+                    continue
+
+                if len(text) == 0:
+                    continue
+
+                text = text+" "
+                text = re.sub(r"(?<=\S)\...\s", " |... ", text)
+                text = re.sub(r"(?<=\S)\?\s", " |? ", text)
+                text = re.sub(r"(?<=\S)\.\s", " |. ", text)
+
+
+                yield "{}-{}-{:04d}".format(speaker, self.key, i), record[0], record[1], text
 
 
 if __name__ == "__main__":
