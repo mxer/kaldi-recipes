@@ -12,7 +12,7 @@ mkdir -p data/test
 train_data_dir=$(mktemp -d)
 
 find $corpus_dir/data/audio/wav/comp-o/ -name "*.wav" >  $train_data_dir/wavlist
-find $corpus_dir/data/annot/text/ort/comp-o/ -name "*.wav" > $train_data_dir/ortlist
+find $corpus_dir/data/annot/text/ort/comp-o/ -name "*.ort.gz" > $train_data_dir/ortlist
 
 local/make_wav_txt_lists.py $train_data_dir/wavlist $train_data_dir/ortlist $train_data_dir/text $train_data_dir/wav.scp $train_data_dir/segments $train_data_dir/utt2speak
 
