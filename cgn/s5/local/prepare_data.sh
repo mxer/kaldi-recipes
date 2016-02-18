@@ -11,6 +11,8 @@ mkdir -p data/test
 
 train_data_dir=$(mktemp -d)
 
+trap "{ rm -Rf $train_data_dir ; exit 255; }" EXIT
+
 find $corpus_dir/data/audio/wav/comp-o/ -name "*.wav" >  $train_data_dir/wavlist
 find $corpus_dir/data/annot/text/ort/comp-o/ -name "*.ort.gz" > $train_data_dir/ortlist
 
@@ -32,6 +34,6 @@ cut -f2 -d" " data/test/segments | grep -f - $train_data_dir/wav.scp > data/test
 cut -f2 -d" " data/dev/segments | grep -f - $train_data_dir/wav.scp > data/dev/wav.scp
 cut -f2 -d" " data/train/segments | grep -f - $train_data_dir/wav.scp > data/train/wav.scp
 
-
+rm -Rf $train_data_dir
 
 
