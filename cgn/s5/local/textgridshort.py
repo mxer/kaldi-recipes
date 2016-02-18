@@ -1,4 +1,5 @@
 import gzip
+import os
 
 import sys
 
@@ -8,7 +9,7 @@ SPECIAL_TIERS = ("BACKGROUND", "COMMENT", "UNKNOWN")
 class TextGridShort(object):
     def __init__(self, filename):
         self._streams = {}
-        self.key = filename[1:8]
+        self.key = os.path.basename(filename)[1:8]
         self._parse(filename)
 
     def _parse(self, filename):
@@ -43,7 +44,7 @@ class TextGridShort(object):
         for speaker in speakers:
             for i, record in enumerate(self._streams[speaker]):
                 #TODO filter this record if in other streams there is information
-                yield "{}-{}-{:4d}".format(speaker, self.key, i), record[0], record[1], record[2]
+                yield "{}-{}-{:04d}".format(speaker, self.key, i), record[0], record[1], record[2]
 
 
 if __name__ == "__main__":
