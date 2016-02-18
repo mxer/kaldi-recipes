@@ -23,9 +23,9 @@ tar xzf /teamwork/t40511_asr/c/språkbanken/se/nst-16khz/sve.16khz.0468.tar.gz -
 echo $train_data_dir $test_data_dir
 
 echo $(date) "make lists train"
-./make_wav_txt_lists.py $train_data_dir $train_data_dir/text $train_data_dir/wav.scp $train_data_dir/utt2speak
+local/make_wav_txt_lists.py $train_data_dir $train_data_dir/text $train_data_dir/wav.scp $train_data_dir/utt2speak
 echo $(date) "make lists test"
-./make_wav_txt_lists.py $test_data_dir $test_data_dir/text $test_data_dir/wav.scp $test_data_dir/utt2speak
+local/make_wav_txt_lists.py $test_data_dir $test_data_dir/text $test_data_dir/wav.scp $test_data_dir/utt2speak
 
 echo $(date) "sorting"
 sort < $train_data_dir/text > data/train/text
