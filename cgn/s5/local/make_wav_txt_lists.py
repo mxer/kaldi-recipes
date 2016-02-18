@@ -6,8 +6,8 @@ import textgridshort
 
 
 def main(wav_list, ort_list, out_text, out_scp, out_segments, out_spk2utt):
-    wavs = {os.path.basename(f)[:8]: f for f in open(wav_list)}
-    orts = {os.path.basename(f)[:8]: f for f in open(ort_list)}
+    wavs = {os.path.basename(f)[:8]: f.strip() for f in open(wav_list)}
+    orts = {os.path.basename(f)[:8]: f.strip() for f in open(ort_list)}
 
     fd_text = open(out_text, 'w', encoding='utf-8')
     fd_scp = open(out_scp, 'w', encoding='utf-8')

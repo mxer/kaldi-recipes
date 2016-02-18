@@ -22,7 +22,7 @@ class TextGridShort(object):
         for _ in range(num_tiers):
             assert lines[i] == '"IntervalTier"'
 
-            tier_name = lines[i+1]
+            tier_name = lines[i+1][1:-1]
             tier = []
             num_intervals = int(lines[i+4])
             i += 5
