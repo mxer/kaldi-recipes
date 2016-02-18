@@ -45,8 +45,21 @@ class TextGridShort(object):
 
         for speaker in speakers:
             for i, record in enumerate(self._streams[speaker]):
-                text = record[2]
+                text = record[2].strip()
+
+                if text == ".":
+                    continue
+
                 if "*" in text:
+                    continue
+
+                if "ggg" in text:
+                    continue
+
+                if "xxx" in text:
+                    continue
+
+                if "Xxx" in text:
                     continue
 
                 if len(text) == 0:
@@ -55,10 +68,10 @@ class TextGridShort(object):
                 text = text+" "
                 text = re.sub(r"(?<=\S)\...\s", " |... ", text)
                 text = re.sub(r"(?<=\S)\?\s", " |? ", text)
-                text = re.sub(r"(?<=\S)\.\s", " |. ", text)
+                text = re.sub(r"(?<!\s|[|.])\.\s", " |. ", text)
 
 
-                yield "{}-{}-{:04d}".format(speaker, self.key, i), record[0], record[1], text
+                yield "{}-{}-{:04d}".format(speaker, self.key, i), record[0], record[1], text.strip()
 
 
 if __name__ == "__main__":
