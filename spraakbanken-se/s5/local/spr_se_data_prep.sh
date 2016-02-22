@@ -47,6 +47,9 @@ sort < $test_data_dir/text > data/test/text
 sort < $train_data_dir/utt2spk > data/train/utt2spk
 sort < $test_data_dir/utt2spk > data/test/utt2spk
 
+utils/utt2spk_to_spk2utt.pl data/train/utt2spk > data/train/spk2utt
+utils/utt2spk_to_spk2utt.pl data/test/utt2spk > data/test/spk2utt
+
 sort < $train_data_dir/wav.scp > $train_data_dir/wav.sorted.scp
 sort < $test_data_dir/wav.scp > $test_data_dir/wav.sorted.scp
 
