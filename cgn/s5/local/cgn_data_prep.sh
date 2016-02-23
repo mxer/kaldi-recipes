@@ -9,8 +9,6 @@ else
 data_dir=$(mktemp -d)
 
 echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
-trap "{ rm -Rf ${data_dir} ; exit 255; }" EXIT
-
 
 echo $(date) "Find files"
 

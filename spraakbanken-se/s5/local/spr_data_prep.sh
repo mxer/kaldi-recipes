@@ -18,7 +18,7 @@ mkdir -p data-prep/${lang}/${set}
 data_dir=$(mktemp -d)
 
 echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
-trap "{ rm -Rf ${data_dir} ; exit 255; }" EXIT
+#trap "{ rm -Rf ${data_dir} ; exit 255; }" EXIT
 
 echo $(date) "Start untarring"
 for t in $(cut -f3- -d" " local/checksums/${set}_${lang}); do
