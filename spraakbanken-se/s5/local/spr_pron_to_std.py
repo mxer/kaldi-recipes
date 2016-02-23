@@ -3,6 +3,23 @@ import sys
 
 
 def map_transcript(trans):
+    syllables = trans.split("$")
+
+    for syl in syllables:
+        syl_level = ""
+        if syl.starswith('""'):
+            syl_level = "3"
+            syl = syl[2:]
+        elif syl.starswith('"'):
+            syl_level = "2"
+            syl = syl[1:]
+        elif syl.starswith('%'):
+            syl_level = "1"
+            syl = syl[1:]
+
+
+
+
     return [trans]
 
 
