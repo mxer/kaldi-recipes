@@ -37,9 +37,10 @@ echo $(date) "wav-copy"
 wav-copy scp:${data_dir}/wav.${set}.scp ark,scp:data-prep/${set}/wav.ark,data-prep/${set}/wav.scp
 
 echo $(date) "Start removing temp dirs"
-rm -Rf ${data_dir}
 
 done  # test train for-loop
+
+rm -Rf ${data_dir}
 
 fi  # Now data-prep exists and is filled
 
