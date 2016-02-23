@@ -22,7 +22,7 @@ def main(wav_list, ort_list, out_text, out_scp, out_segments, out_spk2utt):
 
         tgs = textgridshort.TextGridShort(ort)
 
-        print("{} sph2pipe -f wav -p -c 1 {} |".format(k, wav), file=fd_scp)
+        print("{} sox {} -r 16000 -t wav - remix 1 |".format(k, wav), file=fd_scp)
 
         for record in tgs.records():
             utt_key, start, end, text = record
