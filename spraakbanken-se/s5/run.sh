@@ -19,6 +19,8 @@ if [ ! -d "data-prep" ]; then
  exit "The directory data-prep needs to exist. Either do 'mkdir data-prep', or make it a symlink to somewhere"
 fi
 
+local/spr_lex_prep.sh ${lang} || error_exit "Could not prep lexicon";
+
 local/spr_data_prep.sh ${lang} || error_exit "Could not prep corpus";
 
 mfccdir=mfcc/${lang}
