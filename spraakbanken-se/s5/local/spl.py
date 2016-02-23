@@ -5,11 +5,11 @@ class Spl(object):
     def __init__(self, filename):
         self._encoding = "ascii"
         self._delimiter = ";"
-        self._f = {"System": {"ANSI Codepage": self._set_ansi_encoding,
-                              "Delimiter": self._set_delimiter},
-                   "Info states": self._add_info,
-                   "Record states": self._add_record,
-                   "Validation states": self._add_validation}
+        self._f = {"system": {"ansi codepage": self._set_ansi_encoding,
+                              "delimiter": self._set_delimiter},
+                   "info states": self._add_info,
+                   "record states": self._add_record,
+                   "validation states": self._add_validation}
 
         self._records = {}
         self._validations = {}
@@ -28,12 +28,12 @@ class Spl(object):
             else:
                 key, val = l.split("=", 1)
                 if key.isnumeric():
-                    self._f.get(section, lambda y, z: 0)(int(key),val)
+                    self._f.get(section.lower(), lambda y, z: 0)(int(key),val)
                 else:
-                    if section in self._f:
-                        s = self._f[section]
-                        if key in s:
-                            s[key](val)
+                    if section.lower() in self._f:
+                        s = self._f[section.lower()]
+                        if key.lower() in s:
+                            s[key.lower()](val)
 
     def _set_ansi_encoding(self, e):
         self._encoding = "cp{}".format(e)
