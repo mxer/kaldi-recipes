@@ -3,8 +3,6 @@ import os
 
 import sys
 
-import re
-
 SPECIAL_TIERS = ("BACKGROUND", "COMMENT", "UNKNOWN")
 
 
@@ -47,29 +45,28 @@ class TextGridShort(object):
             for i, record in enumerate(self._streams[speaker]):
                 text = record[2].strip()
 
-                if text == ".":
-                    continue
-
-                if "*" in text:
-                    continue
-
-                if "ggg" in text:
-                    continue
-
-                if "xxx" in text:
-                    continue
-
-                if "Xxx" in text:
-                    continue
+                # if text == ".":
+                #     continue
+                #
+                # if "*" in text:
+                #     continue
+                #
+                # if "ggg" in text:
+                #     continue
+                #
+                # if "xxx" in text:
+                #     continue
+                #
+                # if "Xxx" in text:
+                #     continue
 
                 if len(text) == 0:
                     continue
 
-                text = text+" "
-                text = re.sub(r"(?<=\S)\...\s", " |... ", text)
-                text = re.sub(r"(?<=\S)\?\s", " |? ", text)
-                text = re.sub(r"(?<!\s|[|.])\.\s", " |. ", text)
-
+                # text = text+" "
+                # text = re.sub(r"(?<=\S)\...\s", " |... ", text)
+                # text = re.sub(r"(?<=\S)\?\s", " |? ", text)
+                # text = re.sub(r"(?<!\s|[|.])\.\s", " |. ", text)
 
                 yield "{}-{}-{:04d}".format(speaker, self.key, i), record[0], record[1], text.strip()
 

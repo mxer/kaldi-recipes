@@ -1,49 +1,57 @@
 #!/bin/bash
 
-
-corpus_dir=$GROUP_DIR/c/cgn
-
 export LC_ALL=C
 
-mkdir -p data/dev
-mkdir -p data/train
-mkdir -p data/test
+if [ -f data-prep/train/wav.scp ]; then
+   echo "data-prep/train/wav.scp exists, so we assume we don't need the original corpus files. If data preparation fails, remove data-prep/* and try again"
+else
 
-train_data_dir=$(mktemp -d)
+data_dir=$(mktemp -d)
 
-trap "{ rm -Rf $train_data_dir ; exit 255; }" EXIT
+echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
+trap "{ rm -Rf ${data_dir} ; exit 255; }" EXIT
+
 
 echo $(date) "Find files"
 
-find $corpus_dir/data/audio/wav/comp-o/ -name "*.wav" >  $train_data_dir/wavlist
-find $corpus_dir/data/annot/text/ort/comp-o/ -name "*.ort.gz" > $train_data_dir/ortlist
+find corpus/data/audio/wav/comp-o/ -name "*.wav" >  ${data_dir}/wavlist
+find corpus/data/annot/text/ort/comp-o/ -name "*.ort.gz" > ${data_dir}/ortlist
+
 
 echo $(date) "Make lists"
-local/make_wav_txt_lists.py $train_data_dir/wavlist $train_data_dir/ortlist $train_data_dir/text $train_data_dir/wav.scp $train_data_dir/segments $train_data_dir/utt2spk
+local/make_wav_txt_lists.py ${data_dir}/wavlist ${data_dir}/ortlist ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/segments ${data_dir}/utt2spk
 
-echo $(date) "sorting"
 
-grep "^.....9" $train_data_dir/text | sort > data/test/text
-grep "^.....8" $train_data_dir/text | sort > data/dev/text
-grep "^.....[0-7]" $train_data_dir/text | sort > data/train/text
+for set in "train" "dev" "test"; do
 
-grep "^.....9" $train_data_dir/utt2spk | sort > data/test/utt2spk
-grep "^.....8" $train_data_dir/utt2spk | sort > data/dev/utt2spk
-grep "^.....[0-7]" $train_data_dir/utt2spk | sort > data/train/utt2spk
+mkdir -p data-prep/${set}
+echo $(date) "sorting (${set})"
 
-utils/utt2spk_to_spk2utt.pl data/test/utt2spk > data/test/spk2utt
-utils/utt2spk_to_spk2utt.pl data/dev/utt2spk > data/dev/spk2utt
-utils/utt2spk_to_spk2utt.pl data/train/utt2spk > data/train/spk2utt
+grep -f local/dataset_def/${set} ${data_dir}/text | sort > data-prep/${set}/text
+grep -f local/dataset_def/${set} ${data_dir}/utt2spk | sort > data-prep/${set}/utt2spk
+grep -f local/dataset_def/${set} ${data_dir}/segments | sort > data-prep/${set}/segments
 
-grep "^.....9" $train_data_dir/segments | sort > data/test/segments
-grep "^.....8" $train_data_dir/segments | sort > data/dev/segments
-grep "^.....[0-7]" $train_data_dir/segments | sort > data/train/segments
+cut -f2 -d" " data-prep/${set}/segments | grep -f - $data_dir/wav.scp | sort > $data_dir/wav.${set}.scp
 
-cut -f2 -d" " data/test/segments | grep -f - $train_data_dir/wav.scp | sort > data/test/wav.scp
-cut -f2 -d" " data/dev/segments | grep -f - $train_data_dir/wav.scp | sort > data/dev/wav.scp
-cut -f2 -d" " data/train/segments | grep -f - $train_data_dir/wav.scp | sort > data/train/wav.scp
+echo $(date) "wav-copy"
+wav-copy scp:${data_dir}/wav.${set}.scp ark,scp:data-prep/${set}/wav.ark,data-prep/${set}/wav.scp
 
-echo $(date) "Start removing dirs"
-rm -Rf $train_data_dir
+echo $(date) "Start removing temp dirs"
+rm -Rf ${data_dir}
+
+done  # test train for-loop
+
+fi  # Now data-prep exists and is filled
+
+for set in "train" "dev" "test"; do
+  mkdir -p data/${set}
+  cp data-prep/${set}/wav.scp data/${set}
+  cp data-prep/${set}/utt2spk data/${set}
+  cp data-prep/${set}/text data/${set}
+  cp data-prep/${set}/segments data/${set}
+
+  #TODO make text in the desired format
+  utils/utt2spk_to_spk2utt.pl data/${set}/utt2spk > data/${set}/spk2utt
+done
 
 

@@ -4,7 +4,22 @@
            ## This relates to the queue.
 
 
-cgn=$GROUP_DIR/c/cgn
+if [ ! -d "corpus" ]; then
+ exit "The directory corpus needs to exist, with the corpus files (data, corex, doc_{English,Dutch}). This can be a symlinked directory"
+fi
 
-! ( utils/validate_data_dir.sh data/train && utils/validate_data_dir.sh data/test && utils/validate_data_dir.sh data/dev ) || local/cgn_data_prep.sh $cgn  || exit "Could not prep corpus";
+if [ ! -d "data-prep" ]; then
+ exit "The directory data-prep needs to exist. Either do 'mkdir data-prep', or make it a symlink to somewhere"
+fi
 
+local/cgn_data_prep.sh || exit "Could not prep corpus";
+
+mfccdir=mfcc/
+
+for set in "train" "dev" "test"; do
+ steps/make_mfcc.sh --cmd "${train_cmd}" --nj 20 \
+   data/${set} exp/make_mfcc/${set} ${mfccdir} || exit 1;
+ steps/compute_cmvn_stats.sh data/${set} exp/make_mfcc/${set} ${mfccdir} || exit 1;
+
+ utils/validate_data_dir.sh data/${set} || exit "Directory data/${set} was not properly set up"
+done
