@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 
+import io
+
 PH_MAP = {}
 
 
@@ -39,7 +41,7 @@ def map_transcript(trans):
                     yield k
                 break
             if not succ:
-                print("Unknown charachter {}".format(trans[0]), file=sys.stderr)
+                print("Unknown character {}".format(trans[0]), file=sys.stderr)
                 trans = trans[1:]
 
 
@@ -76,4 +78,4 @@ def init_ph_map(vowel_file, consonant_file):
 
 if __name__ == "__main__":
     init_ph_map(sys.argv[1], sys.argv[2])
-    transform_lexicon(sys.stdin, sys.stdout)
+    transform_lexicon(io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8'), sys.stdout)
