@@ -1,26 +1,46 @@
 #!/usr/bin/env python3
 import sys
 
+PH_MAP = {}
+
 
 def map_transcript(trans):
-    syllables = trans.split("$")
 
-    for syl in syllables:
-        syl_level = ""
-        if syl.starswith('""'):
-            syl_level = "3"
-            syl = syl[2:]
-        elif syl.starswith('"'):
-            syl_level = "2"
-            syl = syl[1:]
-        elif syl.starswith('%'):
-            syl_level = "1"
-            syl = syl[1:]
+    syl_level = 0
 
 
+    while len(trans) > 0:
 
+        if trans.startswith('""'):
+            syl_level = 3
+            trans = trans[2:]
+        elif trans.startswith('"'):
+            syl_level = 2
+            trans = trans[1:]
+        elif trans.startswith('%'):
+            syl_level = 1
+            trans = trans[1:]
+        elif trans.startswith('$'):
+            syl_level = 0
+            trans = trans[1:]
+        elif trans.startswith('-'):
+            trans = trans[1:]
+        else:
+            succ = False
+            for k in sorted(PH_MAP.keys(), key=lambda x: -len(x)):
+                if not trans.startswith(k):
+                    continue
+                succ = True
+                trans = trans[len(k):]
 
-    return [trans]
+                if PH_MAP[k]:
+                    yield k+str(syl_level)
+                else:
+                    yield k
+                break
+            if not succ:
+                print("Unknown charachter {}".format(trans[0]), file=sys.stderr)
+                trans = trans[1:]
 
 
 def transform_lexicon(input,output):
@@ -30,13 +50,30 @@ def transform_lexicon(input,output):
             continue
 
         parts = line.split(";")
-        key, trans = parts[0], parts[11]
+        key, trans = parts[0], parts[11:12]
 
-        d[key] = map_transcript(trans)
+        # for t in trans:
+        #     if len(t) > 0:
+        #         print("{} {}".format(key, " ".join(map_transcript(t))), file=output)
+        d[key] = []
+        for t in trans:
+            d[key].append(tuple(map_transcript(t)))
 
     for key, value in d.items():
-        print("{} {}".format(key, " ".join(value)), file=output)
+        for v in set(value):
+            print("{} {}".format(key, " ".join(v)), file=output)
+
+
+def init_ph_map(vowel_file, consonant_file):
+    for l in open(vowel_file):
+        if len(l.strip()) > 0:
+            PH_MAP[l.strip()] = True
+
+    for l in open(consonant_file):
+        if len(l.strip()) > 0:
+            PH_MAP[l.strip()] = False
 
 
 if __name__ == "__main__":
+    init_ph_map(sys.argv[1], sys.argv[2])
     transform_lexicon(sys.stdin, sys.stdout)
