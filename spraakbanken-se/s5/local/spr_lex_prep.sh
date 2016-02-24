@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LC_ALL=C
+
 lang=$1
 
 echo $(date) "Check the integrity of the lexicon"
