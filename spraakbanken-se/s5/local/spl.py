@@ -1,5 +1,7 @@
 import collections
 
+import sys
+
 
 class Spl(object):
     def __init__(self, filename):
@@ -18,22 +20,25 @@ class Spl(object):
         self._parse(filename)
 
     def _parse(self, filename):
-        section = None
-        for line in open(filename, "rb").readlines():
-            l = line.decode(self._encoding).strip()
-            if len(l) < 2:
-                continue
-            if l.startswith('['):
-                section = l[1:-1]
-            else:
-                key, val = l.split("=", 1)
-                if key.isnumeric():
-                    self._f.get(section.lower(), lambda y, z: 0)(int(key),val)
+        try:
+            section = None
+            for line in open(filename, "rb").readlines():
+                l = line.decode(self._encoding).strip()
+                if len(l) < 2:
+                    continue
+                if l.startswith('['):
+                    section = l[1:-1]
                 else:
-                    if section.lower() in self._f:
-                        s = self._f[section.lower()]
-                        if key.lower() in s:
-                            s[key.lower()](val)
+                    key, val = l.split("=", 1)
+                    if key.isnumeric():
+                        self._f.get(section.lower(), lambda y, z: 0)(int(key),val)
+                    else:
+                        if section.lower() in self._f:
+                            s = self._f[section.lower()]
+                            if key.lower() in s:
+                                s[key.lower()](val)
+        except Exception as e:
+            print("Error when parsing {}: {}".format(filename, e), file=sys.stderr)
 
     def _set_ansi_encoding(self, e):
         self._encoding = "cp{}".format(e)
