@@ -52,20 +52,21 @@ def main(in_dir, out_text, out_scp, out_spk2utt):
                 print("Length incorrect of {}".format(file_name))
                 continue
 
-            count +=1
+            count += 1
 
             print("{} sph2pipe -f wav -p -c 1 {} |".format(utt_key, file_name), file=fd_scp)
             print("{} {}".format(utt_key, valid[0]), file=fd_text)
             print("{} {}".format(utt_key, key[:8]), file=fd_spk2utt)
 
         if count > 0:
-            #print("{} with speaker {}, {} utterances".format(key, s._infos['Speaker ID'], count))
+            # print("{} with speaker {}, {} utterances".format(key, s._infos['Speaker ID'], count))
             try:
                 speakers[int(s._infos['Speaker ID'].strip().strip("#"))] += count
             except ValueError:
                 speakers[s._infos['Speaker ID'].strip().strip("#")] += count
 
-#    for s,c in speakers.items():
+
+# for s,c in speakers.items():
 #        print("{} {}".format(s,c))
 
 if __name__ == "__main__":

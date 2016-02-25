@@ -2,7 +2,7 @@
 
 export LC_ALL=C
 
-lang=$1
+lang=${1:-sv}
 
 echo $(date) "Check the integrity of the lexicon"
 wd=$(pwd)

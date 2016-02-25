@@ -10,7 +10,6 @@ def map_transcript(trans):
 
     syl_level = 0
 
-
     while len(trans) > 0:
 
         if trans.startswith('""'):

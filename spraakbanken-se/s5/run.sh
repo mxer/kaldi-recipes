@@ -3,7 +3,7 @@
 . ./cmd.sh ## You'll want to change cmd.sh to something that will work on your system.
            ## This relates to the queue.
 
-lang=${1:-se}
+lang=${1:-sv}
 
 function error_exit {
     echo "$1" >&2

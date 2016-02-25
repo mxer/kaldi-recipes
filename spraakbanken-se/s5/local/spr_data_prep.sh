@@ -2,7 +2,7 @@
 
 export LC_ALL=C
 
-lang=$1
+lang=${1:-sv}
 
 if [ -f data-prep/${lang}/train/wav.scp ]; then
    echo "data-prep/${lang}/train/wav.scp exists, so we assume we don't need the original corpus files. If data preparation fails, remove data-prep/$lang and try again"

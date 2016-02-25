@@ -23,7 +23,7 @@ class Spl(object):
         try:
             section = None
             for line in open(filename, "rb").readlines():
-                l = line.decode(self._encoding).strip()
+                l = line.decode(self._encoding).strip().strip("\0")
                 if len(l) < 2:
                     continue
                 if l.startswith('['):
