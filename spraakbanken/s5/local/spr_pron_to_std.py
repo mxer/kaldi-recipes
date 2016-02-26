@@ -7,7 +7,7 @@ import collections
 
 PH_MAP = {}
 
-SIL_PHONE = "sil"
+SIL_PHONE = "SIL"
 
 PH_USED = collections.Counter()
 
@@ -93,4 +93,5 @@ def init_ph_map(vowel_file, consonant_file):
 
 if __name__ == "__main__":
     init_ph_map(sys.argv[1], sys.argv[2])
-    transform_lexicon(io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8'), sys.stdout, sys.stderr)
+    transform_lexicon(io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8'),
+                      io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8'), sys.stderr)
