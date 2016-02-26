@@ -5,8 +5,11 @@ import io
 
 PH_MAP = {}
 
+SIL_PHONE = "sil"
+
 
 def map_transcript(trans):
+    ot = trans
 
     syl_level = 0
 
@@ -26,6 +29,11 @@ def map_transcript(trans):
             trans = trans[1:]
         elif trans.startswith('-'):
             trans = trans[1:]
+        elif trans.startswith('¤'):
+            trans = trans[1:]
+        elif trans.startswith('_'):
+            trans = trans[1:]
+            yield SIL_PHONE
         else:
             succ = False
             for k in sorted(PH_MAP.keys(), key=lambda x: -len(x)):
@@ -35,16 +43,16 @@ def map_transcript(trans):
                 trans = trans[len(k):]
 
                 if PH_MAP[k]:
-                    yield k+str(syl_level)
+                    yield k + str(syl_level)
                 else:
                     yield k
                 break
             if not succ:
-                print("Unknown character {}".format(trans[0]), file=sys.stderr)
+                print("Unknown character {} in {}".format(trans[0], ot), file=sys.stderr)
                 trans = trans[1:]
 
 
-def transform_lexicon(input,output):
+def transform_lexicon(input, output):
     d = {}
     for line in input:
         if ";" not in line:
