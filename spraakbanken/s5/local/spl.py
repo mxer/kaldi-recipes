@@ -60,6 +60,11 @@ class Spl(object):
         for key, val in self._records.items():
             yield self._validations[key], val
 
+    def key_records(self):
+        for key, val in self._records.items():
+            yield key, self._validations[key], val
+
 if __name__ == "__main__":
     s = Spl("test.spl")
+    print(list(s.records()))
     print(s._validations)
