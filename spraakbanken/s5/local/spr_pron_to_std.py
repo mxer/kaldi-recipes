@@ -93,5 +93,6 @@ def init_ph_map(vowel_file, consonant_file):
 
 if __name__ == "__main__":
     init_ph_map(sys.argv[1], sys.argv[2])
-    transform_lexicon(io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8'),
-                      io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8'), sys.stderr)
+    # transform_lexicon(io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8'),
+    #                   io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8'), sys.stderr)
+    transform_lexicon(sys.stdin, sys.stdout, sys.stderr)

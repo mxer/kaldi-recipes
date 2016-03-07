@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export LC_ALL=C
-
 lang=${1:-sv}
 
 if [ -f data-prep/${lang}/train/wav.scp ]; then
@@ -29,9 +27,9 @@ echo $(date) "make lists"
 local/make_wav_txt_lists.py ${data_dir} ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/utt2spk ${set}
 
 echo $(date) "sorting"
-sort < ${data_dir}/text > data-prep/${lang}/${set}/text
-sort < ${data_dir}/utt2spk > data-prep/${lang}/${set}/utt2spk
-sort < ${data_dir}/wav.scp > ${data_dir}/wav.sorted.scp
+LC_ALL=C sort < ${data_dir}/text > data-prep/${lang}/${set}/text
+LC_ALL=C sort < ${data_dir}/utt2spk > data-prep/${lang}/${set}/utt2spk
+LC_ALL=C sort < ${data_dir}/wav.scp > ${data_dir}/wav.sorted.scp
 
 
 echo $(date) "wav-copy"
