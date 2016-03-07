@@ -37,7 +37,11 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
         for valid, record in s.records():
             if record[9] in BLACKLIST:
                 continue
-            type_key = re.search('\D+', record[9]).group()
+            try:
+                type_key = re.search('\D+', record[9]).group()
+            except:
+                print("Error for {}, val: {}, rec: {}, rec[9]: {}".format(key, val, record, record[9]))
+                return
 
             wav_key = key[:8] + os.path.splitext(valid[9])[0]
             utt_key = key[:8] + '-' + wav_key[1:5] + '-' + wav_key[5:] + "-1"
@@ -85,7 +89,7 @@ if __name__ == "__main__":
 
     whitelist = set()
     if selection == "train":
-        whitelist = {"cISa", "FF", "CD", "dISa", "ISp", "pIWp", "prIWp", "cIWp", "phIWp", "IWp"}
+        whitelist = {"ISa", "cISa", "FF", "CD", "dISa", "ISp", "pIWp", "prIWp", "cIWp", "phIWp", "IWp"}
     elif selection == "test":
         whitelist = {"ISa", "ISp"}
 

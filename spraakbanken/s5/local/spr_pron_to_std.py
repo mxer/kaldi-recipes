@@ -78,8 +78,8 @@ def transform_lexicon(input, output, phone_list):
         for v in set(value):
             print("{} {}".format(key, " ".join(v)), file=output)
 
-    for phone, count in PH_USED.most_common():
-        print("{} {: 7d}".format(phone, count), file=phone_list)
+    # for phone, count in PH_USED.most_common():
+    #     print("{} {: 7d}".format(phone, count), file=phone_list)
 
 def init_ph_map(vowel_file, consonant_file):
     for l in open(vowel_file):
