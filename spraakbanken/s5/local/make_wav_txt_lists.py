@@ -7,7 +7,7 @@ import sys
 import re
 import spl
 
-BLACKLIST = {'bISa1'}
+BLACKLIST = {'bISa1', ''}
 
 
 def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
@@ -35,16 +35,14 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
         count = 0
         s = spl.Spl(val)
         for valid, record in s.records():
-            if record[9] in BLACKLIST:
+            if record[9].strip() in BLACKLIST:
                 continue
-            try:
-                type_key = re.search('\D+', record[9]).group()
-            except:
-                print("Error for {}, val: {}, rec: {}, rec[9]: {}".format(key, val, record, record[9]))
-                return
 
-            wav_key = key[:8] + os.path.splitext(valid[9])[0]
-            utt_key = key[:8] + '-' + wav_key[1:5] + '-' + wav_key[5:] + "-1"
+            type_key = re.search('\D+', record[9]).group()
+            
+            key_a = os.path.splitext(valid[9])[0]
+            wav_key = key[:8] + key_a 
+            utt_key = key[:8] + '-' + key_a[1:5] + '-' + key_a[5:] + "-1"
 
             if wav_key not in wav_files:
                 continue

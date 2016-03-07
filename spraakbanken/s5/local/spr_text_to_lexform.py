@@ -11,16 +11,19 @@ def map_word(word, lexicon, first_word_in_sentence):
         word = word[:i]
 
     if word not in lexicon:
-        word = word.strip(",;?.")
+        word = word.strip("!,;?.")
         if word not in lexicon and word.lower() in lexicon:
             word = word.lower()
         if word not in lexicon and first_word_in_sentence:
             word = word.lower()
-
+    
     if punc is None:
-        return [word]
+        ret = [word]
     else:
-        return [word, punc]
+        ret = [word, punc[2:]]
+    if len(word.strip()) == 0:
+        ret = ret[1:]
+    return ret
 
 
 def map(text_in, text_out, oov_out, lexicon):
