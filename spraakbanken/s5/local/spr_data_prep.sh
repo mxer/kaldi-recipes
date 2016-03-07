@@ -48,9 +48,8 @@ for set in "train" "test"; do
   mkdir -p data/${lang}/${set}
   cp data-prep/${lang}/${set}/wav.scp data/${lang}/${set}
   cp data-prep/${lang}/${set}/utt2spk data/${lang}/${set}
-  cp data-prep/${lang}/${set}/text data/${lang}/${set}
+  local/spr_text_to_lexform.py data-prep/${lang}/${set}/text data/${lang}/${set}/text data/${lang}/${set}/known_oov.txt data/${lang}/dict/lexicon.txt
 
-  #TODO make text in the desired format
   utils/utt2spk_to_spk2utt.pl data/${lang}/${set}/utt2spk > data/${lang}/${set}/spk2utt
 done
 

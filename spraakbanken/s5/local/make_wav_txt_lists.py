@@ -25,7 +25,7 @@ def main(in_dir, out_text, out_scp, out_spk2utt):
 
     fd_text = open(out_text, 'w', encoding='utf-8')
     fd_scp = open(out_scp, 'w', encoding='utf-8')
-    fd_spk2utt = open(out_spk2utt, 'w', encoding='utf-8')
+    fd_utt2spk = open(out_spk2utt, 'w', encoding='utf-8')
 
     speakers = collections.Counter()
     for key, val in spl_files.items():
@@ -33,7 +33,7 @@ def main(in_dir, out_text, out_scp, out_spk2utt):
         s = spl.Spl(val)
         for valid, record in s.records():
             wav_key = key[:8] + os.path.splitext(valid[9])[0]
-            utt_key = key[:8] + '-' + os.path.splitext(valid[9])[0][1:] + "-1"
+            utt_key = key[:8] + '-' + wav_key[1:5] + '-' + wav_key[5:] + "-1"
             if wav_key not in wav_files:
                 continue
 
@@ -56,7 +56,7 @@ def main(in_dir, out_text, out_scp, out_spk2utt):
 
             print("{} sph2pipe -f wav -p -c 1 {} |".format(utt_key, file_name), file=fd_scp)
             print("{} {}".format(utt_key, valid[0]), file=fd_text)
-            print("{} {}".format(utt_key, key[:8]), file=fd_spk2utt)
+            print("{} {}".format(utt_key, key[:13]), file=fd_utt2spk)
 
         if count > 0:
             # print("{} with speaker {}, {} utterances".format(key, s._infos['Speaker ID'], count))
