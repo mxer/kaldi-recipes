@@ -4,10 +4,13 @@ import os
 import subprocess
 import sys
 
+import re
 import spl
 
+BLACKLIST = {'bISa1'}
 
-def main(in_dir, out_text, out_scp, out_spk2utt):
+
+def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
     wav_files = {}
     spl_files = {}
 
@@ -32,10 +35,18 @@ def main(in_dir, out_text, out_scp, out_spk2utt):
         count = 0
         s = spl.Spl(val)
         for valid, record in s.records():
+            if record[9] in BLACKLIST:
+                continue
+            type_key = re.search('\D+', record[9]).group()
+
             wav_key = key[:8] + os.path.splitext(valid[9])[0]
             utt_key = key[:8] + '-' + wav_key[1:5] + '-' + wav_key[5:] + "-1"
+
             if wav_key not in wav_files:
                 continue
+
+            if type_key not in whitelist:
+                print("Skip {} (type {}), not in whitelist".format(wav_key, type_key))
 
             file_name = wav_files[wav_key]
 
@@ -66,12 +77,16 @@ def main(in_dir, out_text, out_scp, out_spk2utt):
                 speakers[s._infos['Speaker ID'].strip().strip("#")] += count
 
 
-# for s,c in speakers.items():
-#        print("{} {}".format(s,c))
-
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        exit("4 required arguments: data directory, output text file, output scp file, utt2speak file")
+    if len(sys.argv) != 6:
+        exit("5 required arguments: data directory, output text file, output scp file, utt2speak file, selection")
 
-    in_dir, out_text, out_scp, out_spk2utt = sys.argv[1:5]
-    main(in_dir, out_text, out_scp, out_spk2utt)
+    in_dir, out_text, out_scp, out_spk2utt, selection = sys.argv[1:6]
+
+    whitelist = set()
+    if selection == "train":
+        whitelist = {"cISa", "FF", "CD", "dISa", "ISp", "pIWp", "prIWp", "cIWp", "phIWp", "IWp"}
+    elif selection == "test":
+        whitelist = {"ISa", "ISp"}
+
+    main(in_dir, out_text, out_scp, out_spk2utt, whitelist)

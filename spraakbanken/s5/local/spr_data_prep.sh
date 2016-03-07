@@ -26,7 +26,7 @@ for t in $(cut -f3- -d" " local/checksums/${set}_${lang}); do
 done
 
 echo $(date) "make lists"
-local/make_wav_txt_lists.py ${data_dir} ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/utt2spk
+local/make_wav_txt_lists.py ${data_dir} ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/utt2spk ${set}
 
 echo $(date) "sorting"
 sort < ${data_dir}/text > data-prep/${lang}/${set}/text
