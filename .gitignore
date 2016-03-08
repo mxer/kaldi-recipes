@@ -1,0 +1,11 @@
+.idea
+__pycache__
+data
+data-prep
+steps
+utils
+mfcc
+exp
+corpus
+cmd.sh
+path.sh

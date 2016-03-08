@@ -46,10 +46,10 @@ for set in "train" "dev" "test"; do
   mkdir -p data/${set}
   cp data-prep/${set}/wav.scp data/${set}
   cp data-prep/${set}/utt2spk data/${set}
-  cp data-prep/${set}/text data/${set}
   cp data-prep/${set}/segments data/${set}
 
-  #TODO make text in the desired format
+  local/cgn_text_to_lexform.py data-prep/${set}/text data/${set}/text
+
   utils/utt2spk_to_spk2utt.pl data/${set}/utt2spk > data/${set}/spk2utt
 done
 
