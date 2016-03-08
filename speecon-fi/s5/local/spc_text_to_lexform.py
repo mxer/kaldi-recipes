@@ -8,7 +8,7 @@ def map(text_in, text_out):
         key, rest = line.strip().split(None, 1)
         sent = []
         for i, word in enumerate(rest.split()):
-            sent.extend(word.strip("."))
+            sent.append(word.strip("."))
 
         print("{} {}".format(key, " ".join(sent)), file=text_out)
 
