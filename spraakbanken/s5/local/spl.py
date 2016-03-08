@@ -40,6 +40,9 @@ class Spl(object):
         except Exception as e:
             print("Error when parsing {}: {}".format(filename, e), file=sys.stderr)
 
+        if len(self._records) != len(self._validations):
+            print("Filename: {} has {} records and {} validations".format(filename, len(self._records), len(self._validations)))
+
     def _set_ansi_encoding(self, e):
         self._encoding = "cp{}".format(e)
 
@@ -61,8 +64,10 @@ class Spl(object):
             yield self._validations[key], val
 
     def key_records(self):
-        for key, val in self._records.items():
-            yield key, self._validations[key], val
+        for key, record in self._records.items():
+            if key not in self._validations:
+                continue
+            yield key, self._validations[key], record
 
 if __name__ == "__main__":
     s = Spl("test.spl")

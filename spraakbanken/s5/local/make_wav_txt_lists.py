@@ -20,11 +20,11 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
         for f in files:
             if f.endswith(".wav") and f.startswith("u"):
                 key = parts[-2] + os.path.splitext(f)[0]
-                wav_files[key] = os.path.join(root, f)
+                wav_files[key.lower()] = os.path.join(root, f)
 
             if f.endswith(".spl"):
                 key = parts[-1] + os.path.splitext(f)[0]
-                spl_files[key] = os.path.join(root, f)
+                spl_files[key.lower()] = os.path.join(root, f)
 
     fd_text = open(out_text, 'w', encoding='utf-8')
     fd_scp = open(out_scp, 'w', encoding='utf-8')
@@ -41,14 +41,15 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
             type_key = re.search('\D+', record[9]).group()
             
             key_a = os.path.splitext(valid[9])[0]
-            wav_key = key[:8] + key_a 
+            wav_key = key[:8] + key_a
+            wav_key = wav_key.lower()
             utt_key = key[:8] + '-' + key_a[1:5] + '-' + key_a[5:] + "-1"
 
             if wav_key not in wav_files:
                 continue
 
             if type_key not in whitelist:
-                print("Skip {} (type {}), not in whitelist".format(wav_key, type_key))
+                print("Skip {} (type {}), not in whitelist".format(wav_key, type_key), file=sys.stderr)
 
             file_name = wav_files[wav_key]
 
@@ -58,11 +59,11 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
             try:
                 num_sam = int(subprocess.check_output("soxi -s {}".format(file_name), shell=True))
             except subprocess.CalledProcessError:
-                print("Error when reading {}".format(file_name))
+                print("Error when reading {}".format(file_name), file=sys.stderr)
                 continue
 
             if num_sam * 4 != int(valid[11]) - int(valid[10]):
-                print("Length incorrect of {}".format(file_name))
+                print("Length incorrect of {}".format(file_name), file=sys.stderr)
                 continue
 
             count += 1
@@ -90,5 +91,7 @@ if __name__ == "__main__":
         whitelist = {"ISa", "cISa", "FF", "CD", "dISa", "ISp", "pIWp", "prIWp", "cIWp", "phIWp", "IWp"}
     elif selection == "test":
         whitelist = {"ISa", "ISp"}
+    else:
+        print("This is a mistake, there should be a set selected.", file=sys.stderr)
 
     main(in_dir, out_text, out_scp, out_spk2utt, whitelist)
