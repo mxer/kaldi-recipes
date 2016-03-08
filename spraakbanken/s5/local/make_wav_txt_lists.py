@@ -70,7 +70,7 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
 
             print("{} sph2pipe -f wav -p -c 1 {} |".format(utt_key, file_name), file=fd_scp)
             print("{} {}".format(utt_key, valid[0]), file=fd_text)
-            print("{} {}".format(utt_key, key[:13]), file=fd_utt2spk)
+            print("{} {}".format(utt_key, utt_key[:13]), file=fd_utt2spk)
 
         if count > 0:
             # print("{} with speaker {}, {} utterances".format(key, s._infos['Speaker ID'], count))
