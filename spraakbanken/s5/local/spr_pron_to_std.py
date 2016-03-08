@@ -87,10 +87,12 @@ def transform_lexicon(input, output, phone_list, question_list):
             if k in PH_USED:
                 phone_line.append(k)
                 question_map[i].add(k)
-        print(" ".join(phone_line), file=phone_list)
+        if len(phone_line) > 0:
+            print(" ".join(phone_line), file=phone_list)
 
     for question in question_map:
-        print(" ".join(question), file=question_list)
+        if len(question) > 0:
+            print(" ".join(question), file=question_list)
 
 
 def init_ph_map(vowel_file, consonant_file):
