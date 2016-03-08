@@ -11,6 +11,7 @@ BLACKLIST = {'bISa1', ''}
 
 
 def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
+    skip_counter = collections.Counter()
     wav_files = {}
     spl_files = {}
 
@@ -36,6 +37,7 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
         s = spl.Spl(val)
         for valid, record in s.records():
             if record[9].strip() in BLACKLIST:
+                skip_counter[record[9].strip()] += 1
                 continue
 
             type_key = re.search('\D+', record[9]).group()
@@ -49,7 +51,8 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
                 continue
 
             if type_key not in whitelist:
-                print("Skip {} (type {}), not in whitelist".format(wav_key, type_key), file=sys.stderr)
+                skip_counter[type_key] += 1
+                continue
 
             file_name = wav_files[wav_key]
 
@@ -79,6 +82,8 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
             except ValueError:
                 speakers[s._infos['Speaker ID'].strip().strip("#")] += count
 
+    for type, count in skip_counter.most_common():
+        print("Skipped {} utterances of type {}".format(count, type), file=sys.stderr)
 
 if __name__ == "__main__":
     if len(sys.argv) != 6:

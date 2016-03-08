@@ -58,7 +58,7 @@ def map_transcript(trans):
                 trans = trans[1:]
 
 
-def transform_lexicon(input, output, phone_list):
+def transform_lexicon(input, output, phone_list, question_list):
     d = {}
     for line in input:
         if ";" not in line:
@@ -67,9 +67,6 @@ def transform_lexicon(input, output, phone_list):
         parts = line.split(";")
         key, trans = parts[0], parts[11:12]
 
-        # for t in trans:
-        #     if len(t) > 0:
-        #         print("{} {}".format(key, " ".join(map_transcript(t))), file=output)
         d[key] = []
         for t in trans:
             d[key].append(tuple(map_transcript(t)))
@@ -78,8 +75,23 @@ def transform_lexicon(input, output, phone_list):
         for v in set(value):
             print("{} {}".format(key, " ".join(v)), file=output)
 
-    # for phone, count in PH_USED.most_common():
-    #     print("{} {: 7d}".format(phone, count), file=phone_list)
+    question_map = [set() for _ in range(5)]
+
+    for phone in PH_MAP.keys():
+        phone_line = []
+        if phone in PH_USED:
+            phone_line.append(phone)
+            question_map[4].add(phone)
+        for i in range(4):
+            k = phone + str(i)
+            if k in PH_USED:
+                phone_line.append(k)
+                question_map[i].add(k)
+        print(" ".join(phone_line), file=phone_list)
+
+    for question in question_map:
+        print(" ".join(question), file=question_list)
+
 
 def init_ph_map(vowel_file, consonant_file):
     for l in open(vowel_file):
@@ -93,6 +105,4 @@ def init_ph_map(vowel_file, consonant_file):
 
 if __name__ == "__main__":
     init_ph_map(sys.argv[1], sys.argv[2])
-    # transform_lexicon(io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8'),
-    #                   io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8'), sys.stderr)
-    transform_lexicon(sys.stdin, sys.stdout, sys.stderr)
+    transform_lexicon(sys.stdin, sys.stdout, sys.argv[3], sys.argv[4])

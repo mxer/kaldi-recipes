@@ -13,6 +13,11 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 (cd corpus && cut -f3- -d" " ${wd}/local/checksums/lex_${lang} | xargs tar xz --strip-components=1 -C ${data_dir} -f)
 
 mkdir -p data/${lang}/dict/
-find ${data_dir} -type f -name "*.pron" | xargs cat | iconv -f CP1252 -t UTF-8 | local/spr_pron_to_std.py local/dict_prep/${lang}_vowels local/dict_prep/${lang}_consonants | LC_ALL=C sort -u > data/${lang}/dict/lexicon.txt
+
+find ${data_dir} -type f -name "*.pron" | xargs cat | iconv -f CP1252 -t UTF-8 | local/spr_pron_to_std.py local/dict_prep/${lang}_vowels local/dict_prep/${lang}_consonants data/${lang}/dict/nonsilence_phones.txt data/${lang}/dict/extra_questions.txt | LC_ALL=C sort -u > data/${lang}/dict/lexicon.txt
+echo "SIL" > data/${lang}/dict/silence_phones.txt
+echo "SPN" >> data/${lang}/dict/silence_phones.txt
+
+echo "SIL" > data/${lang}/dict/optional_silence.txt
 
 rm -Rf ${data_dir}
