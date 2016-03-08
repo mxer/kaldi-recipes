@@ -105,4 +105,4 @@ def init_ph_map(vowel_file, consonant_file):
 
 if __name__ == "__main__":
     init_ph_map(sys.argv[1], sys.argv[2])
-    transform_lexicon(sys.stdin, sys.stdout, sys.argv[3], sys.argv[4])
+    transform_lexicon(sys.stdin, sys.stdout, open(sys.argv[3], 'w'), open(sys.argv[4], 'w'))
