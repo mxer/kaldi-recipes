@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-import sys
-
-import io
 
 import collections
+import sys
+
 
 PH_MAP = {}
 
 SIL_PHONE = "SIL"
 
 PH_USED = collections.Counter()
+
 
 def map_transcript(trans):
     ot = trans

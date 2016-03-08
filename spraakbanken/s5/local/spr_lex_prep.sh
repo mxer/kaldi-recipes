@@ -4,7 +4,7 @@ lang=${1:-sv}
 
 echo $(date) "Check the integrity of the lexicon"
 wd=$(pwd)
-(cd corpus && md5sum -c ${wd}/local/checksums/lex_${lang}) || exit "The spraakbanken ${set} archives gave unexpected md5 sums"
+(cd corpus && md5sum -c ${wd}/local/checksums/lex_${lang}) || exit "The spraakbanken lexicon gave unexpected md5 sums"
 
 data_dir=$(mktemp -d)
 
