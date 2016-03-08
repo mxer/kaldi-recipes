@@ -8,7 +8,11 @@ import sys
 
 def read_ort(speaker_dir, utt):
     info = {p.split(": ")[0]: p.split(": ")[1].strip() for p in open(os.path.join(speaker_dir, utt+".FIO"), encoding="iso-8859-1") if len(p.strip()) > 4}
-    return info["LBO"].split(',')[3]
+    ort = info["LBO"].split(',')[3]
+    if "#" in ort:
+        ort = ort.split("#")[-1]
+
+    return " ".join([w.strip("_") for w in ort.split()]) 
 
 def main(corp_dir, speaker_list, white_list, out_text, out_scp, out_spk2utt):
 

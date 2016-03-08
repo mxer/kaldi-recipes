@@ -11,6 +11,10 @@ def transform_lexicon(input, output, phone_list):
             word_list.add(word)
 
     for word in word_list:
+        if word.startswith("["):
+            print("{} {}".format(word, "NSN"), file=output)
+            continue
+
         print("{} {}".format(word, " ".join(list(word))), file=output)
         for c in word:
             phone_set.add(c)
