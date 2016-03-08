@@ -28,3 +28,6 @@ for set in "train" "dev" "test"; do
 
  utils/validate_data_dir.sh data/${set} || error_exit "Directory data/${set} was not properly set up"
 done
+
+utils/prepare_lang.sh data/dict "<UNK>" data/local/lang data/lang
+
