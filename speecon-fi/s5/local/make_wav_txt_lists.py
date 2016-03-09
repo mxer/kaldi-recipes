@@ -52,6 +52,14 @@ def main(corp_dir, speaker_list, white_list, out_text, out_scp, out_spk2utt):
                 print("{}.FIO missing".format(utt), file=sys.stderr)
                 continue
 
+            # A single * on the beginning of a line is ignored
+            if ort.startswith("*"):
+                ort = ort[1:]
+
+            # If any noise is left, the utterance is skipped
+            if "*" in ort or "[sta]" in ort or "[int]" in ort:
+                continue
+
             utt_key = utt[:5] + '-' + utt[5:] + "-0"
 
             print("{} {}".format(utt_key, ort), file=fd_text)
