@@ -4,20 +4,21 @@ import sys
 
 
 def transform_lexicon(input, output, phone_list):
-    word_list = set()
     phone_set = set()
-    for line in input:
-        for word in line.split()[1:]:
-            word_list.add(word)
 
-    for word in word_list:
-        if word.startswith("["):
-            print("{} {}".format(word, "NSN"), file=output)
+    for line in input:
+        orth, freq, pron, _ = line.split("\t")
+        if freq == "Frequency":
             continue
 
-        print("{} {}".format(word, " ".join(list(word))), file=output)
-        for c in word:
+        pron = pron.split()
+        for c in pron:
             phone_set.add(c)
+
+        print("{} {}".format(orth, " ".join(pron)), file=output)
+
+    for s in "[spk]", "<UNK>":
+        print("{} {}".format(s, "NSN"), file=output)
 
     for phone in phone_set:
         print(phone, file=phone_list)

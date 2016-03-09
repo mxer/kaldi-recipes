@@ -7,15 +7,13 @@ if [ -f data-prep/train/wav.scp ]; then
    echo "data-prep/train/wav.scp exists, so we assume we don't need the original corpus files. If data preparation fails, remove data-prep/* and try again"
 else
 
-data_dir=$(mktemp -d)
-
-echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
-
-
 for set in "train" "dev" "eval"; do
 
+data_dir=$(mktemp -d)
+echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
+
 echo $(date) "Make lists ${set}"
-local/make_wav_txt_lists.py corpus/ local/dataset_def/${set} local/dataset_def/whitelist_${set} ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/utt2spk
+local/make_wav_txt_lists.py corpus/ local/dataset_def/${set} local/dataset_def/whitelist_${set} ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/utt2spk ${set}
 
 
 mkdir -p data-prep/${set}
@@ -28,11 +26,11 @@ LC_ALL=C sort < ${data_dir}/wav.scp > ${data_dir}/wav.${set}.scp
 echo $(date) "wav-copy"
 wav-copy scp:${data_dir}/wav.${set}.scp ark,scp:data-prep/${set}/wav.ark,data-prep/${set}/wav.scp
 
+echo $(date) "Start removing temp dir ${data_dir}"
+rm -Rf ${data_dir}
+
 done  # test train for-loop
 
-echo $(date) "Start removing temp dirs"
-
-rm -Rf ${data_dir}
 
 fi  # Now data-prep exists and is filled
 
