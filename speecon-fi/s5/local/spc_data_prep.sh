@@ -36,7 +36,7 @@ rm -Rf ${data_dir}
 
 fi  # Now data-prep exists and is filled
 
-for set in "train" "dev" "test"; do
+for set in "train" "dev" "eval"; do
   mkdir -p data/${set}
   cp data-prep/${set}/wav.scp data/${set}
   cp data-prep/${set}/utt2spk data/${set}
