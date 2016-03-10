@@ -26,6 +26,8 @@ def main(wav_list, ort_list, out_text, out_scp, out_segments, out_spk2utt):
 
         for record in tgs.records():
             utt_key, start, end, text = record
+            if "xxx" in text.lower() or "ggg" in text.lower():
+                continue
             print("{} {}".format(utt_key, text), file=fd_text)
             print("{} {}".format(utt_key, utt_key.split('-')[0]), file=fd_spk2utt)
             print("{} {} {} {}".format(utt_key, k, start, end), file=fd_segments)
