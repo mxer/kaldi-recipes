@@ -10,6 +10,10 @@ def map_word(word, lexicon, first_word_in_sentence):
         punc = word[i:]
         word = word[:i]
 
+    if "." in word and not word.endswith("."):
+        p1, p2 = word.split(".", 1)
+        return map_word(p1, lexicon, first_word_in_sentence) + map_word(p2, lexicon, False)
+
     if word not in lexicon:
         word = word.strip("!,;?.")
         if word not in lexicon and word.lower() in lexicon:

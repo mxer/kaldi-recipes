@@ -12,6 +12,8 @@ BLACKLIST = {'bISa1', ''}
 
 def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
     skip_counter = collections.Counter()
+    err_counter = collections.Counter()
+
     wav_files = {}
     spl_files = {}
 
@@ -62,11 +64,13 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
             try:
                 num_sam = int(subprocess.check_output("soxi -s {}".format(file_name), shell=True))
             except subprocess.CalledProcessError:
-                print("Error when reading {}".format(file_name), file=sys.stderr)
+                err_counter["Reading file error"] += 1
+                #print("Error when reading {}".format(file_name), file=sys.stderr)
                 continue
 
             if num_sam * 4 != int(valid[11]) - int(valid[10]):
-                print("Length incorrect of {}".format(file_name), file=sys.stderr)
+                err_counter["Length incorrect error"] += 1
+                #print("Length incorrect of {}".format(file_name), file=sys.stderr)
                 continue
 
             count += 1
@@ -84,6 +88,9 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
 
     for type, count in skip_counter.most_common():
         print("Skipped {} utterances of type {}".format(count, type), file=sys.stderr)
+
+    for type, count in err_counter.most_common():
+        print("Occured {} errors of type: {}".format(count, type), file=sys.stderr)
 
 if __name__ == "__main__":
     if len(sys.argv) != 6:
