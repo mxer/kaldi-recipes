@@ -8,8 +8,8 @@ def map_word(word, lexicon, first_word_in_sentence):
         i = word.index("\\") - 1
         return map_word(word[:i], lexicon, first_word_in_sentence) + map_word(word[i+2:], lexicon, False)
 
-    if "." in word and not word.endswith("."):
-        p1, p2 = word.split(".", 1)
+    if "." in word[:-1] or "," in word[:-1]:
+        p1, p2 = word.split(".,", 1)
         return map_word(p1, lexicon, first_word_in_sentence) + map_word(p2, lexicon, False)
 
     if word not in lexicon:
