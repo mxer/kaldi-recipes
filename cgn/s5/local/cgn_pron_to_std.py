@@ -57,7 +57,7 @@ def transform_lexicon(input, output, phone_list, question_list):
 
     for key, value in d.items():
         for v in set(value):
-            if len(value) > 0:
+            if len(" ".join(v).strip()) > 0:
                 print("{} {}".format(key, " ".join(v)), file=output)
 
     question_map = [set() for _ in range(5)]
