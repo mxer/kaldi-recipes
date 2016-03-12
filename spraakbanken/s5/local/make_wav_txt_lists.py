@@ -56,6 +56,10 @@ def main(in_dir, out_text, out_scp, out_spk2utt, whitelist):
                 skip_counter[type_key] += 1
                 continue
 
+            if "(" in valid[0] or ")" in valid[0] or "+" in valid[0]:
+                err_counter["invalid test"] +=1
+                continue
+
             file_name = wav_files[wav_key]
 
             if os.stat(file_name).st_size == 0:

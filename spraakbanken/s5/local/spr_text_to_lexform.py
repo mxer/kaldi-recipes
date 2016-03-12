@@ -4,30 +4,25 @@ import sys
 
 
 def map_word(word, lexicon, first_word_in_sentence):
-    punc = None
     if "\\" in word:
-        i = word.index("\\") -1
-        punc = word[i:]
-        word = word[:i]
+        i = word.index("\\") - 1
+        return map_word(word[:i], lexicon, first_word_in_sentence) + map_word(word[i+2:], lexicon, False)
 
     if "." in word and not word.endswith("."):
         p1, p2 = word.split(".", 1)
         return map_word(p1, lexicon, first_word_in_sentence) + map_word(p2, lexicon, False)
 
     if word not in lexicon:
-        word = word.strip("!,;?.")
+        word = word.strip("!,;?.\"+-")
         if word not in lexicon and word.lower() in lexicon:
             word = word.lower()
         if word not in lexicon and first_word_in_sentence:
             word = word.lower()
-    
-    if punc is None:
-        ret = [word]
+
+    if len(word.strip()) > 0:
+        return [word]
     else:
-        ret = [word, punc[2:]]
-    if len(word.strip()) == 0:
-        ret = ret[1:]
-    return ret
+        return []
 
 
 def map(text_in, text_out, oov_out, lexicon):
