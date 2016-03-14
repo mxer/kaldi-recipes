@@ -12,7 +12,7 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 mkdir -p data/dict/
 
-find ${data_dir} -type f -name "*.pron" | xargs cat | iconv -f CP1252 -t UTF-8 | local/spr_pron_to_std.py local/dict_prep/vowels local/dict_prep/consonants data/dict/nonsilence_phones.txt data/dict/extra_questions.txt  > ${data_dir}/prepped_lex
+find ${data_dir} -type f -name "*.pron" | xargs cat | iconv -f CP1252 -t UTF-8 | spr_local/spr_pron_to_std.py local/dict_prep/vowels local/dict_prep/consonants data/dict/nonsilence_phones.txt data/dict/extra_questions.txt  > ${data_dir}/prepped_lex
 cat local/dict_prep/extradict ${data_dir}/prepped_lex | LC_ALL=C sort -u > data/dict/lexicon.txt
 
 echo "SIL" > data/dict/silence_phones.txt

@@ -22,7 +22,7 @@ for t in $(cut -f3- -d" " local/checksums/${set}); do
 done
 
 echo $(date) "make lists"
-local/make_wav_txt_lists.py ${data_dir} ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/utt2spk ${set}
+spr_local/make_wav_txt_lists.py ${data_dir} ${data_dir}/text ${data_dir}/wav.scp ${data_dir}/utt2spk ${set}
 
 echo $(date) "sorting"
 LC_ALL=C sort < ${data_dir}/text > data-prep/${set}/text
@@ -44,7 +44,7 @@ for set in "train" "test"; do
   mkdir -p data/${set}
   cp data-prep/${set}/wav.scp data/${set}
   cp data-prep/${set}/utt2spk data/${set}
-  local/spr_text_to_lexform.py data-prep/${set}/text data/${set}/text data/${set}/known_oov.txt data/dict/lexicon.txt
+  spr_local/spr_text_to_lexform.py data-prep/${set}/text data/${set}/text data/${set}/known_oov.txt data/dict/lexicon.txt
 
   utils/utt2spk_to_spk2utt.pl data/${set}/utt2spk > data/${set}/spk2utt
 done
