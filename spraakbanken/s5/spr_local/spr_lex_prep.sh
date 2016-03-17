@@ -15,8 +15,6 @@ mkdir -p data/g2p
 
 find ${data_dir} -type f -name "*.pron" | xargs cat | iconv -f CP1252 -t UTF-8 | spr_local/spr_pron_to_std.py local/dict_prep/vowels local/dict_prep/consonants data/dict/nonsilence_phones.txt data/dict/extra_questions.txt | LC_ALL=C sort -u > data/dict_nst/lexicon.txt
 
-spr_local/spr_g2p_train.sh data/dict_nst/lexicon.txt data/g2p
-
 echo "SIL" > data/dict/silence_phones.txt
 echo "NSN" >> data/dict/silence_phones.txt
 

@@ -49,6 +49,8 @@ def map_transcript(trans):
                 if PH_MAP[k]:
                     PH_USED[k + str(syl_level)] += 1
                     yield k + str(syl_level)
+                    # PH_USED[k] += 1
+                    # yield k
                 else:
                     PH_USED[k] += 1
                     yield k
@@ -74,7 +76,7 @@ def transform_lexicon(input, output, phone_list, question_list):
 
     for key, value in d.items():
         for v in set(value):
-            print("{} {}".format(key, " ".join(v)), file=output)
+            print("{}\t{}".format(key, " ".join(v)), file=output)
 
     question_map = [set() for _ in range(5)]
 

@@ -19,6 +19,8 @@ fi
 
 spr_local/spr_lex_prep.sh || error_exit "Could not prep lexicon";
 
+spr_local/spr_g2p_train.sh --cmd "slurm.pl --mem 40G" data/dict_nst/lexicon.txt data/g2p || error_exit "Could not train g2p model";
+
 spr_local/spr_data_prep.sh || error_exit "Could not prep corpus";
 
 mfccdir=mfcc

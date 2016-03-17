@@ -1,13 +1,26 @@
 #!/bin/bash
+# Begin configuration section.
+cmd=run.pl
+# End configuration options.
+
+echo "$0 $@"  # Print the command line for logging
+
+[ -f path.sh ] && . ./path.sh # source the path.
+. parse_options.sh || exit 1;
+
+if [ $# != 2 ]; then
+   echo "usage: spr_local/spr_g2p_train.sh in_lexicon g2p_dir"
+   echo "e.g.:  steps/align_fmllr.sh data/dict_nst/lexicon.txt data/g2p"
+   echo "main options (for others, see top of script file)"
+   echo "  --cmd (utils/run.pl|utils/queue.pl <queue opts>) # how to run jobs."
+   exit 1;
+fi
 
 infile=$1
 outdir=$2
 
-phonetisaurus-align --input=${infile} -ofile=${outdir}/corpus
+${cmd} JOB=1 ${outdir}/log/phonetisaurus-align.JOB phonetisaurus-align --s1s2_sep="]" --input=${infile} -ofile=${outdir}/corpus
 
-ngram-count -order 7 -kn-modify-counts-at-end -gt1min 0 -gt2min 0 \                                                                                                                                      :(
--gt3min 0 -gt4min 0 -gt5min 0 -gt6min 0 -gt7min 0 -ukndiscount \
--ukndiscount1 -ukndiscount2 -ukndiscount3 -ukndiscount4 \
--ukndiscount5 -ukndiscount6 -ukndiscount7 -text ${outdir}/corpus -lm ${outdir}/arpa
+estimate-ngram -s FixKN -o 7 -t ${outdir}/corpus -wl ${outdir}/arpa
 
 phonetisaurus-arpa2wfst --lm=${outdir}/arpa --ofile=${outdir}/wfsa

@@ -10,6 +10,10 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 (cd corpus && cut -f3- -d" " ${wd}/local/checksums/ngram | xargs tar xz --strip-components=1 -C ${data_dir} -f)
 
+iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram1-1.frk | head -n 200000 | sed "s/\s*[0-9]\+ //" > ${data_dir}/vocab
+
+
+
 for order in "2" "3"; do
 for vocab_size in "20" "80" "100" "120"; do
 
