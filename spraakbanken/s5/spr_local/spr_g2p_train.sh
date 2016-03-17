@@ -23,4 +23,4 @@ ${cmd} JOB=1 ${outdir}/log/phonetisaurus-align.JOB phonetisaurus-align --s1s2_se
 
 estimate-ngram -s FixKN -o 7 -t ${outdir}/corpus -wl ${outdir}/arpa
 
-phonetisaurus-arpa2wfst --lm=${outdir}/arpa --ofile=${outdir}/wfsa
+phonetisaurus-arpa2wfst --lm=${outdir}/arpa --ofile=${outdir}/wfsa --split="]"
