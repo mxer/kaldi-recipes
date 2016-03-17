@@ -44,7 +44,7 @@ for set in "train" "test"; do
   mkdir -p data/${set}
   cp data-prep/${set}/wav.scp data/${set}
   cp data-prep/${set}/utt2spk data/${set}
-  spr_local/spr_text_to_lexform.py data-prep/${set}/text data/${set}/text data/${set}/known_oov.txt data/dict/lexicon.txt
+  spr_local/spr_text_to_lexform.py data-prep/${set}/text data/${set}/text data/${set}/known_oov.txt data/dict_nst/lexicon.txt
 
   utils/utt2spk_to_spk2utt.pl data/${set}/utt2spk > data/${set}/spk2utt
 done

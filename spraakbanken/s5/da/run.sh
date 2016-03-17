@@ -31,7 +31,7 @@ for set in "train" "test"; do
  utils/validate_data_dir.sh data/${set} || error_exit "Directory data/${set} was not properly set up"
 done
 
-utils/prepare_lang.sh data/dict "<UNK>" data/local/lang data/lang
+spr_local/spr_lang_prep.sh || error_exit "Could not prep lang directory";
 
 steps/train_mono.sh --boost-silence 1.25 --nj 10 --cmd "$train_cmd" data/train data/lang exp/mono0a || error_exit "Train mono failed";
 steps/align_si.sh --boost-silence 1.25 --nj 10 --cmd "$train_cmd" data/train data/lang exp/mono0a exp/mono0a_ali || error_exit "Align mono failed";
