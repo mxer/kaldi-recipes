@@ -10,6 +10,7 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 (cd corpus && cut -f3- -d" " ${wd}/local/checksums/lex | xargs tar xz --strip-components=1 -C ${data_dir} -f)
 
+mkdir -p data/dict
 mkdir -p data/dict_nst
 mkdir -p data/g2p
 
