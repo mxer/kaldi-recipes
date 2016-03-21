@@ -12,6 +12,17 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram1-1.frk | head -n 200000 | sed "s/\s*[0-9]\+ //" > ${data_dir}/vocab
 
+spraakbanken/s5/spr_local/get_oov.py data/dict_nst/lexicon.txt ${data_dir}/vocab > ${data_dir}/vocab_oov
+
+phonetisaurus-g2pfst --print_scores=false --model=data/g2p/wfsa --wordlist=${data_dir}/vocab_oov | grep -P -v "\t$" > ${data_dir}/vocab_oov.lex
+
+cat ${data_dir}/vocab_oov.lex data/dict_nst/lexicon.txt | LC_ALL=C sort -u > ${data_dir}/lexicon.txt
+
+mkdir data/dict_recog
+cp data/dict/{extra_questions.txt,nonsilence_phones.txt,optional_silence.txt,silence_phones.txt} data/dict_recog
+cp ${data_dir}/lexicon.txt data/dict_recog
+
+utils/prepare_lang.sh data/dict_recog "<UNK>" data/local/lang_recog data/lang_recog
 
 
 for order in "2" "3"; do
@@ -27,12 +38,17 @@ echo "Temporary directories (should be cleaned afterwards):" ${lang_tmp_dir}
 
 mkdir -p ${langdir}
 
-cp -r data/lang/* ${langdir}/
+cp -r data/dict_recog/* ${langdir}/
 
-iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram1-1.frk | head -n ${vocab_size}000 | sed "s/\s*[0-9]\+ //" > ${langdir}/vocab
+head -n ${vocab_size}000 ${data_dir}/vocab | LC_ALL=C sort -u > ${langdir}/words.txt
 
-iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram[1-${order}].srt | spr_local/swap_counts.py | ngram-count -memuse -read - -lm $lang_tmp_dir/arpa -vocab ${langdir}/vocab -order ${order} $INTERPOLATE $KNDISCOUNT 
+iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram[1-${order}].srt | spr_local/swap_counts.py | ngram-count -memuse -read - -lm $lang_tmp_dir/arpa -vocab ${langdir}/words.txt -order ${order} $INTERPOLATE $KNDISCOUNT
 
+arpa2fst ${lang_tmp_dir}/arpa | fstprint | utils/eps2disambig.pl | utils/s2eps.pl | fstcompile --isymbols=${langdir}/words.txt \
+      --osymbols=${langdir}/words.txt  --keep_isymbols=false --keep_osymbols=false | \
+     fstrmepsilon | fstarcsort --sort_type=ilabel > ${langdir}/G.fst
+
+utils/validate_lang.pl ${langdir} || exit 1;
 done
 done
 
