@@ -12,7 +12,7 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram1-1.frk | head -n 200000 | sed "s/\s*[0-9]\+ //" > ${data_dir}/vocab
 
-spraakbanken/s5/spr_local/get_oov.py data/dict_nst/lexicon.txt ${data_dir}/vocab > ${data_dir}/vocab_oov
+spr_local/get_oov.py data/dict_nst/lexicon.txt ${data_dir}/vocab > ${data_dir}/vocab_oov
 
 phonetisaurus-g2pfst --print_scores=false --model=data/g2p/wfsa --wordlist=${data_dir}/vocab_oov | grep -P -v "\t$" > ${data_dir}/vocab_oov.lex
 
