@@ -19,7 +19,7 @@ fi
 infile=$1
 outdir=$2
 
-${cmd} JOB=1 ${outdir}/log/phonetisaurus-align.JOB phonetisaurus-align --s1s2_sep="]" --input=${infile} -ofile=${outdir}/corpus
+${cmd} JOB=1 ${outdir}/log/phonetisaurus-align.JOB phonetisaurus-align --s1s2_sep="]" --input=${infile} -ofile=${outdir}/corpus \| echo
 
 estimate-ngram -s FixKN -o 7 -t ${outdir}/corpus -wl ${outdir}/arpa
 
