@@ -5,28 +5,23 @@ wd=$(pwd)
 (cd corpus && md5sum -c ${wd}/local/checksums/ngram) || exit "The spraakbanken ngram file gave unexpected md5 sums"
 
 data_dir=$(mktemp -d)
-
 echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 (cd corpus && cut -f3- -d" " ${wd}/local/checksums/ngram | xargs tar xz --strip-components=1 -C ${data_dir} -f)
-
-iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram1-1.frk | head -n 200000 | sed "s/\s*[0-9]\+ //" > ${data_dir}/vocab
-
-spr_local/get_oov.py data/dict_nst/lexicon.txt ${data_dir}/vocab > ${data_dir}/vocab_oov
-
-phonetisaurus-g2pfst --print_scores=false --model=data/g2p/wfsa --wordlist=${data_dir}/vocab_oov | grep -P -v "\t$" > ${data_dir}/vocab_oov.lex
-
-cat ${data_dir}/vocab_oov.lex data/dict_nst/lexicon.txt | LC_ALL=C sort -u > ${data_dir}/lexicon.txt
 
 mkdir data/dict_recog
 cp data/dict/{extra_questions.txt,nonsilence_phones.txt,optional_silence.txt,silence_phones.txt} data/dict_recog
 cp ${data_dir}/lexicon.txt data/dict_recog
 
+iconv -f ISO8859-15 -t UTF-8 ${data_dir}/ngram1-1.frk | sed "s/\s*[0-9]\+ //" > ${data_dir}/vocab
+spr_local/create_vocab_lex.py data/dict_nst/lexicon.txt ${data_dir}/vocab 20000 ${data_dir}/known.lex ${data_dir}/oov.list ${data_dir}/real_vocab
+phonetisaurus-g2pfst --print_scores=false --model=data/g2p/wfsa --wordlist=${data_dir}/oov.list | grep -P -v "\t$" > ${data_dir}/oov.lex
+cat ${data_dir}/oov.lex ${data_dir}/known.lex | LC_ALL=C sort -u > data/dict_recog/lexicon.txt
+
 utils/prepare_lang.sh data/dict_recog "<UNK>" data/local/lang_recog data/lang_recog
 
-
-for order in "2" "3"; do
 for vocab_size in "20" "80" "100" "120"; do
+for order in "2" "3"; do
 
 INTERPOLATE=$(seq 1 $order | sed "s/^/-interpolate/" | tr "\n" " ")
 KNDISCOUNT=$(seq 1 $knd | sed "s/^/-kndiscount/" | tr "\n" " ")
@@ -38,9 +33,9 @@ echo "Temporary directories (should be cleaned afterwards):" ${lang_tmp_dir}
 
 mkdir -p ${langdir}
 
-cp -r data/dict_recog/* ${langdir}/
+cp -r data/lang_recog/* ${langdir}/
 
-head -n ${vocab_size}000 ${data_dir}/vocab | LC_ALL=C sort -u > ${langdir}/words.txt
+head -n ${vocab_size}000 ${data_dir}/real_vocab | LC_ALL=C sort -u > ${langdir}/words.txt
 
 iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram[1-${order}].srt | spr_local/swap_counts.py | ngram-count -memuse -read - -lm $lang_tmp_dir/arpa -vocab ${langdir}/words.txt -order ${order} $INTERPOLATE $KNDISCOUNT
 
