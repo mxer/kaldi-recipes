@@ -11,7 +11,6 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 mkdir data/dict_recog
 cp data/dict/{extra_questions.txt,nonsilence_phones.txt,optional_silence.txt,silence_phones.txt} data/dict_recog
-cp ${data_dir}/lexicon.txt data/dict_recog
 
 iconv -f ISO8859-15 -t UTF-8 ${data_dir}/ngram1-1.frk | sed "s/\s*[0-9]\+ //" > ${data_dir}/vocab
 spr_local/create_vocab_lex.py data/dict_nst/lexicon.txt ${data_dir}/vocab 20000 ${data_dir}/known.lex ${data_dir}/oov.list ${data_dir}/real_vocab
@@ -35,9 +34,9 @@ mkdir -p ${langdir}
 
 cp -r data/lang_recog/* ${langdir}/
 
-head -n ${vocab_size}000 ${data_dir}/real_vocab | LC_ALL=C sort -u > ${langdir}/words.txt
+head -n ${vocab_size}000 ${data_dir}/real_vocab | LC_ALL=C sort -u > ${langdir}/vocab
 
-iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram[1-${order}].srt | spr_local/swap_counts.py | ngram-count -memuse -read - -lm $lang_tmp_dir/arpa -vocab ${langdir}/words.txt -order ${order} $INTERPOLATE $KNDISCOUNT
+iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram[1-${order}].srt | spr_local/swap_counts.py | ngram-count -memuse -read - -lm $lang_tmp_dir/arpa -vocab ${langdir}/vocab -order ${order} $INTERPOLATE $KNDISCOUNT
 
 arpa2fst ${lang_tmp_dir}/arpa | fstprint | utils/eps2disambig.pl | utils/s2eps.pl | fstcompile --isymbols=${langdir}/words.txt \
       --osymbols=${langdir}/words.txt  --keep_isymbols=false --keep_osymbols=false | \

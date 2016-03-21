@@ -21,23 +21,33 @@ def main(lexicon_file, vocab_file, desired_size, known_lex, oov_lex, real_vocab)
 
     lexicon["<s>"] = {"SIL",}
     lexicon["</s>"] = {"SIL",}
+    
+    print("<UNK>\tNSN", file=known_lex)
 
-    punctuation = "\\/?.,!;:\"\'()-"
+    punctuation = "\\/?.,!;:\"\'()-=+[]"
     for p in punctuation:
-        lexicon[p] = {"_",}
+        lexicon[p] = {"SIL",}
+
+    blacklist = "%§"
 
     count = 0
     for v in vocab_file:
         v = v.strip()
-
+       
         if count >= desired_size:
             break
-        
+        if v == "<s>" or v == "</s>":
+            print(v, file=real_vocab)
+            continue
+  
         if v in lexicon:
             for t in lexicon[v]:
                 print("{}\t{}".format(v, t), file=known_lex)
             count += 1
             print(v, file=real_vocab)
+            continue
+
+        if any(x in blacklist for x in v):
             continue
         
         if any(x in string.digits for x in v):
@@ -45,7 +55,7 @@ def main(lexicon_file, vocab_file, desired_size, known_lex, oov_lex, real_vocab)
 
         v2 = v.strip(punctuation)
         if len(v2) == 0:
-            print("{}\t_".format(v), file=known_lex)
+            print("{}\tSIL".format(v), file=known_lex)
             count += 1
             print(v, file=real_vocab)
             continue
