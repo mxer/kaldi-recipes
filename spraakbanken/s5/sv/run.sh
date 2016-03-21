@@ -19,7 +19,7 @@ fi
 
 spr_local/spr_lex_prep.sh || error_exit "Could not prep lexicon";
 
-spr_local/spr_g2p_train.sh --cmd "slurm.pl --mem 30G" data/dict_nst/lexicon.txt data/g2p || error_exit "Could not train g2p model";
+spr_local/spr_g2p_train.sh --cmd "slurm.pl --mem 30G" data/dict_nst/lexicon.txt data/g2p &
 
 spr_local/spr_data_prep.sh || error_exit "Could not prep corpus";
 
@@ -32,6 +32,8 @@ for set in "train" "test"; do
 
  utils/validate_data_dir.sh data/${set} || error_exit "Directory data/${set} was not properly set up"
 done
+
+wait
 
 spr_local/spr_lang_prep.sh || error_exit "Could not prep lang directory";
 
