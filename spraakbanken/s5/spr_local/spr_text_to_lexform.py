@@ -44,7 +44,7 @@ def map(text_in, text_out, oov_out, lexicon):
             if word not in lexicon:
                 if word not in oov:
                     oov.add(word)
-                    print("OOV WORD: {}".format(word))
+                    # print("OOV WORD: {}".format(word))
 
         print("{} {}".format(key, " ".join(sent)), file=text_out)
 
