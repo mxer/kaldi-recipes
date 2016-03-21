@@ -9,3 +9,4 @@ exp
 corpus
 cmd.sh
 path.sh
+slurm*
