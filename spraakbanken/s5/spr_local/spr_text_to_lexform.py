@@ -51,6 +51,8 @@ def map(text_in, text_out, oov_out, lexicon):
     for word in sorted(oov):
         print(word, file=oov_out)
 
+    print("{} oov words".format(len(oov)), file=sys.stderr)
+
 
 if __name__ == "__main__":
     text_in = open(sys.argv[1], encoding='utf-8')
