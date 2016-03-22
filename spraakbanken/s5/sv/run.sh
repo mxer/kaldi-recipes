@@ -37,6 +37,7 @@ done
 wait
 
 spr_local/spr_lang_prep.sh || error_exit "Could not prep lang directory";
+spr_local/spr_lm_prep.sh &
 
 steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a || error_exit "Train mono failed";
 steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a exp/mono0a_ali || error_exit "Align mono failed";
@@ -44,6 +45,7 @@ steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/t
 steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2000 10000 data/train data/lang exp/mono0a_ali exp/tri1 || error_exit "Triphone-delta failed";
 steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/tri1 exp/tri1_ali || error_exit "Align tri failed";
 
+wait
 utils/mkgraph.sh data/lang_nst_2g_20k exp/tri1 exp/tri1/graph_nst_2g_20k
 steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/tri1/graph_nst_2g_20k data/test exp/tri1/decode_nst_2g_20k_test
 

@@ -37,6 +37,7 @@ done
 wait
 
 spr_local/spr_lang_prep.sh || error_exit "Could not prep lang directory";
+spr_local/spr_lm_prep.sh &
 
 steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a || error_exit "Train mono failed";
 steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a exp/mono0a_ali || error_exit "Align mono failed";
