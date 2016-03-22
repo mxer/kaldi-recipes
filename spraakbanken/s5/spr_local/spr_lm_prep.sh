@@ -22,8 +22,7 @@ utils/prepare_lang.sh data/dict_recog "<UNK>" data/local/lang_recog data/lang_re
 for vocab_size in "20" "80" "100" "120"; do
 for order in "2" "3"; do
 
-INTERPOLATE=$(seq 1 $order | sed "s/^/-interpolate/" | tr "\n" " ")
-KNDISCOUNT=$(seq 1 $knd | sed "s/^/-kndiscount/" | tr "\n" " ")
+
 
 langdir=data/lang_nst_${order}g_${vocab_size}k
 
@@ -36,7 +35,26 @@ cp -r data/lang_recog/* ${langdir}/
 
 head -n ${vocab_size}000 ${data_dir}/real_vocab | LC_ALL=C sort -u > ${langdir}/vocab
 
-iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram[1-${order}].srt | spr_local/swap_counts.py | ngram-count -memuse -read - -lm $lang_tmp_dir/arpa -vocab ${langdir}/vocab -order ${order} $INTERPOLATE $KNDISCOUNT
+for knd in $(seq ${order} -1 1); do
+
+
+    INTERPOLATE=$(seq 1 ${order} | sed "s/^/-interpolate/" | tr "\n" " ")
+    KNDISCOUNT=$(seq 1 $knd | sed "s/^/-kndiscount/" | tr "\n" " ")
+    WBDISCOUNT=""
+    if [ $knd != $NGRAM_ORDER ]; then
+        WBDISCOUNT=$(seq $((knd+1)) ${order} | sed "s/^/-wbdiscount/" | tr "\n" " ")
+    fi
+
+    echo $KNDISCOUNT $WBDISCOUNT
+
+
+    iconv -f ISO8859-15 -t UTF-8 $data_dir/ngram[1-${order}].srt | spr_local/swap_counts.py | ngram-count -memuse -read - -lm $lang_tmp_dir/arpa -vocab ${langdir}/vocab -order ${order} $INTERPOLATE $KNDISCOUNT $WBDISCOUNT
+
+    if [ $? == 0 ]; then
+        break
+    fi
+done
+
 
 arpa2fst ${lang_tmp_dir}/arpa | fstprint | utils/eps2disambig.pl | utils/s2eps.pl | fstcompile --isymbols=${langdir}/words.txt \
       --osymbols=${langdir}/words.txt  --keep_isymbols=false --keep_osymbols=false | \
