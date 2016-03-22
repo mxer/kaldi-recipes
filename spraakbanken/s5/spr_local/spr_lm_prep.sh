@@ -37,11 +37,14 @@ cp -r data/lang_recog/* ${langdir}/
 
 head -n ${vocab_size}000 ${data_dir}/real_vocab | LC_ALL=C sort -u > ${langdir}/vocab
 
-for knd in $(seq ${order} -1 1); do
+for knd in $(seq ${order} -1 0); do
 
 
     INTERPOLATE=$(seq 1 ${order} | sed "s/^/-interpolate/" | tr "\n" " ")
-    KNDISCOUNT=$(seq 1 $knd | sed "s/^/-kndiscount/" | tr "\n" " ")
+    KNDISCOUNT=""
+    if [ $knd -ge 1 ]; then
+         KNDISCOUNT=$(seq 1 $knd | sed "s/^/-kndiscount/" | tr "\n" " ")
+    fi
     WBDISCOUNT=""
     if [ $knd != ${order} ]; then
         WBDISCOUNT=$(seq $((knd+1)) ${order} | sed "s/^/-wbdiscount/" | tr "\n" " ")
