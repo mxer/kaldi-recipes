@@ -28,7 +28,7 @@ def main(lexicon_file, vocab_file, desired_size, known_lex, oov_lex, real_vocab)
     for p in punctuation:
         lexicon[p] = {"SIL",}
 
-    blacklist = "%§"
+    blacklist = "*#%§"
 
     count = 0
     for v in vocab_file:
