@@ -41,7 +41,7 @@ for knd in $(seq ${order} -1 1); do
     INTERPOLATE=$(seq 1 ${order} | sed "s/^/-interpolate/" | tr "\n" " ")
     KNDISCOUNT=$(seq 1 $knd | sed "s/^/-kndiscount/" | tr "\n" " ")
     WBDISCOUNT=""
-    if [ $knd != $NGRAM_ORDER ]; then
+    if [ $knd != ${order} ]; then
         WBDISCOUNT=$(seq $((knd+1)) ${order} | sed "s/^/-wbdiscount/" | tr "\n" " ")
     fi
 
