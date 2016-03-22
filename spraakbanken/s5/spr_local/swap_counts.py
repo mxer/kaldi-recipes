@@ -3,6 +3,6 @@
 import fileinput
 
 for line in fileinput.input():
-    parts = line.strip().split()
+    parts = line.strip("\n ").split(" ")
     print("{} {}".format(" ".join(parts[1:]), parts[0]))
 
