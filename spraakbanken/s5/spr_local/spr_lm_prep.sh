@@ -9,6 +9,8 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 (cd corpus && cut -f3- -d" " ${wd}/local/checksums/ngram | xargs tar xz --strip-components=1 -C ${data_dir} -f)
 
+if [ -d data/dict_recog ]; then rm -Rf data/dict_recog; fi
+
 mkdir data/dict_recog
 cp data/dict/{extra_questions.txt,nonsilence_phones.txt,optional_silence.txt,silence_phones.txt} data/dict_recog
 
