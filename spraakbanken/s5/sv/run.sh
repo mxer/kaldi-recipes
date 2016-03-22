@@ -44,6 +44,10 @@ steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/t
 steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2000 10000 data/train data/lang exp/mono0a_ali exp/tri1 || error_exit "Triphone-delta failed";
 steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/tri1 exp/tri1_ali || error_exit "Align tri failed";
 
+utils/mkgraph.sh data/lang_nst_2g_20k exp/tri1 exp/tri1/graph_nst_2g_20k
+steps/decode.sh --nj 10 --cmd "$decode_cmd" exp/tri1/graph_nst_2g_20k data/test exp/tri1/decode_nst_2g_20k_test
+
+
 steps/train_deltas.sh --cmd "$train_cmd" 2500 15000 data/train data/lang exp/tri1_ali exp/tri2a || error_exit "delta-delta training failed";
 steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train data/lang exp/tri1_ali exp/tri2b || error_exit "lda_mllt training failed";
 steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2b exp/tri2b_ali || "Align tri2b failed";
