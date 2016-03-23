@@ -87,7 +87,7 @@ if __name__ == "__main__":
         exit("4 required arguments: source data directory, output lexicon, vowel file, consonants file")
 
     init_ph_map(*sys.argv[3:5])
-    out_file = open(sys.argv[2], encoding='utf-8')
+    out_file = open(sys.argv[2], 'w', encoding='utf-8')
 
     for root, dirs, files in os.walk(os.path.normpath(sys.argv[1])):
         for f in files:
