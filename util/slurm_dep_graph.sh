@@ -4,6 +4,8 @@ mkdir -p log
 LAST=""
 declare -A jobmap
 
+function join { local IFS="$1"; shift; echo "$*"; }
+
 function job {
 name=$1
 mem=$2
@@ -37,7 +39,7 @@ esac
 deparg=""
 if [ ${#dep[@]} -gt 0 ]
 then
-    IFS=":"; depp=${dep[*]}
+    depp=$(join : "${dep[@]}")
     deparg="--dependency=afterok:$depp"
 fi
 
