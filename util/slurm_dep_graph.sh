@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir log
+mkdir -p log
 LAST=""
 declare -A jobmap
 
@@ -50,10 +50,5 @@ LAST=$rid
 
 jobmap["$name"]=$rid
 
-echo ${#jobmap[@]}
-echo "${!jobmap[@]}"
-
-echo
-echo
-echo
+echo $rid >> log/slurm_ids
 }

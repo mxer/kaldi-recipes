@@ -42,7 +42,7 @@ def map_transcript(trans):
 
 
 def transform_lexicon(input, output, phone_list, question_list):
-    d = {"<UNK>": [("NSN",)], }
+    d = {"<UNK>": [("SPN",)], }
     for line in input:
         if "\\" not in line:
             continue

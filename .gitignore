@@ -10,3 +10,4 @@ corpus
 cmd.sh
 path.sh
 slurm*
+log
