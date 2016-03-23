@@ -11,7 +11,7 @@ if [ -d data-prep/corpus ]; then
     done
 
     if [ $ok -eq 0 ]; then
-        echo "There seems to be a corpus in data-prep corpus, so we assume we don't need the original corpus files. If data preparation fails, remove data-prep/corpus and try again"
+        echo "There seems to be a corpus in data-prep/corpus, so we assume we don't need the original corpus files. If data preparation fails, remove data-prep/corpus and try again"
         exit 0
     fi
     rm -Rf data-prep/corpus
@@ -27,7 +27,7 @@ data_dir=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${raw_files_dir} ${data_dir}
 
 echo $(date) "Start untarring"
-for t in $(cut -f3- -d" " local/checksums/${set}); do
+for t in $(cut -f3- -d" " local/checksums/corpus); do
     tar xzf corpus/${t} --strip-components=3 -C ${raw_files_dir}
 done
 
