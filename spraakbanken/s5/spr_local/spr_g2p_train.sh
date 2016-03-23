@@ -1,6 +1,5 @@
 #!/bin/bash
 # Begin configuration section.
-cmd=run.pl
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -19,7 +18,7 @@ fi
 infile=$1
 outdir=$2
 
-${cmd} JOB=1 ${outdir}/log/phonetisaurus-align.JOB phonetisaurus-align --s1s2_sep="]" --input=${infile} -ofile=${outdir}/corpus \| echo
+phonetisaurus-align --s1s2_sep="]" --input=${infile} -ofile=${outdir}/corpus \| echo
 
 estimate-ngram -s FixKN -o 7 -t ${outdir}/corpus -wl ${outdir}/arpa
 

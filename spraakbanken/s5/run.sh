@@ -21,7 +21,7 @@ if [ ! -d "data-prep" ]; then
 fi
 
 job lex_prep 4 4 NONE  -- spr_local/spr_lex_prep.sh
-job g2p_train 4 4 NONE -- spr_local/spr_g2p_train.sh --cmd "${base_cmd} --mem 30G" data/dict_nst/lexicon.txt data/g2p
+job g2p_train 30 4 LAST -- spr_local/spr_g2p_train.sh data/dict_nst/lexicon.txt data/g2p
 job data_prep 4 4 NONE -- spr_local/spr_data_prep.sh
 
 mfccdir=mfcc
@@ -48,7 +48,7 @@ job ali_tri1 2 40 LAST       -- steps/align_si.sh --nj ${numjobs} --cmd "$train_
 job tra_tri2a 2 40 ali_tri1 -- steps/train_deltas.sh --cmd "$train_cmd" 2500 15000 data/train data/lang exp/tri1_ali exp/tri2a || error_exit "delta-delta training failed";
 job ali_tri2b 2 40 LAST     -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2a exp/tri2a_ali || "Align tri2b failed";
 
-job ali_tri2b 2 40 ali_tri1 -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train data/lang exp/tri1_ali exp/tri2b || error_exit "lda_mllt training failed";
+job tra_tri2b 2 40 ali_tri1 -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train data/lang exp/tri1_ali exp/tri2b || error_exit "lda_mllt training failed";
 job ali_tri2b 2 40 LAST     -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2b exp/tri2b_ali || "Align tri2b failed";
 
 job mkg_mono0a 2 40 tra_mono0a,lm_prep -- utils/mkgraph.sh --mono data/lang_nst_2g_20k exp/mono0a exp/mono0a/graph_nst_2g_20k
