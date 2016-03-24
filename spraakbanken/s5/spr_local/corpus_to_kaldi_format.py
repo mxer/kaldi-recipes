@@ -54,6 +54,9 @@ def main(in_dir, out_scp, out_dir):
             except subprocess.CalledProcessError:
                 err_counter["Reading file error"] += 1
                 continue
+            except ValueError:
+                err_counter["Reading file error"] += 1
+                continue
 
             if num_sam * 4 != int(valid[11]) - int(valid[10]):
                 err_counter["Length incorrect error"] += 1
