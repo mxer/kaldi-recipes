@@ -37,6 +37,7 @@ spr_local/swap_ngram_counts.py ${data_dir}/ngram1-1.frk data-prep/ngram/vocab
 order=1
 while [ -f "${data_dir}/ngram${order}.srt" ]; do
 spr_local/swap_ngram_counts.py ${data_dir}/ngram${order}.srt data-prep/ngram/${order}count
+order=$((order+1))
 done
 
 
