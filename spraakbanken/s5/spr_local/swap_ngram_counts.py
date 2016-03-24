@@ -13,6 +13,6 @@ if __name__ == "__main__":
     if len(sys.argv) != 3:
         exit("2 required arguments: input, output")
 
-    in_f = open(sys.argv[1], encoding='cp1252')
+    in_f = open(sys.argv[1], encoding='cp1252', errors='replace')
     out_f = open(sys.argv[2], 'w', encoding='utf-8')
     swap_counts(in_f, out_f)
