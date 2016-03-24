@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 LC_ALL=C
 
 if [ -d data-prep/corpus ]; then
