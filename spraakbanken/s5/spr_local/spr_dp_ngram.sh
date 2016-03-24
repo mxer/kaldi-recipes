@@ -30,6 +30,8 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
 echo $(date) "Copy files to right locations"
 
+mkdir -p data-prep/ngram
+
 spr_local/swap_ngram_counts.py ${data_dir}/ngram1-1.frk data-prep/ngram/vocab
 
 order=1
