@@ -5,7 +5,7 @@ import sys
 
 def swap_counts(in_f, out_f):
     for line in in_f:
-        count, rest = line.split(' ', maxsplit=1)
+        count, rest = line.strip(" \n").split(' ', maxsplit=1)
         print("{} {}".format(rest, count), file=out_f)
 
 
