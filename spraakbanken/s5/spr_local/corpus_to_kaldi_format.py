@@ -40,11 +40,14 @@ def main(in_dir, out_scp, out_dir):
 
             utt_type = record[9]
             utt_text = " ".join(valid[0].split())
+            if wav_key not in wav_files:
+                err_counter["No such wavfile"] += 1
+                continue
+
             file_name = wav_files[wav_key]
 
             if os.stat(file_name).st_size == 0:
                 err_counter["File empty error"] += 1
-                print("{} is empty".format(file_name))
                 continue
             try:
                 num_sam = int(subprocess.check_output("soxi -s {}".format(file_name), stderr=subprocess.STDOUT, shell=True))
@@ -65,7 +68,7 @@ def main(in_dir, out_scp, out_dir):
                 print("{} {}".format(utt_key, utt_type), file=fd_utt2type)
 
     for type, count in err_counter.most_common():
-        print("{} errors of type {} occured".format(count, type), file=sys.stderr)
+        print("{} errors of type \"{}\" occured".format(count, type), file=sys.stderr)
 
 
 if __name__ == "__main__":
