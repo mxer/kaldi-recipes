@@ -2,7 +2,7 @@
 
 set -e
 
-LC_ALL=C
+export LC_ALL=C
 
 if [ -d data-prep/lexicon ]; then
     ok=0
@@ -31,14 +31,15 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 echo $(date) "Transform lexicon"
 spr_local/nst_lex_to_kaldi_format.py ${data_dir} ${data_dir}/lexicon.txt local/dict_prep/vowels local/dict_prep/consonants
 
-sort -u < ${data_dir}/lexicon.txt > data/lexicon/lexicon.txt
+mkdir -p data-prep/lexicon
+sort -u < ${data_dir}/lexicon.txt > data-prep/lexicon/lexicon.txt
 
 echo $(date) "Train g2p"
 phonetisaurus-align --s1s2_sep="]" --input=data/lexicon/lexicon.txt -ofile=${data_dir}/corpus | echo
 
 estimate-ngram -s FixKN -o 7 -t ${data_dir}/corpus -wl ${data_dir}/arpa
 
-phonetisaurus-arpa2wfst --lm=${data_dir}/arpa --ofile=data/lexicon/g2p_wfsa --split="]"
+phonetisaurus-arpa2wfst --lm=${data_dir}/arpa --ofile=data-prep/lexicon/g2p_wfsa --split="]"
 
 echo $(date) "Take out the trash"
 rm -Rf ${data_dir}

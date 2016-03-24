@@ -2,7 +2,7 @@
 
 set -e
 
-LC_ALL=C
+export LC_ALL=C
 
 if [ -d data-prep/ngram ]; then
     ok=0

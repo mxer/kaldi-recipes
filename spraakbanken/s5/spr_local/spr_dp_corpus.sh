@@ -2,7 +2,7 @@
 
 set -e
 
-LC_ALL=C
+export LC_ALL=C
 
 if [ -d data-prep/corpus ]; then
     ok=0
