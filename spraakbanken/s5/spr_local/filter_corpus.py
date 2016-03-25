@@ -34,7 +34,7 @@ def main(source_dir, output_dir, specfile):
             continue
         final_utts.add(key)
 
-    for f in "utt2type", "wav.scp", "text", "utt2spk":
+    for f in "utt2type", "wav.scp", "text.orig", "utt2spk":
         filter_uttkey_file(os.path.join(source_dir, f), os.path.join(output_dir, f), final_utts)
 
 

@@ -25,7 +25,7 @@ def main(in_dir, out_scp, out_dir):
                 key = parts[-1] + os.path.splitext(f)[0]
                 spl_files[key.lower()] = os.path.join(root, f)
 
-    fd_text = open(os.path.join(out_dir, 'text'), 'w', encoding='utf-8')
+    fd_text = open(os.path.join(out_dir, 'text.orig'), 'w', encoding='utf-8')
     fd_scp = open(out_scp, 'w', encoding='utf-8')
     fd_utt2spk = open(os.path.join(out_dir, 'utt2spk'), 'w', encoding='utf-8')
     fd_utt2type = open(os.path.join(out_dir, 'utt2type'), 'w', encoding='utf-8')

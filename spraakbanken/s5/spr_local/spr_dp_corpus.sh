@@ -7,7 +7,7 @@ export LC_ALL=C
 
 if [ -d data-prep/corpus ]; then
     ok=0
-    for f in "wav.ark" "wav.scp" "text" "utt2spk" "utt2set" "utt2type"; do
+    for f in "wav.ark" "wav.scp" "text.orig" "utt2spk" "utt2set" "utt2type"; do
         if [ ! -f data-prep/corpus/$f ]; then
             ok=1
         fi
