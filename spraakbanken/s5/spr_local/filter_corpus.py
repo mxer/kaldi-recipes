@@ -25,8 +25,6 @@ def filter_uttkey_file(file_in, file_out, utt_keys):
 def main(source_dir, output_dir, specfile):
     specs = tuple(line.strip() for line in open(specfile, encoding='utf-8').readlines())
 
-    types = read_uttkey_file(os.path.join(source_dir, 'utt2type'))
-
     key_regex = re.compile(specs[0])
     type_regex = re.compile(specs[1])
 

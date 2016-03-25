@@ -1,4 +1,5 @@
 #!/bin/bash
+#SBATCH -t 1-00:00:00
 
 set -e
 

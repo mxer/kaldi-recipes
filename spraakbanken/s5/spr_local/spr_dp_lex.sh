@@ -1,4 +1,6 @@
 #!/bin/bash
+#SBATCH -t 4:00:00
+#SBATCH --mem-per-cpu 30G
 
 set -e
 
