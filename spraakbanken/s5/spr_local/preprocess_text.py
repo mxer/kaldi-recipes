@@ -57,7 +57,7 @@ def main(dir, lexicon):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        exit("3 required arguments: directory, lexicon")
+    if len(sys.argv) != 3:
+        exit("2 required arguments: directory, lexicon")
 
     main(*sys.argv[1:])
