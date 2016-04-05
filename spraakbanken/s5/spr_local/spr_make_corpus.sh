@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+export LC_ALL=C
+
 # Begin configuration section.
 # End configuration options.
 

@@ -3,6 +3,8 @@
 import os
 import sys
 
+import collections
+
 
 def map_word(word, lexicon, first_word_in_sentence):
     if "\\" in word:
@@ -36,7 +38,7 @@ def map_word(word, lexicon, first_word_in_sentence):
 
 def main(dir, lexicon):
     lexicon = {l.strip().split("\t")[0] for l in open(lexicon, encoding='utf-8')}
-    vocab = set()
+    vocab = collections.Counter()
 
     cleaned_f = open(os.path.join(dir, 'text'), 'w', encoding='utf-8')
 
@@ -47,13 +49,13 @@ def main(dir, lexicon):
             sent.extend(map_word(word, lexicon, i == 0))
 
         for word in sent:
-            vocab.add(word)
+            vocab[word] += 1
 
         print("{} {}".format(key, " ".join(sent)), file=cleaned_f)
 
     with open(os.path.join(dir, 'vocab'), 'w', encoding='utf-8') as vocab_f:
-        for word in sorted(vocab):
-            print(word, file=vocab_f)
+        for word, count in vocab.most_common():
+            print("{}\t{}".format(word, count), file=vocab_f)
 
 
 if __name__ == "__main__":
