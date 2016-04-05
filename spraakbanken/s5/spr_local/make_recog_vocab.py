@@ -12,7 +12,7 @@ def main(in_vocab, size, out_vocab,):
         if any(x.isdigit() for x in word):
             continue
 
-        punctuation = "\\/?.,!;:\"\'()-=+[]"
+        punctuation = "\\/?.,!;:\"\'()-=+[]%§"
         if any(x in punctuation for x in word):
             continue
 
