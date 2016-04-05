@@ -19,21 +19,23 @@ if [ $# != 3 ]; then
    exit 1;
 fi
 
-outfile=$1
+outdir=$1
 vocabsize=$2
 order=$3
 
-if [ -d ${outfile} ]; then rm -Rf ${outfile}; fi
-mkdir -p ${outfile}/dict
+if [ -d ${outdir} ]; then rm -Rf ${outdir}; fi
+mkdir -p ${outdir}
 
 tmp_dir=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${tmp_dir}
 
-spr_local/make_recog_vocab.py data-prep/ngram/vocab ${vocabsize}000 ${outfile}/dict/vocab
+spr_local/make_recog_vocab.py data-prep/ngram/vocab ${vocabsize}000 ${tmp_dir}/vocab
 
-spr_local/spr_make_lex.sh ${outfile}/dict ${outfile}/dict/vocab
+spr_local/spr_make_lex.sh ${outdir}/dict ${tmp_dir}/vocab
 
-utils/prepare_lang.sh ${outfile}/dict "<UNK>" ${outfile}/local ${outfile}
+mv ${tmp_dir}/vocab ${outdir}/dict/vocab
+
+utils/prepare_lang.sh ${outdir}/dict "<UNK>" ${outdir}/local ${outdir}
 
 
 for knd in $(seq ${order} -1 0); do
@@ -49,15 +51,15 @@ for knd in $(seq ${order} -1 0); do
 
     echo $KNDISCOUNT $WBDISCOUNT
 
-    cat data-prep/ngram/[1-${order}]count | ngram-count -memuse -read - -lm ${outfile}/arpa -vocab ${outfile}/dict/vocab -order ${order} $INTERPOLATE $KNDISCOUNT $WBDISCOUNT
+    cat data-prep/ngram/[1-${order}]count | ngram-count -memuse -read - -lm ${outdir}/arpa -vocab ${outdir}/dict/vocab -order ${order} $INTERPOLATE $KNDISCOUNT $WBDISCOUNT
 
     if [ $? == 0 ]; then
         break
     fi
 done
 
-arpa2fst ${outfile}/arpa | fstprint | utils/eps2disambig.pl | utils/s2eps.pl | fstcompile --isymbols=${outfile}/words.txt \
-      --osymbols=${outfile}/words.txt  --keep_isymbols=false --keep_osymbols=false | \
-     fstrmepsilon | fstarcsort --sort_type=ilabel > ${outfile}/G.fst
+arpa2fst ${outdir}/arpa | fstprint | utils/eps2disambig.pl | utils/s2eps.pl | fstcompile --isymbols=${outdir}/words.txt \
+      --osymbols=${outdir}/words.txt  --keep_isymbols=false --keep_osymbols=false | \
+     fstrmepsilon | fstarcsort --sort_type=ilabel > ${outdir}/G.fst
 
-utils/validate_lang.pl ${outfile}
+utils/validate_lang.pl ${outdir}
