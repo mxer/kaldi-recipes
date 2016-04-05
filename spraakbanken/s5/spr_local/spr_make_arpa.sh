@@ -51,9 +51,11 @@ for knd in $(seq ${order} -1 0); do
 
     echo $KNDISCOUNT $WBDISCOUNT
 
-    cat data-prep/ngram/[1-${order}]count | ngram-count -memuse -read - -lm ${outdir}/arpa -vocab ${outdir}/dict/vocab -order ${order} $INTERPOLATE $KNDISCOUNT $WBDISCOUNT
+    again=0
 
-    if [ $? == 0 ]; then
+    cat data-prep/ngram/[1-${order}]count | ngram-count -memuse -read - -lm ${outdir}/arpa -vocab ${outdir}/dict/vocab -order ${order} $INTERPOLATE $KNDISCOUNT $WBDISCOUNT || again=1
+
+    if [ $again -eq 0 ]; then
         break
     fi
 done
