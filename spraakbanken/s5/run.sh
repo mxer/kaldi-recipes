@@ -20,27 +20,28 @@ if [ ! -d "data-prep" ]; then
  error_exit "The directory data-prep needs to exist. Either do 'mkdir data-prep', or make it a symlink to somewhere"
 fi
 
-job lex_prep 4 4 NONE  -- spr_local/spr_lex_prep.sh
-job g2p_train 30 4 LAST -- spr_local/spr_g2p_train.sh data/dict_nst/lexicon.txt data/g2p
-job data_prep 4 4 NONE -- spr_local/spr_data_prep.sh
+job prep_lex 30 4 NONE -- spr_local/spr_dp_lex.sh
+job prep_corpus 4 24 NONE -- spr_local/spr_dp_corpus.sh
+job prep_ngram 4 4 NONE -- spr_local/spr_dp_ngram.sh
+
+job make_lex 4 4 prep_lex -- spr_local/spr_make_lex.sh
+job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict "<UNK>" data/local/lang data/lang
+
+job make_corpus_train 4 4 prep_lex,prep_corpus -- spr_local/spr_make_corpus.sh data/train train_clean
+job make_corpus_dev 4 4 prep_lex,prep_corpus -- spr_local/spr_make_corpus.sh data/dev dev
+
+job make_arpa_20k_2g 4 4 prep_lex,prep_ngram -- spr_local/spr_make_arpa.sh data/20k_2gram 20 2
 
 mfccdir=mfcc
 numjobs=40
 
-for set in "train" "test"; do
- job mfcc_$set 4 4 data_prep -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj 20 data/${set} exp/make_mfcc/${set} ${mfccdir}
+for set in "train" "dev"; do
+ job mfcc_$set 4 4 make_corpus_$set -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj 20 data/${set} exp/make_mfcc/${set} ${mfccdir}
  job cmvn_$set 4 4 LAST      -- steps/compute_cmvn_stats.sh data/${set} exp/make_mfcc/${set} ${mfccdir}
  job val_data_$set 4 4 LAST  -- utils/validate_data_dir.sh data/${set}
 done
 
-
-job lang_prep 4 4 data_prep,g2p_train,lex_prep \
- -- spr_local/spr_lang_prep.sh
-
-job lm_prep 60 4 LAST \
- -- spr_local/spr_lm_prep.sh
-
-job tra_mono0a 2 40 val_data_train,lang_prep \
+job tra_mono0a 2 40 val_data_train,make_lang \
  -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a 
 job ali_mono0a 2 40 LAST \
  -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a exp/mono0a_ali 

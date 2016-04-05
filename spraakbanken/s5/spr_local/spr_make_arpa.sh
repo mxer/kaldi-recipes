@@ -33,11 +33,6 @@ spr_local/make_recog_vocab.py data-prep/ngram/vocab ${vocabsize}000 ${outfile}/d
 
 spr_local/spr_make_lex.sh ${outfile}/dict ${outfile}/dict/vocab
 
-#spr_local/create_vocab_lex.py data-prep/lexicon/lexicon.txt data-prep/ngram/vocab ${vocabsize}000 ${tmp_dir}/known.lex ${tmp_dir}/oov.list ${outfile}/dict/vocab
-#
-#phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmp_dir}/oov.list | grep -P -v "\t$" > ${tmp_dir}/oov.lex
-#cat ${tmp_dir}/oov.lex ${tmp_dir}/known.lex | LC_ALL=C sort -u > ${outfile}/dict/lexicon.txt
-
 utils/prepare_lang.sh ${outfile}/dict "<UNK>" ${outfile}/local ${outfile}
 
 
