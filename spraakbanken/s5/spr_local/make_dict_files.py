@@ -20,7 +20,7 @@ def main(lex_dir, vowels, consonants):
             print(c, file=phones_f)
 
     groups = []
-    for _ in range(4):
+    for _ in range(10):
         groups.append(set())
 
     for v in vowels:
@@ -33,7 +33,8 @@ def main(lex_dir, vowels, consonants):
 
     quest_f = open(os.path.join(lex_dir, 'extra_questions.txt'), 'w', encoding='utf-8')
     for g in groups:
-        print(" ".join(sorted(g)), file=quest_f)
+        if len(g) > 0:
+            print(" ".join(sorted(g)), file=quest_f)
 
 
 if __name__ == "__main__":
