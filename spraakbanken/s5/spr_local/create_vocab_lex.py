@@ -33,7 +33,7 @@ def main(lexicon_file, vocab_file, desired_size, known_lex, oov_lex, real_vocab)
     count = 0
     for v in vocab_file:
         v = v.strip()
-       
+
         if count >= desired_size:
             break
         if v == "<s>" or v == "</s>":

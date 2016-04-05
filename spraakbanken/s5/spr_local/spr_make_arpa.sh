@@ -3,6 +3,7 @@ set -e
 export LC_ALL=C
 
 # Begin configuration section.
+lowercase_text=false
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -14,6 +15,7 @@ if [ $# != 3 ]; then
    echo "usage: spr_local/spr_make_arpa.sh out_file vocabsize(in thousands) order"
    echo "e.g.:  steps/spr_make_arpa.sh data/20k_3gram 20 3"
    echo "main options (for others, see top of script file)"
+   echo "     --lowercase-text (true|false)   # Lowercase everthing"
    exit 1;
 fi
 
@@ -26,10 +28,14 @@ mkdir -p ${outfile}/dict
 tmp_dir=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${tmp_dir}
 
-spr_local/create_vocab_lex.py data/dict_nst/lexicon.txt data-prep/ngram/vocab ${vocabsize} ${tmp_dir}/known.lex ${tmp_dir}/oov.list ${outfile}/dict/vocab
+spr_local/make_recog_vocab.py data-prep/ngram/vocab ${vocabsize}000 ${outfile}/dict/vocab
 
-phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmp_dir}/oov.list | grep -P -v "\t$" > ${tmp_dir}/oov.lex
-cat ${tmp_dir}/oov.lex ${tmp_dir}/known.lex | LC_ALL=C sort -u > ${outfile}/dict/lexicon.txt
+spr_local/spr_make_lex.sh ${outfile}/dict ${outfile}/dict/vocab
+
+#spr_local/create_vocab_lex.py data-prep/lexicon/lexicon.txt data-prep/ngram/vocab ${vocabsize}000 ${tmp_dir}/known.lex ${tmp_dir}/oov.list ${outfile}/dict/vocab
+#
+#phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmp_dir}/oov.list | grep -P -v "\t$" > ${tmp_dir}/oov.lex
+#cat ${tmp_dir}/oov.lex ${tmp_dir}/known.lex | LC_ALL=C sort -u > ${outfile}/dict/lexicon.txt
 
 utils/prepare_lang.sh ${outfile}/dict "<UNK>" ${outfile}/local ${outfile}
 
