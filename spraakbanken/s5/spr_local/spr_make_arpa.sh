@@ -23,6 +23,7 @@ outfile=$1
 vocabsize=$2
 order=$3
 
+if [ -d ${outfile} ]; then rm -Rf ${outfile}; fi
 mkdir -p ${outfile}/dict
 
 tmp_dir=$(mktemp -d)
