@@ -27,7 +27,7 @@ job prep_ngram 4 4 NONE -- spr_local/spr_dp_ngram.sh
 job make_corpus_train 4 4 prep_lex,prep_corpus -- spr_local/spr_make_corpus.sh data/train train_clean
 job make_corpus_dev 4 4 prep_lex,prep_corpus -- spr_local/spr_make_corpus.sh data/dev dev
 
-job make_lex 4 4 prep_lex -- spr_local/spr_make_lex.sh data/dict_train data/train/vocab
+job make_lex 4 4 prep_lex,make_corpus_train -- spr_local/spr_make_lex.sh data/dict_train data/train/vocab
 job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
 job make_arpa_20k_2g 4 4 prep_lex,prep_ngram -- spr_local/spr_make_arpa.sh data/20k_2gram 20 2
