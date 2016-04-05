@@ -24,7 +24,7 @@ if [ -d data/${set} ]; then rm -Rf data/${set}; fi
 
 mkdir -p data/${set}
 
-spr_local/filter_corpus.py data-prep/corpus data/${set} local/corpus_sets/${set}
-utils/utt2spk_to_spk2utt.pl data/${set}/utt2spk > data/${set}/spk2utt
+spr_local/filter_corpus.py data-prep/corpus ${outdir} local/corpus_sets/${set}
+utils/utt2spk_to_spk2utt.pl ${outdir}/utt2spk > ${outdir}/spk2utt
 
-spr_local/preprocess_text.py data/${set} data-prep/lexicon/lexicon.txt
+spr_local/preprocess_text.py ${outdir} data-prep/lexicon/lexicon.txt

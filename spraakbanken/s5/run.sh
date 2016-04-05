@@ -24,11 +24,11 @@ job prep_lex 30 4 NONE -- spr_local/spr_dp_lex.sh
 job prep_corpus 4 24 NONE -- spr_local/spr_dp_corpus.sh
 job prep_ngram 4 4 NONE -- spr_local/spr_dp_ngram.sh
 
-job make_lex 4 4 prep_lex -- spr_local/spr_make_lex.sh
-job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict "<UNK>" data/local/lang data/lang
-
 job make_corpus_train 4 4 prep_lex,prep_corpus -- spr_local/spr_make_corpus.sh data/train train_clean
 job make_corpus_dev 4 4 prep_lex,prep_corpus -- spr_local/spr_make_corpus.sh data/dev dev
+
+job make_lex 4 4 prep_lex -- spr_local/spr_make_lex.sh data/dict_train data/train/vocab
+job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
 job make_arpa_20k_2g 4 4 prep_lex,prep_ngram -- spr_local/spr_make_arpa.sh data/20k_2gram 20 2
 
@@ -42,25 +42,25 @@ for set in "train" "dev"; do
 done
 
 job tra_mono0a 2 40 val_data_train,make_lang \
- -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a 
+ -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/mono0a
 job ali_mono0a 2 40 LAST \
- -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono0a exp/mono0a_ali 
+ -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/mono0a exp/mono0a_ali
 
 job tra_tri1 2 40 ali_mono0a \
- -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2000 10000 data/train data/lang exp/mono0a_ali exp/tri1 
+ -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2000 10000 data/train data/lang_train exp/mono0a_ali exp/tri1
 job ali_tri1 2 40 LAST \
- -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/tri1 exp/tri1_ali
+ -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/tri1 exp/tri1_ali
 
 
 job tra_tri2a 2 40 ali_tri1 \
- -- steps/train_deltas.sh --cmd "$train_cmd" 2500 15000 data/train data/lang exp/tri1_ali exp/tri2a
+ -- steps/train_deltas.sh --cmd "$train_cmd" 2500 15000 data/train data/lang_train exp/tri1_ali exp/tri2a
 job ali_tri2b 2 40 LAST \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2a exp/tri2a_ali
 
 job tra_tri2b 2 40 ali_tri1 \
- -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train data/lang exp/tri1_ali exp/tri2b
+ -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train data/lang_train exp/tri1_ali exp/tri2b
 job ali_tri2b 2 40 LAST \
- -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2b exp/tri2b_ali
+ -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang_train exp/tri2b exp/tri2b_ali
 
 job mkg_mono0a 2 40 tra_mono0a,make_arpa_20k_2g \
  -- utils/mkgraph.sh --mono data/20k_2gram exp/mono0a exp/mono0a/graph_nst_2g_20k
