@@ -20,9 +20,9 @@ fi
 outdir=$1
 set=$2
 
-if [ -d data/${set} ]; then rm -Rf data/${set}; fi
+if [ -d ${outdir} ]; then rm -Rf ${outdir}; fi
 
-mkdir -p data/${set}
+mkdir -p ${outdir}
 
 spr_local/filter_corpus.py data-prep/corpus ${outdir} local/corpus_sets/${set}
 utils/utt2spk_to_spk2utt.pl ${outdir}/utt2spk > ${outdir}/spk2utt
