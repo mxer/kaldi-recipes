@@ -62,14 +62,14 @@ job tra_tri2b 2 40 ali_tri1 \
 job ali_tri2b 2 40 LAST \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2b exp/tri2b_ali
 
-job mkg_mono0a 2 40 tra_mono0a,lm_prep \ 
- -- utils/mkgraph.sh --mono data/lang_nst_2g_20k exp/mono0a exp/mono0a/graph_nst_2g_20k
+job mkg_mono0a 2 40 tra_mono0a,make_arpa_20k_2g \
+ -- utils/mkgraph.sh --mono data/20k_2gram exp/mono0a exp/mono0a/graph_nst_2g_20k
 job dec_mono0a 2 40 LAST \
  -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/mono0a/graph_nst_2g_20k data/test exp/mono0a/decode_nst_2g_20k_test
 
 for model in "tri1" "tri2a" "tri2b"; do
-    job mkg_${model} 2 40 tra_${model},lm_prep \
-     -- utils/mkgraph.sh data/lang_nst_2g_20k exp/${model} exp/${model}/graph_nst_2g_20k
+    job mkg_${model} 2 40 tra_${model},make_arpa_20k_2g \
+     -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
     job dec_${model} 2 40 LAST \
      -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_nst_2g_20k data/test exp/${model}/decode_nst_2g_20k_test
 done
