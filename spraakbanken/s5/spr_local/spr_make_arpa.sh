@@ -35,7 +35,7 @@ spr_local/spr_make_lex.sh ${outdir}/dict ${tmp_dir}/vocab
 
 mv ${tmp_dir}/vocab ${outdir}/dict/vocab
 
-utils/prepare_lang.sh ${outdir}/dict "<UNK>" ${outdir}/local ${outdir} --phone-symbol-table data/lang_recog/phones.txt
+utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt ${outdir}/dict "<UNK>" ${outdir}/local ${outdir}
 
 
 for knd in $(seq ${order} -1 0); do
