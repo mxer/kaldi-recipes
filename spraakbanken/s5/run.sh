@@ -30,7 +30,10 @@ job make_corpus_dev 4 4 prep_lex,prep_corpus -- spr_local/spr_make_corpus.sh dat
 job make_lex 4 4 prep_lex,make_corpus_train -- spr_local/spr_make_lex.sh data/dict_train data/train/vocab
 job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
-job make_arpa_20k_2g 4 4 prep_lex,prep_ngram -- spr_local/spr_make_arpa.sh data/20k_2gram 20 2
+job make_arpa_20k_2g 4 4 make_lang,prep_ngram -- spr_local/spr_make_arpa.sh data/20k_2gram 20 2
+job make_arpa_20k_5g 4 4 make_lang,prep_ngram -- spr_local/spr_make_arpa.sh data/20k_5gram 20 5
+job make_arpa_120k_2g 4 4 make_lang,prep_ngram -- spr_local/spr_make_arpa.sh data/120k_2gram 120 2
+job make_arpa_120k_5g 4 4 make_lang,prep_ngram -- spr_local/spr_make_arpa.sh data/120k_5gram 120 5
 
 mfccdir=mfcc
 numjobs=40
@@ -65,11 +68,11 @@ job ali_tri2b 2 40 LAST \
 job mkg_mono0a 26 40 tra_mono0a,make_arpa_20k_2g \
  -- utils/mkgraph.sh --mono data/20k_2gram exp/mono0a exp/mono0a/graph_nst_2g_20k
 job dec_mono0a 6 40 LAST \
- -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/mono0a/graph_nst_2g_20k data/test exp/mono0a/decode_nst_2g_20k_test
+ -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/mono0a/graph_nst_2g_20k data/dev exp/mono0a/decode_2g_20k_dev
 
 for model in "tri1" "tri2a" "tri2b"; do
     job mkg_${model} 26 40 tra_${model},make_arpa_20k_2g \
      -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
     job dec_${model} 6 40 LAST \
-     -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_nst_2g_20k data/test exp/${model}/decode_nst_2g_20k_test
+     -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_2g_20k data/dev exp/${model}/decode_2g_20k_dev
 done
