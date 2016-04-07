@@ -10,7 +10,7 @@ def main(in_vocab, size, out_vocab,):
     size = int(size)
 
     for line in open(in_vocab, encoding='utf-8'):
-        word, count = line.strip().split()
+        word, count = line.rstrip("\n").split(" ")
         if any(x.isdigit() for x in word):
             continue
 
