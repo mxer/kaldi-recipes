@@ -20,11 +20,11 @@ def main(lex_dir, vowels, consonants):
             print(c, file=phones_f)
 
     groups = []
-    for _ in range(10):
+    for _ in range(4):
         groups.append(set())
 
     for v in vowels:
-        active_vowels = ["{}{}".format(v,a) for a in range(4) if "{}{}".format(v,a) in phones]
+        active_vowels = ["{}{}".format(v,a) for a in range(4)]# if "{}{}".format(v,a) in phones]
         if len(active_vowels) > 0:
             print(" ".join(sorted(active_vowels)), file=phones_f)
 
