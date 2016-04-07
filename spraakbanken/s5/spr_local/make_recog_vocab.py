@@ -2,13 +2,15 @@
 
 import sys
 
+import collections
+
 
 def main(in_vocab, size, out_vocab,):
-    vocab = set()
+    counter = collections.Counter()
     size = int(size)
 
     for line in open(in_vocab, encoding='utf-8'):
-        word = line.strip().split()[0]
+        word, count = line.strip().split()
         if any(x.isdigit() for x in word):
             continue
 
@@ -16,12 +18,10 @@ def main(in_vocab, size, out_vocab,):
         if any(x in punctuation for x in word):
             continue
 
-        vocab.add(word)
-        if len(vocab) >= size:
-            break
+        counter[word] += int(count)
 
     with open(out_vocab, 'w', encoding='utf-8') as out_f:
-        for w in vocab:
+        for w, c in counter.most_common(size):
             print(w, file=out_f)
 
 
