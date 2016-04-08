@@ -30,18 +30,22 @@ tmp_dir=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${tmp_dir}
 
 if $lowercase_text; then
-    cat data-prep/ngram/vocab | python3 -c 'import sys; print(sys.stdin.read().lower(), end="")' > ${tmp_dir}/in_vocab
-    cat data-prep/ngram/[1-${order}]count | python3 -c 'import sys; print(sys.stdin.read().lower(), end="")' > ${tmp_dir}/in_count
+    cat data-prep/ngram/vocab | sed -e 's/./\L\0/g' > ${tmp_dir}/in_vocab
+    cat data-prep/ngram/[1-${order}]count | sed -e 's/./\L\0/g' > ${tmp_dir}/in_count
 else
     cat data-prep/ngram/vocab > ${tmp_dir}/in_vocab
     cat data-prep/ngram/[1-${order}]count > ${tmp_dir}/in_count
 fi
+
+echo "Make vocab"
 spr_local/make_recog_vocab.py ${tmp_dir}/in_vocab ${vocabsize}000 ${tmp_dir}/vocab
 
+echo "Make lex"
 spr_local/spr_make_lex.sh ${outdir}/dict ${tmp_dir}/vocab
 
 mv ${tmp_dir}/vocab ${outdir}/dict/vocab
 
+echo "prepare lang"
 utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt ${outdir}/dict "<UNK>" ${outdir}/local ${outdir}
 
 
