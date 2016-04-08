@@ -22,6 +22,9 @@ fi
 outdir=$1
 vocabsize=$2
 
+if [ -d ${outdir} ]; then rm -Rf ${outdir}; fi
+mkdir -p ${outdir}
+
 tmp_dir=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${tmp_dir}
 
