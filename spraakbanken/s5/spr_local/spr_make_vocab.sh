@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+export LC_ALL=C
+
+# Begin configuration section.
+lowercase_text=false
+# End configuration options.
+
+echo "$0 $@"  # Print the command line for logging
+
+[ -f path.sh ] && . ./path.sh # source the path.
+. parse_options.sh || exit 1;
+
+if [ $# != 2 ]; then
+   echo "usage: spr_local/spr_make_vocab.sh out_file vocabsize(in thousands) order"
+   echo "e.g.:  steps/spr_make_vocab.sh --lowercase-text true data/vocab/20k_lower 20"
+   echo "main options (for others, see top of script file)"
+   echo "     --lowercase-text (true|false)   # Lowercase everthing"
+   exit 1;
+fi
+
+outdir=$1
+vocabsize=$2
+
+tmp_dir=$(mktemp -d)
+echo "Temporary directories (should be cleaned afterwards):" ${tmp_dir}
+
+filter_cmd="cat"
+if $lowercase_text; then
+    filter_cmd="spr_local/to_lower.py"
+fi
+
+cat data-prep/ngram/vocab | $filter_cmd > ${tmp_dir}/in_vocab
+
+echo "Make vocab"
+spr_local/make_recog_vocab.py ${tmp_dir}/in_vocab ${vocabsize}000 ${tmp_dir}/vocab
+
+echo "Make lex"
+spr_local/spr_make_lex.sh ${outdir}/dict ${tmp_dir}/vocab
+
+mv ${tmp_dir}/vocab ${outdir}/dict/vocab
