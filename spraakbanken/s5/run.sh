@@ -42,7 +42,7 @@ mfccdir=mfcc
 numjobs=40
 
 for set in "train" "dev"; do
- job mfcc_$set 4 4 make_corpus_$set -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj 20 data/${set} exp/make_mfcc/${set} ${mfccdir}
+ job mfcc_$set 4 4 make_corpus_$set -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
  job cmvn_$set 4 4 LAST      -- steps/compute_cmvn_stats.sh data/${set} exp/make_mfcc/${set} ${mfccdir}
  job val_data_$set 4 4 LAST  -- utils/validate_data_dir.sh data/${set}
 done
