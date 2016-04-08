@@ -29,13 +29,12 @@ mkdir -p ${outdir}
 tmp_dir=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${tmp_dir}
 
+filter_cmd="cat"
 if $lowercase_text; then
-    cat data-prep/ngram/vocab | sed -e 's/./\L\0/g' > ${tmp_dir}/in_vocab
-    cat data-prep/ngram/[1-${order}]count | sed -e 's/./\L\0/g' > ${tmp_dir}/in_count
-else
-    cat data-prep/ngram/vocab > ${tmp_dir}/in_vocab
-    cat data-prep/ngram/[1-${order}]count > ${tmp_dir}/in_count
+    filter_cmd="spr_local/to_lower.py"
 fi
+
+cat data-prep/ngram/vocab | $filter_cmd > ${tmp_dir}/in_vocab
 
 echo "Make vocab"
 spr_local/make_recog_vocab.py ${tmp_dir}/in_vocab ${vocabsize}000 ${tmp_dir}/vocab
@@ -71,7 +70,7 @@ for knd in $(seq ${order} -1 0); do
 
     again=0
 
-    cat ${tmp_dir}/in_count | ngram-count -memuse -read - -lm ${outdir}/arpa -vocab ${outdir}/dict/vocab -order ${order} $MINCOUNT $INTERPOLATE $KNDISCOUNT $WBDISCOUNT || again=1
+    cat data-prep/ngram/[1-${order}]count | $filter_cmd | ngram-count -memuse -read - -lm ${outdir}/arpa -vocab ${outdir}/dict/vocab -order ${order} $MINCOUNT $INTERPOLATE $KNDISCOUNT $WBDISCOUNT || again=1
 
     if [ $again -eq 0 ]; then
         break
