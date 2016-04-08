@@ -29,7 +29,7 @@ echo "Temporary directories (should be cleaned afterwards):" ${tmp_dir}
 
 spr_local/filter_lex.py data-prep/lexicon/lexicon.txt ${vocab} ${tmp_dir}/known.lex ${tmp_dir}/oov
 
-phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmp_dir}/oov | grep -P -v "\t$" > ${tmp_dir}/oov.lex
+phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmp_dir}/oov | sed "s/\t$/\tSIL/" > ${tmp_dir}/oov.lex #grep -P -v "\t$" > ${tmp_dir}/oov.lex
 
 echo -e "<UNK>\tNSN" > ${tmp_dir}/unk.lex
 cat ${tmp_dir}/known.lex ${tmp_dir}/oov.lex ${tmp_dir}/unk.lex | sort -u > ${outdir}/lexicon.txt
