@@ -68,12 +68,24 @@ job tra_tri2b 2 40 ali_tri1 \
 job ali_tri2b 2 40 LAST \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang_train exp/tri2b exp/tri2b_ali
 
+job tra_tri3b 2 40 ali_tri2b \
+ -- steps/train_sat.sh --cmd "$train_cmd" 2500 15000 data/train data/lang_train exp/tri2b_ali exp/tri3b
+job ali_tri3b 2 40 LAST \
+ -- steps/align_fmllr.sh  --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/tri3b exp/tri3b_ali
+
+job tra_tri4a 2 40 ali_tri3b \
+ -- steps/train_sat.sh  --cmd "$train_cmd" 4200 40000 data/train data/lang_train exp/tri3b_ali exp/tri4a
+
+job tra_tri4b 2 40 ali_tri3b \
+ -- steps/train_quick.sh --cmd "$train_cmd" 4200 40000 data/train data/lang_train exp/tri3b_ali exp/tri4b
+
+
 job mkg_mono0a 26 40 tra_mono0a,make_arpa_20k_2g \
  -- utils/mkgraph.sh --mono data/20k_2gram exp/mono0a exp/mono0a/graph_nst_2g_20k
 job dec_mono0a 6 40 LAST \
  -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/mono0a/graph_nst_2g_20k data/dev exp/mono0a/decode_2g_20k_dev
 
-for model in "tri1" "tri2a" "tri2b"; do
+for model in "tri1" "tri2a" "tri2b" "tri3b" "tri4a" "tri4b"; do
     job mkg_${model} 26 40 tra_${model},make_arpa_20k_2g \
      -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
     job dec_${model} 6 40 LAST \

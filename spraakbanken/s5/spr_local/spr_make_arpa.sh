@@ -40,7 +40,7 @@ for knd in $(seq ${order} -1 0); do
 
     MINCOUNT=""
     if [ $order -ge 1 ]; then
-         MINCOUNT=$(seq 1 ${order} | sed "s/^/-gt/" | sed "s/$/min 3/" | tr "\n" " ")
+         MINCOUNT=$(seq 2 ${order} | sed "s/^/-gt/" | sed "s/$/min 3/" | tr "\n" " ")
     fi
 
     KNDISCOUNT=""
