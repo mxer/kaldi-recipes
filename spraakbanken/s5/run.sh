@@ -85,9 +85,19 @@ job mkg_mono0a 26 40 tra_mono0a,make_arpa_20k_2g \
 job dec_mono0a 6 40 LAST \
  -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/mono0a/graph_nst_2g_20k data/dev exp/mono0a/decode_2g_20k_dev
 
-for model in "tri1" "tri2a" "tri2b" "tri3b" "tri4a" "tri4b"; do
+numjobs=$(cat data/dev/spk2utt | wc -l)
+echo "Changing numjobs to ${numjobs}"
+for model in "tri1" "tri2a" "tri2b"; do
     job mkg_${model} 26 40 tra_${model},make_arpa_20k_2g \
      -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
     job dec_${model} 6 40 LAST \
      -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_2g_20k data/dev exp/${model}/decode_2g_20k_dev
 done
+
+for model in "tri3b" "tri4a" "tri4b"; do
+    job mkg_${model} 26 40 tra_${model},make_arpa_20k_2g \
+     -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
+    job dec_${model} 6 40 LAST \
+     -- steps/decode_fmllr.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_2g_20k data/dev exp/${model}/decode_2g_20k_dev
+done
+
