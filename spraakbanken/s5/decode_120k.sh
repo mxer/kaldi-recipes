@@ -15,7 +15,7 @@ function error_exit {
 mfccdir=mfcc
 numjobs=10
 
-numjobs=$(cat data/dev/spk2utt | wc -l)
+numjobs=$(cat data/test_kth/spk2utt | wc -l)
 
 echo "Changing numjobs to ${numjobs}"
 
