@@ -15,7 +15,8 @@ def oov_rate(test_list, vocab):
 
         tot_count += count
         if word.lower() not in vocab:
-            oov_count += word
+            print(word.lower())
+            oov_count += count
 
     return oov_count / tot_count
 
