@@ -26,7 +26,7 @@ data_dir=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${raw_files_dir} ${data_dir}
 
 echo $(date) "Read the corpus"
-spr_local/corpus_to_kaldi_format.py corpus ${raw_files_dir}/wav.scp ${data_dir}
+local/corpus_to_kaldi_format.py corpus ${raw_files_dir}/wav.scp ${data_dir}
 
 mkdir -p data-prep/corpus
 
