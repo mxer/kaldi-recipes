@@ -33,9 +33,9 @@ job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data
 job make_vocab_20k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text true data/vocab/20k_lower 20
 job make_vocab_120k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text true data/vocab/120k_lower 120
 
-job make_arpa_20k_2g 4 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_2gram data/vocab/20k_lower 2
-job make_arpa_20k_5g 15 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_5gram data/vocab/20k_lower 5
-job make_arpa_120k_2g 40 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_2gram data/vocab/120k_lower 2
+job make_arpa_20k_2g 2 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_2gram data/vocab/20k_lower 2
+job make_arpa_20k_5g 25 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_5gram data/vocab/20k_lower 5
+job make_arpa_120k_2g 4 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_2gram data/vocab/120k_lower 2
 job make_arpa_120k_5g 60 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_5gram data/vocab/120k_lower 5
 
 mfccdir=mfcc
@@ -84,8 +84,7 @@ job mkg_mono0a 26 40 tra_mono0a,make_arpa_20k_2g \
  -- utils/mkgraph.sh --mono data/20k_2gram exp/mono0a exp/mono0a/graph_nst_2g_20k
 job dec_mono0a 6 40 LAST \
  -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/mono0a/graph_nst_2g_20k data/dev exp/mono0a/decode_2g_20k_dev
-
-numjobs=$(cat data/dev/spk2utt | wc -l)
+numjobs=10
 echo "Changing numjobs to ${numjobs}"
 for model in "tri1" "tri2a" "tri2b"; do
     job mkg_${model} 26 40 tra_${model},make_arpa_20k_2g \
