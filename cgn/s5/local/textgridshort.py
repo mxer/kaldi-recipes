@@ -67,6 +67,9 @@ class TextGridShort(object):
                 # text = re.sub(r"(?<=\S)\?\s", " |? ", text)
                 # text = re.sub(r"(?<!\s|[|.])\.\s", " |. ", text)
 
+                if int(record[1]) - int(record[2]) < 0.11:
+                    continue
+
                 yield "{}-{}-{:04d}".format(speaker, self.key, i), record[0], record[1], text.strip()
 
 

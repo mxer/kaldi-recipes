@@ -39,7 +39,7 @@ sort < ${raw_files_dir}/segments > ${raw_files_dir}/segments.sorted
 
 
 echo $(date) "Start extract-segments"
-extract-segments scp:${raw_files_dir}/sorted.scp ${raw_files_dir}/segments.sorted ark,scp:data-prep/corpus/wav.ark,data-prep/corpus/wav.scp
+extract-segments --max-overshoot 3 scp:${raw_files_dir}/sorted.scp ${raw_files_dir}/segments.sorted ark,scp:data-prep/corpus/wav.ark,data-prep/corpus/wav.scp
 
 echo $(date) "Start removing temp dirs"
 rm -Rf ${data_dir} ${raw_files_dir}
