@@ -43,7 +43,7 @@ def main(in_dir, out_scp, out_segments, out_dir):
             print("Help, {} wav not found".format(k))
             continue
 
-        print("{} sox {} -r 16000 -t wav - remix - |".format(k, wav_files[k]), file=fd_scp)
+        print("{} sox {} -b 16 -r 16000 -t wav - remix - |".format(k, wav_files[k]), file=fd_scp)
         tgs = textgridshort.TextGridShort(ort_files[k])
 
         for record in tgs.records():
