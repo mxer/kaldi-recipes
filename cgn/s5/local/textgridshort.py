@@ -39,7 +39,6 @@ class TextGridShort(object):
 
     def records(self):
         speakers = set(self._streams.keys()) - set(SPECIAL_TIERS)
-        assert len(speakers) == 1
 
         for speaker in speakers:
             for i, record in enumerate(self._streams[speaker]):
