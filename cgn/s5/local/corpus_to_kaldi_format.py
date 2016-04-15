@@ -10,7 +10,7 @@ def main(in_dir, out_scp, out_segments, out_dir):
     fd_scp = open(out_scp, 'w', encoding='utf-8')
     fd_segments = open(out_segments, 'w', encoding='utf-8')
 
-    fd_text = open(os.path.join(out_dir, 'text.ort1'), 'w', encoding='utf-8')
+    fd_text = open(os.path.join(out_dir, 'text.orig'), 'w', encoding='utf-8')
 
     fd_utt2spk = open(os.path.join(out_dir, 'utt2spk'), 'w', encoding='utf-8')
     fd_utt2comp = open(os.path.join(out_dir, 'utt2comp'), 'w', encoding='utf-8')
