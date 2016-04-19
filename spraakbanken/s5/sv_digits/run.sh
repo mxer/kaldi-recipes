@@ -27,6 +27,8 @@ job make_corpus_test 4 4 NONE -- spr_local/spr_make_corpus.sh data/test test_dig
 job make_lex 4 4 make_corpus_train -- spr_local/spr_make_lex.sh --accents false data/dict_train data/train/vocab data-prep/lexicon_lc_na
 job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
+job make_arpa 5 4 make_lang -- spr_local/spr_make_train_arpa.sh data/train_2gram data/train/text data/dict_train 2
+
 mfccdir=mfcc
 numjobs=10
 
@@ -45,6 +47,7 @@ job tra_tri1 2 40 ali_mono0a \
  -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 300 3000 data/train data/lang_train exp/mono0a_ali exp/tri1
 job ali_tri1 2 40 LAST \
  -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/tri1 exp/tri1_ali
+
 
 
 

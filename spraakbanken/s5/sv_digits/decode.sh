@@ -18,8 +18,8 @@ numjobs=10
 numjobs=$(cat data/dev/spk2utt | wc -l)
 
 
-job make_arpa 5 4 NONE \
- -- spr_local/spr_make_train_arpa.sh data/train_2gram data/train/text data/dict_train 2
+#job make_arpa 5 4 NONE \
+# -- spr_local/spr_make_train_arpa.sh data/train_2gram data/train/text data/dict_train 2
 
 
 echo "Changing numjobs to ${numjobs}"
