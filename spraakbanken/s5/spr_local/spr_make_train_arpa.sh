@@ -58,7 +58,7 @@ for knd in $(seq ${order} -1 0); do
 
     again=0
 
-    cat $inf | $filter_cmd | ngram-count -memuse -read - -lm ${outdir}/arpa -vocab ${outdir}/vocab -order ${order} $MINCOUNT $INTERPOLATE $KNDISCOUNT $WBDISCOUNT || again=1
+    cat $inf | $filter_cmd | ngram-count -memuse -read - -lm ${outdir}/arpa -write-vocab ${outdir}/vocab -order ${order} $MINCOUNT $INTERPOLATE $KNDISCOUNT $WBDISCOUNT || again=1
 
     if [ $again -eq 0 ]; then
         break
