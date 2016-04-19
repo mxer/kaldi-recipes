@@ -53,7 +53,7 @@ def map_transcript(trans):
                 trans = trans[1:]
 
 
-def transform_lexicon(input, output):
+def transform_lexicon(input, output, lowercase):
     d = {"<UNK>": [("SPN",)], }
 
     for line in input:
@@ -62,8 +62,12 @@ def transform_lexicon(input, output):
 
         parts = line.split(";")
         key, trans = parts[0], parts[11:12]
+        if lowercase:
+            key = key.lower()
 
-        d[key] = []
+        if key not in d:
+            d[key] = []
+
         for t in trans:
             d[key].append(tuple(map_transcript(t)))
 
@@ -83,14 +87,21 @@ def init_ph_map(vowel_file, consonant_file):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        exit("4 required arguments: source data directory, output lexicon, vowel file, consonants file")
+    if len(sys.argv) != 7:
+        exit("6 required arguments: source data directory, output lexicon, vowel file, consonants file, lowercase, accent")
 
     init_ph_map(*sys.argv[3:5])
     out_file = open(sys.argv[2], 'w', encoding='utf-8')
+
+    lowercase = sys.argv[5] == 'lowercase'
+    accent = sys.argv[6] == 'accent'
+
+    if accent:
+        for k in list(PH_MAP.keys()):
+            PH_MAP[k] = False
 
     for root, dirs, files in os.walk(os.path.normpath(sys.argv[1])):
         for f in files:
             if f.endswith(".pron"):
                 in_file = open(os.path.join(root, f), encoding='cp1252')
-                transform_lexicon(in_file, out_file)
+                transform_lexicon(in_file, out_file, lowercase)
