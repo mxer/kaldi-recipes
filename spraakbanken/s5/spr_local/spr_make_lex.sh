@@ -42,6 +42,8 @@ echo "NSN" >> ${outdir}/silence_phones.txt
 
 echo "SIL" > ${outdir}/optional_silence.txt
 
+
+
 opt=""
 if ! $accents; then
 opt="--no-accents"
