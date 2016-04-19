@@ -30,7 +30,7 @@ out_dir=$1
 if [ -d $out_dir ]; then
     ok=0
     for f in "lexicon.txt" "g2p_wfsa"; do
-        if [ ! -f data-prep/lexicon/$f ]; then
+        if [ ! -f $out_dir/$f ]; then
             ok=1
         fi
     done
