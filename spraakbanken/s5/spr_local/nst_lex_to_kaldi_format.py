@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import argparse
 import os
 import sys
 
@@ -87,21 +87,26 @@ def init_ph_map(vowel_file, consonant_file):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 7:
-        exit("6 required arguments: source data directory, output lexicon, vowel file, consonants file, lowercase, accent")
+    parser = argparse.ArgumentParser(description='Transform nst lexicon to kaldi format')
+    parser.add_argument('--lowercase', dest='lowercase', default=False, action='store_true', help='Lowercase dict keys', required=True)
+    parser.add_argument('--no-accents', dest='accents', default=True, action='store_false', help='Do not add accents to vowels', required=True)
+    parser.add_argument('sourcedir', required=True)
+    parser.add_argument('outlex', required=True)
+    parser.add_argument('vowelfile', required=True)
+    parser.add_argument('consonantfile', required=True)
 
-    init_ph_map(*sys.argv[3:5])
-    out_file = open(sys.argv[2], 'w', encoding='utf-8')
+    args = parser.parse_args()
 
-    lowercase = sys.argv[5] == 'lowercase'
-    accent = sys.argv[6] == 'accent'
+    init_ph_map(args.vowelfile, args.consonantfile)
+    out_file = open(args.outlex, 'w', encoding='utf-8')
 
-    if accent:
+    if not args.accents:
+        print("Remove accents", file=sys.stderr)
         for k in list(PH_MAP.keys()):
             PH_MAP[k] = False
 
-    for root, dirs, files in os.walk(os.path.normpath(sys.argv[1])):
+    for root, dirs, files in os.walk(os.path.normpath(args.sourcedir)):
         for f in files:
             if f.endswith(".pron"):
                 in_file = open(os.path.join(root, f), encoding='cp1252')
-                transform_lexicon(in_file, out_file, lowercase)
+                transform_lexicon(in_file, out_file, args.lowercase)

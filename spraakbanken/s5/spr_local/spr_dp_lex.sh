@@ -53,13 +53,13 @@ echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 (cd corpus && cut -f3- -d" " ${wd}/local/checksums/lex | xargs tar xz --strip-components=1 -C ${data_dir} -f)
 
 echo $(date) "Transform lexicon"
-opt1="NONE"
-opt2="noaccent"
+opt1=""
+opt2=""
 if $lowercase; then
-    opt1="lowercase"
+    opt1="--lowercase"
 fi
-if $accents; then
-    opt2="accent"
+if ! $accents; then
+    opt2="--no-accents"
 fi
 
 spr_local/nst_lex_to_kaldi_format.py ${data_dir} ${data_dir}/lexicon.txt local/dict_prep/vowels local/dict_prep/consonants $opt1 $opt2
