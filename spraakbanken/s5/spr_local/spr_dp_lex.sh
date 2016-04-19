@@ -62,7 +62,7 @@ fi
 
 spr_local/nst_lex_to_kaldi_format.py ${data_dir} ${data_dir}/lexicon.txt local/dict_prep/vowels local/dict_prep/consonants $opt1 $opt2
 
-mkdir -p data-prep/lexicon
+mkdir -p ${out_dir}
 sort -u < ${data_dir}/lexicon.txt > ${out_dir}/lexicon.txt
 
 echo $(date) "Train g2p"
