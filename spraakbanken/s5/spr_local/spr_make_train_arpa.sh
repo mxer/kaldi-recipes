@@ -11,7 +11,7 @@ echo "$0 $@"  # Print the command line for logging
 [ -f path.sh ] && . ./path.sh # source the path.
 . parse_options.sh || exit 1;
 
-if [ $# != 3 ]; then
+if [ $# != 4 ]; then
    echo "usage: spr_local/spr_make_train_arpa.sh out_file in_file in_dict order"
    echo "e.g.:  steps/spr_make_arpa.sh --lowercase-text true data/train_2gram data/train/text data/dict_train 2"
    echo "main options (for others, see top of script file)"
