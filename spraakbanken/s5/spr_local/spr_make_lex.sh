@@ -3,6 +3,7 @@ set -e
 export LC_ALL=C
 
 # Begin configuration section.
+accents=true
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -14,6 +15,7 @@ if [ $# != 3 ]; then
    echo "usage: spr_local/spr_make_lex.sh out_dir vocab lex_dir"
    echo "e.g.:  steps/spr_make_lex.sh data/lexicon data/train/vocab data-prep/lexicon_lc_na"
    echo "main options (for others, see top of script file)"
+   echo "     --accents (true|false)   # add accents to vowels"
    exit 1;
 fi
 
@@ -40,7 +42,12 @@ echo "NSN" >> ${outdir}/silence_phones.txt
 
 echo "SIL" > ${outdir}/optional_silence.txt
 
-spr_local/make_dict_files.py ${outdir} local/dict_prep/vowels local/dict_prep/consonants
+opt=""
+if ! $accents; then
+opt="--no-accents"
+fi
+
+spr_local/make_dict_files.py ${outdir} local/dict_prep/vowels local/dict_prep/consonants $opt
 
 
 
