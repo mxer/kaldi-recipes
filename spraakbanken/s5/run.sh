@@ -20,7 +20,11 @@ if [ ! -d "data-prep" ]; then
  error_exit "The directory data-prep needs to exist. Either do 'mkdir data-prep', or make it a symlink to somewhere"
 fi
 
-job prep_lex 30 4 NONE -- spr_local/spr_dp_lex.sh
+job prep_lex 30 4 NONE -- spr_local/spr_dp_lex.sh data-prep/lexicon
+job prep_lex_lc 30 4 NONE -- spr_local/spr_dp_lex.sh --lowercase true data-prep/lexicon_lc
+job prep_lex_na 30 4 NONE -- spr_local/spr_dp_lex.sh --accents false data-prep/lexicon_na
+job prep_lex_lc_na 30 4 NONE -- spr_local/spr_dp_lex.sh --lowercase true --accents false data-prep/lexicon_lc_na
+
 job prep_corpus 4 24 NONE -- spr_local/spr_dp_corpus.sh
 job prep_ngram 4 4 NONE -- spr_local/spr_dp_ngram.sh
 

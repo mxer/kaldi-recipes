@@ -24,7 +24,7 @@ def main(lex_dir, vowels, consonants):
         groups.append(set())
 
     for v in vowels:
-        active_vowels = ["{}{}".format(v,a) for a in range(4)]# if "{}{}".format(v,a) in phones]
+        active_vowels = ["{}{}".format(v,a) for a in range(4)] + ["{}".format(v)]# if "{}{}".format(v,a) in phones]
         if len(active_vowels) > 0:
             print(" ".join(sorted(active_vowels)), file=phones_f)
 
