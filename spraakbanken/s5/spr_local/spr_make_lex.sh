@@ -47,8 +47,8 @@ if ! $accents; then
 opt="--no-accents"
 fi
 
-spr_local/make_dict_files.py ${outdir} local/dict_prep/vowels local/dict_prep/consonants $opt
-
+echo "$opt"
+spr_local/make_dict_files.py $opt ${outdir} local/dict_prep/vowels local/dict_prep/consonants
 
 
 rm -Rf ${tmp_dir}
