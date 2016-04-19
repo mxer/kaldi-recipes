@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+import argparse
 import os
 import sys
 
 
-def main(lex_dir, vowels, consonants):
+def main(lex_dir, vowels, consonants, accents):
     consonants = {c.strip() for c in open(consonants, encoding='utf-8')}
     vowels = {c.strip() for c in open(vowels, encoding='utf-8')}
 
@@ -19,26 +20,38 @@ def main(lex_dir, vowels, consonants):
         if c in phones:
             print(c, file=phones_f)
 
-    groups = []
-    for _ in range(4):
-        groups.append(set())
-
-    for v in vowels:
-        active_vowels = ["{}{}".format(v,a) for a in range(4)] + ["{}".format(v)]# if "{}{}".format(v,a) in phones]
-        if len(active_vowels) > 0:
-            print(" ".join(sorted(active_vowels)), file=phones_f)
-
-        for a in active_vowels:
-            groups[int(a[-1])].add(a)
-
     quest_f = open(os.path.join(lex_dir, 'extra_questions.txt'), 'w', encoding='utf-8')
-    for g in groups:
-        if len(g) > 0:
-            print(" ".join(sorted(g)), file=quest_f)
+
+    if accents:
+        groups = []
+        for _ in range(4):
+            groups.append(set())
+
+        for v in vowels:
+            active_vowels = ["{}{}".format(v,a) for a in range(4)]# if "{}{}".format(v,a) in phones]
+            if len(active_vowels) > 0:
+                print(" ".join(sorted(active_vowels)), file=phones_f)
+
+            for a in active_vowels:
+                groups[int(a[-1])].add(a)
+
+        for g in groups:
+            if len(g) > 0:
+                print(" ".join(sorted(g)), file=quest_f)
+    else:
+        for v in vowels:
+            if v in phones:
+                print(v, file=phones_f)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        exit("3 required arguments: lex_dir, vowels, consonants")
+    parser = argparse.ArgumentParser(description='Make necessary files for dict directory')
+    parser.add_argument('--no-accents', dest='accents', default=True, action='store_false',
+                        help='Do not add accents to vowels')
+    parser.add_argument('lexdir')
+    parser.add_argument('vowelfile')
+    parser.add_argument('consonantfile')
 
-    main(*sys.argv[1:])
+    args = parser.parse_args()
+
+    main(args.lexdir, args.vowelfile, args.consonantfile, args.accents)
