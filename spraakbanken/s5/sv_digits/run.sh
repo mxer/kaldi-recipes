@@ -24,7 +24,7 @@ fi
 job make_corpus_train 4 4 NONE -- spr_local/spr_make_corpus.sh data/train train_digits
 job make_corpus_test 4 4 NONE -- spr_local/spr_make_corpus.sh data/test test_digits
 
-job make_lex 4 4 make_corpus_train -- spr_local/spr_make_lex.sh data/dict_train data/train/vocab
+job make_lex 4 4 make_corpus_train -- spr_local/spr_make_lex.sh data/dict_train data/train/vocab data-prep/lexicon_lc_na
 job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
 mfccdir=mfcc
