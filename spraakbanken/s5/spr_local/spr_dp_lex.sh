@@ -25,7 +25,9 @@ if [ $# != 1 ]; then
    exit 1;
 fi
 
-if [ -d out_dir ]; then
+out_dir=$1
+
+if [ -d $out_dir ]; then
     ok=0
     for f in "lexicon.txt" "g2p_wfsa"; do
         if [ ! -f data-prep/lexicon/$f ]; then
