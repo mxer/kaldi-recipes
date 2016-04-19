@@ -58,7 +58,7 @@ opt2=""
 if $lowercase; then
     opt1="--lowercase"
 fi
-if [ ! $accents ]; then
+if ! $accents; then
     opt2="--no-accents"
 fi
 

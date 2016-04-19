@@ -88,8 +88,8 @@ def init_ph_map(vowel_file, consonant_file):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Transform nst lexicon to kaldi format')
-    parser.add_argument('--lowercase', dest='lowercase', default=False, action='store_true', help='Lowercase dict keys', required=True)
-    parser.add_argument('--no-accents', dest='accents', default=True, action='store_false', help='Do not add accents to vowels', required=True)
+    parser.add_argument('--lowercase', dest='lowercase', default=False, action='store_true', help='Lowercase dict keys')
+    parser.add_argument('--no-accents', dest='accents', default=True, action='store_false', help='Do not add accents to vowels')
     parser.add_argument('sourcedir')
     parser.add_argument('outlex')
     parser.add_argument('vowelfile')
