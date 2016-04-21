@@ -1,0 +1,59 @@
+%WER 50.05 [ 30699 / 61341, 1403 ins, 9063 del, 20233 sub ] exp/mono0a/decode_2g_120k_dev/wer_9_0.0
+%WER 42.64 [ 26157 / 61341, 974 ins, 8571 del, 16612 sub ] exp/mono0a/decode_2g_120k_dev_biglm_5g/wer_10_0.0
+%WER 43.03 [ 26392 / 61341, 936 ins, 8832 del, 16624 sub ] exp/mono0a/decode_2g_120k_dev_rescore_5g/wer_10_0.0
+%WER 48.84 [ 166407 / 340738, 6775 ins, 51603 del, 108029 sub ] exp/mono0a/decode_2g_120k_test_kth/wer_9_0.0
+%WER 55.81 [ 34233 / 61341, 3048 ins, 7400 del, 23785 sub ] exp/mono0a/decode_2g_20k_dev/wer_9_0.0
+%WER 48.70 [ 29871 / 61341, 2079 ins, 7570 del, 20222 sub ] exp/mono0a/decode_2g_20k_dev_rescore_5g/wer_10_0.0
+%WER 54.63 [ 186152 / 340738, 15592 ins, 41979 del, 128581 sub ] exp/mono0a/decode_2g_20k_test_kth/wer_9_0.0
+%WER 47.79 [ 162840 / 340738, 11217 ins, 41856 del, 109767 sub ] exp/mono0a/decode_2g_20k_test_kth_biglm_5g/wer_10_0.0
+%WER 48.18 [ 164178 / 340738, 11026 ins, 43166 del, 109986 sub ] exp/mono0a/decode_2g_20k_test_kth_rescore_5g/wer_10_0.0
+%WER 28.04 [ 17199 / 61341, 1507 ins, 4298 del, 11394 sub ] exp/tri1/decode_2g_120k_dev/wer_14_0.0
+%WER 21.63 [ 13265 / 61341, 1199 ins, 3334 del, 8732 sub ] exp/tri1/decode_2g_120k_dev_biglm_5g/wer_16_0.0
+%WER 22.15 [ 13584 / 61341, 1236 ins, 3474 del, 8874 sub ] exp/tri1/decode_2g_120k_dev_rescore_5g/wer_15_0.0
+%WER 26.90 [ 91650 / 340738, 7398 ins, 23497 del, 60755 sub ] exp/tri1/decode_2g_120k_test_kth/wer_13_0.0
+%WER 20.65 [ 70377 / 340738, 5750 ins, 18397 del, 46230 sub ] exp/tri1/decode_2g_120k_test_kth_biglm_5g/wer_15_0.0
+%WER 21.18 [ 72165 / 340676, 5858 ins, 19093 del, 47214 sub ] [PARTIAL] exp/tri1/decode_2g_120k_test_kth_rescore_5g/wer_14_0.0
+%WER 36.95 [ 22664 / 61341, 3954 ins, 3559 del, 15151 sub ] exp/tri1/decode_2g_20k_dev/wer_14_0.0
+%WER 30.52 [ 18723 / 61341, 3150 ins, 2940 del, 12633 sub ] exp/tri1/decode_2g_20k_dev_biglm_5g/wer_16_0.0
+%WER 30.97 [ 18995 / 61341, 3125 ins, 3120 del, 12750 sub ] exp/tri1/decode_2g_20k_dev_rescore_5g/wer_16_0.0
+%WER 35.91 [ 122369 / 340738, 20182 ins, 20220 del, 81967 sub ] exp/tri1/decode_2g_20k_test_kth/wer_14_0.0
+%WER 30.19 [ 102869 / 340687, 16041 ins, 17449 del, 69379 sub ] [PARTIAL] exp/tri1/decode_2g_20k_test_kth_rescore_5g/wer_16_0.0
+%WER 24.85 [ 15243 / 61341, 1499 ins, 3793 del, 9951 sub ] exp/tri2b/decode_2g_120k_dev/wer_14_0.0
+%WER 19.10 [ 11715 / 61341, 1200 ins, 2908 del, 7607 sub ] exp/tri2b/decode_2g_120k_dev_biglm_5g/wer_17_0.0
+%WER 19.65 [ 12042 / 61279, 1171 ins, 3108 del, 7763 sub ] [PARTIAL] exp/tri2b/decode_2g_120k_dev_rescore_5g/wer_17_0.0
+%WER 23.77 [ 80978 / 340738, 6798 ins, 21470 del, 52710 sub ] exp/tri2b/decode_2g_120k_test_kth/wer_14_0.0
+%WER 18.62 [ 63442 / 340661, 5593 ins, 16888 del, 40961 sub ] [PARTIAL] exp/tri2b/decode_2g_120k_test_kth_rescore_5g/wer_15_0.0
+%WER 34.26 [ 21015 / 61341, 3872 ins, 3442 del, 13701 sub ] exp/tri2b/decode_2g_20k_dev/wer_16_0.0
+%WER 28.49 [ 17474 / 61341, 3389 ins, 2566 del, 11519 sub ] exp/tri2b/decode_2g_20k_dev_biglm_5g/wer_17_0.0
+%WER 29.02 [ 17787 / 61298, 3189 ins, 2904 del, 11694 sub ] [PARTIAL] exp/tri2b/decode_2g_20k_dev_rescore_5g/wer_19_0.0
+%WER 33.19 [ 113096 / 340738, 21166 ins, 17737 del, 74193 sub ] exp/tri2b/decode_2g_20k_test_kth/wer_14_0.0
+%WER 28.04 [ 95527 / 340627, 17562 ins, 15013 del, 62952 sub ] [PARTIAL] exp/tri2b/decode_2g_20k_test_kth_rescore_5g/wer_16_0.0
+%WER 26.25 [ 16101 / 61341, 1686 ins, 3750 del, 10665 sub ] exp/tri3b/decode_2g_120k_dev.si/wer_13_0.0
+%WER 20.16 [ 68695 / 340738, 6741 ins, 17228 del, 44726 sub ] exp/tri3b/decode_2g_120k_test_kth/wer_14_0.0
+%WER 15.79 [ 53775 / 340670, 5445 ins, 13746 del, 34584 sub ] [PARTIAL] exp/tri3b/decode_2g_120k_test_kth_rescore_5g/wer_17_0.0
+%WER 25.02 [ 85264 / 340738, 7843 ins, 21141 del, 56280 sub ] exp/tri3b/decode_2g_120k_test_kth.si/wer_13_0.0
+%WER 31.55 [ 19352 / 61341, 4158 ins, 2926 del, 12268 sub ] exp/tri3b/decode_2g_20k_dev/wer_17_0.0
+%WER 35.72 [ 21910 / 61341, 4207 ins, 3380 del, 14323 sub ] exp/tri3b/decode_2g_20k_dev.si/wer_15_0.0
+%WER 30.19 [ 102881 / 340738, 21981 ins, 14845 del, 66055 sub ] exp/tri3b/decode_2g_20k_test_kth/wer_15_0.0
+%WER 25.78 [ 87818 / 340667, 18493 ins, 12266 del, 57059 sub ] [PARTIAL] exp/tri3b/decode_2g_20k_test_kth_rescore_5g/wer_18_0.0
+%WER 34.44 [ 117358 / 340738, 22094 ins, 18235 del, 77029 sub ] exp/tri3b/decode_2g_20k_test_kth.si/wer_14_0.0
+%WER 18.90 [ 11594 / 61341, 1486 ins, 2722 del, 7386 sub ] exp/tri4a/decode_2g_120k_dev/wer_16_0.0
+%WER 15.00 [ 9199 / 61332, 1346 ins, 2013 del, 5840 sub ] [PARTIAL] exp/tri4a/decode_2g_120k_dev_rescore_5g/wer_17_0.0
+%WER 23.15 [ 14203 / 61341, 1713 ins, 3244 del, 9246 sub ] exp/tri4a/decode_2g_120k_dev.si/wer_14_0.0
+%WER 17.44 [ 59439 / 340738, 6719 ins, 14549 del, 38171 sub ] exp/tri4a/decode_2g_120k_test_kth/wer_15_0.0
+%WER 13.59 [ 46305 / 340671, 5756 ins, 10956 del, 29593 sub ] [PARTIAL] exp/tri4a/decode_2g_120k_test_kth_rescore_5g/wer_17_0.0
+%WER 21.87 [ 74523 / 340738, 8083 ins, 17428 del, 49012 sub ] exp/tri4a/decode_2g_120k_test_kth.si/wer_13_0.0
+%WER 29.48 [ 18082 / 61341, 4487 ins, 2343 del, 11252 sub ] exp/tri4a/decode_2g_20k_dev/wer_16_0.0
+%WER 25.39 [ 15568 / 61313, 3863 ins, 1919 del, 9786 sub ] [PARTIAL] exp/tri4a/decode_2g_20k_dev_rescore_5g/wer_19_0.0
+%WER 33.25 [ 20398 / 61341, 4478 ins, 2868 del, 13052 sub ] exp/tri4a/decode_2g_20k_dev.si/wer_15_0.0
+%WER 27.88 [ 94982 / 340738, 22830 ins, 12531 del, 59621 sub ] exp/tri4a/decode_2g_20k_test_kth/wer_16_0.0
+%WER 23.87 [ 81308 / 340691, 20070 ins, 9725 del, 51513 sub ] [PARTIAL] exp/tri4a/decode_2g_20k_test_kth_rescore_5g/wer_18_0.0
+%WER 31.87 [ 108596 / 340738, 23449 ins, 15134 del, 70013 sub ] exp/tri4a/decode_2g_20k_test_kth.si/wer_14_0.0
+%WER 19.08 [ 11705 / 61341, 1557 ins, 2660 del, 7488 sub ] exp/tri4b/decode_2g_120k_dev/wer_15_0.0
+%WER 23.25 [ 14259 / 61341, 1792 ins, 3168 del, 9299 sub ] exp/tri4b/decode_2g_120k_dev.si/wer_13_0.0
+%WER 21.88 [ 74540 / 340738, 8124 ins, 17483 del, 48933 sub ] exp/tri4b/decode_2g_120k_test_kth.si/wer_13_0.0
+%WER 29.60 [ 18157 / 61341, 4506 ins, 2323 del, 11328 sub ] exp/tri4b/decode_2g_20k_dev/wer_16_0.0
+%WER 33.22 [ 20378 / 61341, 4498 ins, 2859 del, 13021 sub ] exp/tri4b/decode_2g_20k_dev.si/wer_15_0.0
+%WER 28.09 [ 95700 / 340738, 22953 ins, 12701 del, 60046 sub ] exp/tri4b/decode_2g_20k_test_kth/wer_16_0.0
+%WER 24.05 [ 81921 / 340675, 19733 ins, 10063 del, 52125 sub ] [PARTIAL] exp/tri4b/decode_2g_20k_test_kth_rescore_5g/wer_19_0.0
+%WER 31.81 [ 108376 / 340738, 23500 ins, 15056 del, 69820 sub ] exp/tri4b/decode_2g_20k_test_kth.si/wer_14_0.0
