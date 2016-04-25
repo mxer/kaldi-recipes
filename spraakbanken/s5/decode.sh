@@ -15,32 +15,42 @@ function error_exit {
 mfccdir=mfcc
 numjobs=10
 
-numjobs=$(cat data/dev/spk2utt | wc -l)
+dataset=dev
+lm=20k_2gram
+biglm=20k_5gram
 
+numjobs=$(cat data/${dataset}/spk2utt | wc -l)
 echo "Changing numjobs to ${numjobs}"
-job mkg_mono0a 26 40 NONE \
- -- utils/mkgraph.sh --mono data/20k_2gram exp/mono0a exp/mono0a/graph_nst_2g_20k
-job dec_mono0a 6 40 LAST \
- -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/mono0a/graph_nst_2g_20k data/dev exp/mono0a/decode_2g_20k_dev
-job dec_bl_mono0a 6 40 mkg_mono0a \
- -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd"  exp/mono0a/graph_nst_2g_20k data/20k_2gram/G.fst data/20k_5gram/G.fst data/dev exp/mono0a/decode_2g_20k_dev_biglm_5g
-job dec_rs_mono0a 6 40 dec_mono0a \
- -- steps/lmrescore.sh --cmd "$decode_cmd" data/20k_2gram data/20k_5gram data/dev exp/mono0a/decode_2g_20k_dev exp/mono0a/decode_2g_20k_dev_rescore_5g
 
-for model in "tri1" "tri2a" "tri2b"; do
-    job mkg_${model} 26 40 NONE \
-     -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
-    job dec_${model} 6 40 LAST \
-     -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_nst_2g_20k data/dev exp/${model}/decode_2g_20k_dev
-    job dec_bl_${model} 6 40 mkg_${model} \
-     -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd"  exp/${model}/graph_nst_2g_20k data/20k_2gram/G.fst data/20k_5gram/G.fst data/dev exp/${model}/decode_2g_20k_dev_biglm_5g
-    job dec_rs_${model} 6 40 dec_${model} \
-     -- steps/lmrescore.sh --cmd "$decode_cmd" data/20k_2gram data/20k_5gram data/dev exp/${model}/decode_2g_20k_dev exp/${model}/decode_2g_20k_dev_rescore_5g
+job split_data 4 40 NONE \
+ -- utils/split_data.sh data/${dataset} $numjobs
+
+am=mono0a
+job mkg_${am} 26 40 split_data \
+ -- utils/mkgraph.sh --mono ${lm} exp/${am} exp/${am}/graph_${lm}
+job dec_${am} 6 40 LAST \
+ -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
+job dec_bl_${am} 6 40 mkg_${am} \
+ -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/graph_${lm}/G.fst data/${biglm}/G.fst data/${dataset} exp/${am}/decode_${lm}_bl_${biglm}
+job dec_rs_${am} 6 40 dec_${am} \
+ -- steps/lmrescore.sh --cmd "$decode_cmd" data/${lm} data/${biglm} data/${dataset} exp/${am}/decode_${lm}_${dataset} exp/${am}/decode_${lm}_rs_${biglm}
+
+for am in "tri1" "tri2a" "tri2b"; do
+    job mkg_${am} 26 40 split_data \
+     -- utils/mkgraph.sh ${lm} exp/${am} exp/${am}/graph_${lm}
+    job dec_${am} 6 40 LAST \
+     -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
+    job dec_bl_${am} 6 40 mkg_${am} \
+     -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/graph_${lm}/G.fst data/${biglm}/G.fst data/${dataset} exp/${am}/decode_${lm}_bl_${biglm}
+    job dec_rs_${am} 6 40 dec_${am} \
+     -- steps/lmrescore.sh --cmd "$decode_cmd" data/${lm} data/${biglm} data/${dataset} exp/${am}/decode_${lm}_${dataset} exp/${am}/decode_${lm}_rs_${biglm}
 done
 
-for model in "tri3b" "tri4a" "tri4b"; do
-    job mkg_${model} 26 40 NONE \
-     -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
-    job dec_${model} 6 40 LAST \
-     -- steps/decode_fmllr.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_nst_2g_20k data/dev exp/${model}/decode_2g_20k_dev
+for am in "tri3b" "tri4a" "tri4b"; do
+    job mkg_${am} 26 40 split_data \
+     -- utils/mkgraph.sh data/20k_2gram exp/${am} exp/${am}/graph_${lm}
+    job dec_${am} 6 40 LAST \
+     -- steps/decode_fmllr.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
+    job dec_rs_${am} 6 40 dec_${am} \
+     -- steps/lmrescore.sh --cmd "$decode_cmd" data/${lm} data/${biglm} data/${dataset} exp/${am}/decode_${lm}_${dataset} exp/${am}/decode_${lm}_rs_${biglm}
 done
