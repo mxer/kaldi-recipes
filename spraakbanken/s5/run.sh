@@ -43,7 +43,7 @@ job make_arpa_120k_2g 4 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowerc
 job make_arpa_120k_5g 60 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_5gram data/vocab/120k_lower 5
 
 mfccdir=mfcc
-numjobs=40
+numjobs=10
 
 for set in "train" "dev"; do
  job mfcc_$set 4 4 make_corpus_$set -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
@@ -62,23 +62,28 @@ job subset_8k 2 4 val_data_train \
 
 job tra_mono0a 2 40 subset_2kshort,make_lang \
  -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_2kshort data/lang_train exp/mono0a
+
+numjobs=20
 job ali_mono0a 2 40 tra_mono0a,subset_4k \
  -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_4k data/lang_train exp/mono0a exp/mono0a_ali
 
 job tra_tri1 2 40 ali_mono0a \
  -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2000 10000 data/train_4k data/lang_train exp/mono0a_ali exp/tri1
+
+numjobs=30
 job ali_tri1 2 40 tra_tri1,subset_8k \
  -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train_8k data/lang_train exp/tri1 exp/tri1_ali
 
 
 job tra_tri2a 2 40 ali_tri1 \
  -- steps/train_deltas.sh --cmd "$train_cmd" 2500 15000 data/train_8k data/lang_train exp/tri1_ali exp/tri2a
-job ali_tri2b 2 40 LAST \
- -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2a exp/tri2a_ali
-
-job tra_tri2b 2 40 ali_tri1 \
+ job tra_tri2b 2 40 ali_tri1 \
  -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train_8k data/lang_train exp/tri1_ali exp/tri2b
-job ali_tri2b 2 40 LAST \
+
+numjobs=40
+job ali_tri2a 2 40 tra_tri2a \
+ -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2a exp/tri2a_ali
+job ali_tri2b 2 40 tra_tri2b \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train_8k data/lang_train exp/tri2b exp/tri2b_ali
 
 job tra_tri3b 2 40 ali_tri2b \
