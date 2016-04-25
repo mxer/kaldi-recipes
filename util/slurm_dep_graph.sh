@@ -44,7 +44,7 @@ then
 fi
 
 IFS=" "
-ret=$(sbatch -p batch --constraint hsw --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 --mem-per-cpu ${mem}G $deparg "${@}")
+ret=$(sbatch -p batch,coin --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 --mem-per-cpu ${mem}G $deparg "${@}")
 
 echo $ret
 rid=$(echo $ret | awk '{print $4;}')

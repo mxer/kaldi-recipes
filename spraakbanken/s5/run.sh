@@ -62,12 +62,12 @@ job subset_8k 2 4 val_data_train \
 
 job tra_mono0a 2 40 subset_2kshort,make_lang \
  -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_2kshort data/lang_train exp/mono0a
-job ali_mono0a 2 40 LAST,subset_4k \
+job ali_mono0a 2 40 tra_mono0a,subset_4k \
  -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_4k data/lang_train exp/mono0a exp/mono0a_ali
 
 job tra_tri1 2 40 ali_mono0a \
  -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2000 10000 data/train_4k data/lang_train exp/mono0a_ali exp/tri1
-job ali_tri1 2 40 LAST,subset_8k \
+job ali_tri1 2 40 tra_tri1,subset_8k \
  -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train_8k data/lang_train exp/tri1 exp/tri1_ali
 
 
