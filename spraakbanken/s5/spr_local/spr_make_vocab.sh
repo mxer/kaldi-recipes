@@ -39,6 +39,6 @@ echo "Make vocab"
 spr_local/make_recog_vocab.py ${tmp_dir}/in_vocab ${vocabsize}000 ${tmp_dir}/vocab
 
 echo "Make lex"
-spr_local/spr_make_lex.sh ${outdir} ${tmp_dir}/vocab
+spr_local/spr_make_lex.sh ${outdir} ${tmp_dir}/vocab data-prep/lexicon
 
 mv ${tmp_dir}/vocab ${outdir}/vocab
