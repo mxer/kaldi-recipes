@@ -38,7 +38,7 @@ job make_vocab_20k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --low
 job make_vocab_120k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text true data/vocab/120k_lower 120 data-prep/lexicon
 
 job make_arpa_20k_2g 2 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_2gram data/vocab/20k_lower 2
-job make_arpa_20k_5g 25 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_5gram data/vocab/20k_lower 5
+job make_arpa_20k_5g 35 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_5gram data/vocab/20k_lower 5
 job make_arpa_120k_2g 4 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_2gram data/vocab/120k_lower 2
 job make_arpa_120k_5g 60 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_5gram data/vocab/120k_lower 5
 
