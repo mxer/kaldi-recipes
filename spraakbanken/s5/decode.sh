@@ -27,7 +27,7 @@ job split_data 4 40 NONE \
 
 am=mono0a
 job mkg_${am} 26 40 split_data \
- -- utils/mkgraph.sh --mono ${lm} exp/${am} exp/${am}/graph_${lm}
+ -- utils/mkgraph.sh --mono data/${lm} exp/${am} exp/${am}/graph_${lm}
 job dec_${am} 6 40 LAST \
  -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
 job dec_bl_${am} 6 40 mkg_${am} \
@@ -37,7 +37,7 @@ job dec_rs_${am} 6 40 dec_${am} \
 
 for am in "tri1" "tri2a" "tri2b"; do
     job mkg_${am} 26 40 split_data \
-     -- utils/mkgraph.sh ${lm} exp/${am} exp/${am}/graph_${lm}
+     -- utils/mkgraph.sh data/${lm} exp/${am} exp/${am}/graph_${lm}
     job dec_${am} 6 40 LAST \
      -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
     job dec_bl_${am} 6 40 mkg_${am} \
@@ -48,7 +48,7 @@ done
 
 for am in "tri3b" "tri4a" "tri4b"; do
     job mkg_${am} 26 40 split_data \
-     -- utils/mkgraph.sh data/20k_2gram exp/${am} exp/${am}/graph_${lm}
+     -- utils/mkgraph.sh data/${lm} exp/${am} exp/${am}/graph_${lm}
     job dec_${am} 6 40 LAST \
      -- steps/decode_fmllr.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
     job dec_rs_${am} 6 40 dec_${am} \

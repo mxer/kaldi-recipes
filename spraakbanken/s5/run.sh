@@ -77,7 +77,7 @@ job ali_tri1 2 40 tra_tri1,subset_8k \
 
 job tra_tri2a 2 40 ali_tri1 \
  -- steps/train_deltas.sh --cmd "$train_cmd" 2500 15000 data/train_8k data/lang_train exp/tri1_ali exp/tri2a
- job tra_tri2b 2 40 ali_tri1 \
+job tra_tri2b 2 40 ali_tri1 \
  -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train_8k data/lang_train exp/tri1_ali exp/tri2b
 
 job ali_tri2b 2 40 tra_tri2b \
