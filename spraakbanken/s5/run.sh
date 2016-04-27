@@ -80,9 +80,6 @@ job tra_tri2a 2 40 ali_tri1 \
  job tra_tri2b 2 40 ali_tri1 \
  -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train_8k data/lang_train exp/tri1_ali exp/tri2b
 
-numjobs=40
-job ali_tri2a 2 40 tra_tri2a \
- -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train data/lang exp/tri2a exp/tri2a_ali
 job ali_tri2b 2 40 tra_tri2b \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train_8k data/lang_train exp/tri2b exp/tri2b_ali
 
