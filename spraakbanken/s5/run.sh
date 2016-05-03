@@ -25,22 +25,27 @@ job prep_lex_lc 30 4 NONE -- spr_local/spr_dp_lex.sh --lowercase true data-prep/
 job prep_lex_na 30 4 NONE -- spr_local/spr_dp_lex.sh --accents false data-prep/lexicon_na
 job prep_lex_lc_na 30 4 NONE -- spr_local/spr_dp_lex.sh --lowercase true --accents false data-prep/lexicon_lc_na
 
+ln -s ../data-prep/lexicon_lc_na data/lexicon
+lex_req=prep_lex_lc_na
+lowercase=true
+accents=false
+
 job prep_corpus 4 24 NONE -- spr_local/spr_dp_corpus.sh
 job prep_ngram 4 4 NONE -- spr_local/spr_dp_ngram.sh
 
-job make_corpus_train 4 4 prep_lex_lc_na,prep_corpus -- spr_local/spr_make_corpus.sh data/train train_clean
-job make_corpus_dev 4 4 prep_lex_lc_na,prep_corpus -- spr_local/spr_make_corpus.sh data/dev dev
+job make_corpus_train 4 4 ${lex_req},prep_corpus -- spr_local/spr_make_corpus.sh data/train train_clean
+job make_corpus_dev 4 4 ${lex_req},prep_corpus -- spr_local/spr_make_corpus.sh data/dev dev
 
-job make_lex 4 4 prep_lex_lc_na,make_corpus_train -- spr_local/spr_make_lex.sh --accents false data/dict_train data/train/vocab data-prep/lexicon_lc_na
+job make_lex 4 4 ${lex_req},make_corpus_train -- spr_local/spr_make_lex.sh --accents ${accents} data/dict_train data/train/vocab data/lexicon
 job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
-job make_vocab_20k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text true data/vocab/20k_lower 20 data-prep/lexicon_lc_na
-job make_vocab_120k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text true data/vocab/120k_lower 120 data-prep/lexicon_lc_na
+job make_vocab_20k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text ${lowercase} data/vocab/20k_lower 20 data/lexicon
+job make_vocab_120k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text ${lowercase} data/vocab/120k_lower 120 data/lexicon
 
-job make_arpa_20k_2g 2 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_2gram data/vocab/20k_lower 2
-job make_arpa_20k_5g 65 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text true data/20k_5gram data/vocab/20k_lower 5
-job make_arpa_120k_2g 4 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_2gram data/vocab/120k_lower 2
-job make_arpa_120k_5g 60 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text true data/120k_5gram data/vocab/120k_lower 5
+job make_arpa_20k_2g 2 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text ${lowercase} data/20k_2gram data/vocab/20k_lower 2
+job make_arpa_20k_5g 65 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text ${lowercase} data/20k_5gram data/vocab/20k_lower 5
+job make_arpa_120k_2g 4 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text ${lowercase} data/120k_2gram data/vocab/120k_lower 2
+job make_arpa_120k_5g 60 4 make_vocab_120k -- spr_local/spr_make_arpa.sh --lowercase-text ${lowercase} data/120k_5gram data/vocab/120k_lower 5
 
 mfccdir=mfcc
 numjobs=10
