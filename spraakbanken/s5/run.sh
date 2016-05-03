@@ -25,6 +25,7 @@ job prep_lex_lc 30 4 NONE -- spr_local/spr_dp_lex.sh --lowercase true data-prep/
 job prep_lex_na 30 4 NONE -- spr_local/spr_dp_lex.sh --accents false data-prep/lexicon_na
 job prep_lex_lc_na 30 4 NONE -- spr_local/spr_dp_lex.sh --lowercase true --accents false data-prep/lexicon_lc_na
 
+mkdir data
 ln -s ../data-prep/lexicon_lc_na data/lexicon
 lex_req=prep_lex_lc_na
 lowercase=true
