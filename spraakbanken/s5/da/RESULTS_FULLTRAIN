@@ -1,0 +1,4 @@
+%WER 30.38 [ 6281 / 20677, 1331 ins, 1023 del, 3927 sub ] exp/tri4a/decode_20k_2gram_dev/wer_14_0.0
+%WER 34.10 [ 7051 / 20677, 1435 ins, 1061 del, 4555 sub ] exp/tri4a/decode_20k_2gram_dev.si/wer_11_0.0
+%WER 25.85 [ 5346 / 20677, 1241 ins, 709 del, 3396 sub ] exp/tri4a/decode_20k_2gram_rs_20k_5gram/wer_14_0.0
+%WER 30.79 [ 6367 / 20677, 1312 ins, 1080 del, 3975 sub ] exp/tri4b/decode_20k_2gram_dev/wer_15_0.0

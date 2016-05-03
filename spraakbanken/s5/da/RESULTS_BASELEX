@@ -1,0 +1,20 @@
+%WER 77.97 [ 16121 / 20677, 629 ins, 4129 del, 11363 sub ] exp/mono0a/decode_20k_2gram_bl_20k_5gram/wer_10_0.0
+%WER 81.16 [ 16782 / 20677, 673 ins, 4151 del, 11958 sub ] exp/mono0a/decode_20k_2gram_dev/wer_10_0.0
+%WER 78.23 [ 16175 / 20677, 457 ins, 4793 del, 10925 sub ] exp/mono0a/decode_20k_2gram_rs_20k_5gram/wer_12_0.0
+%WER 36.89 [ 7628 / 20677, 1016 ins, 1386 del, 5226 sub ] exp/tri1/decode_20k_2gram_bl_20k_5gram/wer_13_0.5
+%WER 44.09 [ 9116 / 20677, 1173 ins, 1697 del, 6246 sub ] exp/tri1/decode_20k_2gram_dev/wer_14_0.0
+%WER 37.32 [ 7716 / 20677, 1094 ins, 1351 del, 5271 sub ] exp/tri1/decode_20k_2gram_rs_20k_5gram/wer_14_0.0
+%WER 33.55 [ 6937 / 20677, 1165 ins, 1042 del, 4730 sub ] exp/tri2a/decode_20k_2gram_bl_20k_5gram/wer_14_0.0
+%WER 40.09 [ 8290 / 20677, 1220 ins, 1473 del, 5597 sub ] exp/tri2a/decode_20k_2gram_dev/wer_14_0.0
+%WER 31.68 [ 6551 / 20677, 1158 ins, 1022 del, 4371 sub ] exp/tri2b/decode_20k_2gram_bl_20k_5gram/wer_14_0.0
+%WER 37.87 [ 7830 / 20677, 1216 ins, 1423 del, 5191 sub ] exp/tri2b/decode_20k_2gram_dev/wer_14_0.0
+%WER 32.11 [ 6639 / 20677, 1131 ins, 1087 del, 4421 sub ] exp/tri2b/decode_20k_2gram_rs_20k_5gram/wer_14_0.0
+%WER 35.20 [ 7279 / 20677, 1309 ins, 1236 del, 4734 sub ] exp/tri3b/decode_20k_2gram_dev/wer_14_0.0
+%WER 39.08 [ 8081 / 20677, 1279 ins, 1393 del, 5409 sub ] exp/tri3b/decode_20k_2gram_dev.si/wer_14_0.0
+%WER 30.42 [ 6290 / 20677, 1064 ins, 1136 del, 4090 sub ] exp/tri3b/decode_20k_2gram_rs_20k_5gram/wer_16_0.5
+%WER 30.38 [ 6281 / 20677, 1331 ins, 1023 del, 3927 sub ] exp/tri4a/decode_20k_2gram_dev/wer_14_0.0
+%WER 34.10 [ 7051 / 20677, 1435 ins, 1061 del, 4555 sub ] exp/tri4a/decode_20k_2gram_dev.si/wer_11_0.0
+%WER 25.85 [ 5346 / 20677, 1241 ins, 709 del, 3396 sub ] exp/tri4a/decode_20k_2gram_rs_20k_5gram/wer_14_0.0
+%WER 30.79 [ 6367 / 20677, 1312 ins, 1080 del, 3975 sub ] exp/tri4b/decode_20k_2gram_dev/wer_15_0.0
+%WER 33.98 [ 7026 / 20677, 1445 ins, 1056 del, 4525 sub ] exp/tri4b/decode_20k_2gram_dev.si/wer_11_0.0
+%WER 25.97 [ 5367 / 20666, 1170 ins, 770 del, 3427 sub ] [PARTIAL] exp/tri4b/decode_20k_2gram_rs_20k_5gram/wer_16_0.0
