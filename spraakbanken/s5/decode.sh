@@ -31,7 +31,7 @@ job mkg_${am} 26 40 split_data \
 job dec_${am} 6 40 LAST \
  -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
 job dec_bl_${am} 6 40 mkg_${am} \
- -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/graph_${lm}/G.fst data/${biglm}/G.fst data/${dataset} exp/${am}/decode_${lm}_bl_${biglm}
+ -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${lm}/G.fst data/${biglm}/G.fst data/${dataset} exp/${am}/decode_${lm}_bl_${biglm}
 job dec_rs_${am} 6 40 dec_${am} \
  -- steps/lmrescore.sh --cmd "$decode_cmd" data/${lm} data/${biglm} data/${dataset} exp/${am}/decode_${lm}_${dataset} exp/${am}/decode_${lm}_rs_${biglm}
 
@@ -41,7 +41,7 @@ for am in "tri1" "tri2a" "tri2b"; do
     job dec_${am} 6 40 LAST \
      -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${dataset} exp/${am}/decode_${lm}_${dataset}
     job dec_bl_${am} 6 40 mkg_${am} \
-     -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/graph_${lm}/G.fst data/${biglm}/G.fst data/${dataset} exp/${am}/decode_${lm}_bl_${biglm}
+     -- steps/decode_biglm.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${am}/graph_${lm} data/${lm}/G.fst data/${biglm}/G.fst data/${dataset} exp/${am}/decode_${lm}_bl_${biglm}
     job dec_rs_${am} 6 40 dec_${am} \
      -- steps/lmrescore.sh --cmd "$decode_cmd" data/${lm} data/${biglm} data/${dataset} exp/${am}/decode_${lm}_${dataset} exp/${am}/decode_${lm}_rs_${biglm}
 done

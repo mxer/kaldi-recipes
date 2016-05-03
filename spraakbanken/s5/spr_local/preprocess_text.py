@@ -46,7 +46,7 @@ def main(dir, lexicon):
         key, rest = line.strip().split(None, 1)
         sent = []
         for i, word in enumerate(rest.split()):
-            sent.extend(map_word(word, lexicon, i == 0))
+            sent.extend(map_word(word.lower(), lexicon, i == 0))
 
         for word in sent:
             vocab[word] += 1
