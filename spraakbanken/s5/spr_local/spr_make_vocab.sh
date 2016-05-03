@@ -41,7 +41,12 @@ cat data-prep/ngram/vocab | $filter_cmd > ${tmp_dir}/in_vocab
 echo "Make vocab"
 spr_local/make_recog_vocab.py ${tmp_dir}/in_vocab ${vocabsize}000 ${tmp_dir}/vocab
 
+aflag=false
+if ${accents}; then
+aflag=true
+fi
+
 echo "Make lex"
-spr_local/spr_make_lex.sh --accents ${accents} ${outdir} ${tmp_dir}/vocab ${lex}
+spr_local/spr_make_lex.sh --accents ${aflag} ${outdir} ${tmp_dir}/vocab ${lex}
 
 mv ${tmp_dir}/vocab ${outdir}/vocab
