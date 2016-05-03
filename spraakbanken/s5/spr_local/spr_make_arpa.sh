@@ -35,7 +35,7 @@ echo "prepare lang"
 utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt ${vocab} "<UNK>" ${outdir}/local ${outdir}
 
 
-for knd in $(seq ${order} -1 0); do
+for wtb in $(seq 0 ${order}); do
     INTERPOLATE=$(seq 1 ${order} | sed "s/^/-interpolate/" | tr "\n" " ")
 
     MINCOUNT=""
@@ -44,13 +44,13 @@ for knd in $(seq ${order} -1 0); do
     fi
 
     KNDISCOUNT=""
-    if [ $knd -ge 1 ]; then
-         KNDISCOUNT=$(seq 1 $knd | sed "s/^/-kndiscount/" | tr "\n" " ")
+    if [ $wtb -lt ${order} ]; then
+         KNDISCOUNT=$(seq $((wtb+1)) ${order} | sed "s/^/-kndiscount/" | tr "\n" " ")
     fi
 
     WBDISCOUNT=""
-    if [ $knd != ${order} ]; then
-        WBDISCOUNT=$(seq $((knd+1)) ${order} | sed "s/^/-wbdiscount/" | tr "\n" " ")
+    if [ $wtb -gt 0 ]; then
+        WBDISCOUNT=$(seq 1 ${wtb} | sed "s/^/-wbdiscount/" | tr "\n" " ")
     fi
 
     echo $KNDISCOUNT $WBDISCOUNT $MINCOUNT $INTERPOLATE
