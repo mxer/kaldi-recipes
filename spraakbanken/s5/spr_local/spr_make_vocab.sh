@@ -4,6 +4,7 @@ export LC_ALL=C
 
 # Begin configuration section.
 lowercase_text=false
+accents=true
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -16,6 +17,7 @@ if [ $# != 3 ]; then
    echo "e.g.:  steps/spr_make_vocab.sh --lowercase-text true data/vocab/20k_lower 20 data-prep/lexicon"
    echo "main options (for others, see top of script file)"
    echo "     --lowercase-text (true|false)   # Lowercase everthing"
+   echo "     --accents (true|false)   # use accents on phones"
    exit 1;
 fi
 
@@ -40,6 +42,6 @@ echo "Make vocab"
 spr_local/make_recog_vocab.py ${tmp_dir}/in_vocab ${vocabsize}000 ${tmp_dir}/vocab
 
 echo "Make lex"
-spr_local/spr_make_lex.sh --accents false ${outdir} ${tmp_dir}/vocab ${lex}
+spr_local/spr_make_lex.sh --accents ${accents} ${outdir} ${tmp_dir}/vocab ${lex}
 
 mv ${tmp_dir}/vocab ${outdir}/vocab

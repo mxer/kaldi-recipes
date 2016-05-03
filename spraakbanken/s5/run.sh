@@ -39,8 +39,8 @@ job make_corpus_dev 4 4 ${lex_req},prep_corpus -- spr_local/spr_make_corpus.sh d
 job make_lex 4 4 ${lex_req},make_corpus_train -- spr_local/spr_make_lex.sh --accents ${accents} data/dict_train data/train/vocab data/lexicon
 job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
-job make_vocab_20k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text ${lowercase} data/vocab/20k_lower 20 data/lexicon
-job make_vocab_120k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text ${lowercase} data/vocab/120k_lower 120 data/lexicon
+job make_vocab_20k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text ${lowercase} --accents ${accents} data/vocab/20k_lower 20 data/lexicon
+job make_vocab_120k 4 4 prep_ngram,make_lang -- spr_local/spr_make_vocab.sh --lowercase-text ${lowercase} --accents ${accents} data/vocab/120k_lower 120 data/lexicon
 
 job make_arpa_20k_2g 2 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text ${lowercase} data/20k_2gram data/vocab/20k_lower 2
 job make_arpa_20k_5g 65 4 make_vocab_20k -- spr_local/spr_make_arpa.sh --lowercase-text ${lowercase} data/20k_5gram data/vocab/20k_lower 5

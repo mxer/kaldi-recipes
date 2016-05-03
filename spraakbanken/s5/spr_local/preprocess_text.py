@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import argparse
 import os
 import sys
 
@@ -36,7 +36,7 @@ def map_word(word, lexicon, first_word_in_sentence):
         return []
 
 
-def main(dir, lexicon):
+def main(dir, lexicon, lowercase=False):
     lexicon = {l.strip().split("\t")[0] for l in open(lexicon, encoding='utf-8')}
     vocab = collections.Counter()
 
@@ -46,7 +46,9 @@ def main(dir, lexicon):
         key, rest = line.strip().split(None, 1)
         sent = []
         for i, word in enumerate(rest.split()):
-            sent.extend(map_word(word.lower(), lexicon, i == 0))
+            if lowercase:
+                word = word.lower()
+            sent.extend(map_word(word, lexicon, i == 0))
 
         for word in sent:
             vocab[word] += 1
@@ -59,7 +61,12 @@ def main(dir, lexicon):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        exit("2 required arguments: directory, lexicon")
+    parser = argparse.ArgumentParser(description='Preprocess text')
+    parser.add_argument('--lowercase', dest='lowercase', default=False, action='store_true', help='Lowercase dict keys')
 
-    main(*sys.argv[1:])
+    parser.add_argument('directory')
+    parser.add_argument('lexicon')
+
+    args = parser.parse_args()
+
+    main(args.directory, args.lexicon, args.lowercase)
