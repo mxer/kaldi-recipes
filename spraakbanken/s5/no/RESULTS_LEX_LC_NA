@@ -1,0 +1,34 @@
+%WER 73.68 [ 80346 / 109049, 3257 ins, 23261 del, 53828 sub ] exp/mono0a/decode_120k_2gram_dev/wer_11_0.0
+%WER 68.63 [ 74809 / 109007, 2098 ins, 25619 del, 47092 sub ] [PARTIAL] exp/mono0a/decode_120k_2gram_rs_120k_5gram/wer_12_0.0
+%WER 76.32 [ 83224 / 109049, 5427 ins, 17870 del, 59927 sub ] exp/mono0a/decode_20k_2gram_dev/wer_11_0.0
+%WER 71.04 [ 77421 / 108986, 3715 ins, 20028 del, 53678 sub ] [PARTIAL] exp/mono0a/decode_20k_2gram_rs_20k_5gram/wer_12_0.0
+%WER 35.84 [ 39088 / 109049, 4414 ins, 7968 del, 26706 sub ] exp/tri1/decode_120k_2gram_dev/wer_14_0.0
+%WER 27.92 [ 30447 / 109033, 3334 ins, 6708 del, 20405 sub ] [PARTIAL] exp/tri1/decode_120k_2gram_rs_120k_5gram/wer_15_0.0
+%WER 44.49 [ 48516 / 109049, 8223 ins, 7308 del, 32985 sub ] exp/tri1/decode_20k_2gram_dev/wer_14_0.5
+%WER 36.67 [ 39988 / 109049, 7176 ins, 5599 del, 27213 sub ] exp/tri1/decode_20k_2gram_rs_20k_5gram/wer_17_0.0
+%WER 31.50 [ 34345 / 109049, 3987 ins, 7102 del, 23256 sub ] exp/tri2a/decode_120k_2gram_dev/wer_15_0.0
+%WER 24.37 [ 26555 / 108970, 3257 ins, 5633 del, 17665 sub ] [PARTIAL] exp/tri2a/decode_120k_2gram_rs_120k_5gram/wer_15_0.0
+%WER 40.68 [ 44365 / 109049, 8004 ins, 6579 del, 29782 sub ] exp/tri2a/decode_20k_2gram_dev/wer_15_0.5
+%WER 33.46 [ 36459 / 108960, 7156 ins, 4757 del, 24546 sub ] [PARTIAL] exp/tri2a/decode_20k_2gram_rs_20k_5gram/wer_18_0.0
+%WER 28.77 [ 31371 / 109049, 3908 ins, 6710 del, 20753 sub ] exp/tri2b/decode_120k_2gram_dev/wer_15_0.0
+%WER 22.46 [ 24453 / 108896, 3107 ins, 5390 del, 15956 sub ] [PARTIAL] exp/tri2b/decode_120k_2gram_rs_120k_5gram/wer_16_0.0
+%WER 38.53 [ 42021 / 109049, 8702 ins, 5815 del, 27504 sub ] exp/tri2b/decode_20k_2gram_dev/wer_17_0.0
+%WER 32.08 [ 34939 / 108912, 7389 ins, 4582 del, 22968 sub ] [PARTIAL] exp/tri2b/decode_20k_2gram_rs_20k_5gram/wer_18_0.0
+%WER 24.67 [ 26902 / 109049, 3804 ins, 5701 del, 17397 sub ] exp/tri3b/decode_120k_2gram_dev/wer_16_0.0
+%WER 31.30 [ 34132 / 109049, 4477 ins, 6886 del, 22769 sub ] exp/tri3b/decode_120k_2gram_dev.si/wer_15_0.0
+%WER 19.33 [ 21054 / 108944, 3159 ins, 4342 del, 13553 sub ] [PARTIAL] exp/tri3b/decode_120k_2gram_rs_120k_5gram/wer_17_0.0
+%WER 34.92 [ 38085 / 109049, 9142 ins, 4712 del, 24231 sub ] exp/tri3b/decode_20k_2gram_dev/wer_17_0.0
+%WER 40.82 [ 44513 / 109049, 8972 ins, 6243 del, 29298 sub ] exp/tri3b/decode_20k_2gram_dev.si/wer_15_0.5
+%WER 29.41 [ 32029 / 108900, 7751 ins, 3716 del, 20562 sub ] [PARTIAL] exp/tri3b/decode_20k_2gram_rs_20k_5gram/wer_20_0.0
+%WER 20.23 [ 22058 / 109049, 3618 ins, 4327 del, 14113 sub ] exp/tri4a/decode_120k_2gram_dev/wer_15_0.0
+%WER 25.91 [ 28258 / 109049, 4251 ins, 5372 del, 18635 sub ] exp/tri4a/decode_120k_2gram_dev.si/wer_14_0.0
+%WER 15.52 [ 16904 / 108923, 3092 ins, 3048 del, 10764 sub ] [PARTIAL] exp/tri4a/decode_120k_2gram_rs_120k_5gram/wer_16_0.0
+%WER 31.05 [ 33860 / 109049, 9292 ins, 3593 del, 20975 sub ] exp/tri4a/decode_20k_2gram_dev/wer_16_0.0
+%WER 36.51 [ 39813 / 109049, 9361 ins, 4922 del, 25530 sub ] exp/tri4a/decode_20k_2gram_dev.si/wer_14_0.5
+%WER 26.22 [ 28554 / 108882, 7958 ins, 2706 del, 17890 sub ] [PARTIAL] exp/tri4a/decode_20k_2gram_rs_20k_5gram/wer_19_0.0
+%WER 20.59 [ 22453 / 109049, 3518 ins, 4537 del, 14398 sub ] exp/tri4b/decode_120k_2gram_dev/wer_16_0.0
+%WER 25.82 [ 28154 / 109049, 4225 ins, 5326 del, 18603 sub ] exp/tri4b/decode_120k_2gram_dev.si/wer_14_0.0
+%WER 15.82 [ 17226 / 108867, 3131 ins, 3166 del, 10929 sub ] [PARTIAL] exp/tri4b/decode_120k_2gram_rs_120k_5gram/wer_16_0.0
+%WER 31.38 [ 34225 / 109049, 9358 ins, 3668 del, 21199 sub ] exp/tri4b/decode_20k_2gram_dev/wer_16_0.0
+%WER 36.42 [ 39718 / 109049, 9878 ins, 4381 del, 25459 sub ] exp/tri4b/decode_20k_2gram_dev.si/wer_15_0.0
+%WER 26.48 [ 28825 / 108851, 7944 ins, 2773 del, 18108 sub ] [PARTIAL] exp/tri4b/decode_20k_2gram_rs_20k_5gram/wer_19_0.0
