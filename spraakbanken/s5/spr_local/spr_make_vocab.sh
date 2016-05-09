@@ -14,7 +14,7 @@ echo "$0 $@"  # Print the command line for logging
 
 if [ $# != 3 ]; then
    echo "usage: spr_local/spr_make_vocab.sh out_file vocabsize(in thousands) lexicon"
-   echo "e.g.:  steps/spr_make_vocab.sh --lowercase-text true data/vocab/20k_lower 20 data-prep/lexicon"
+   echo "e.g.:  spr_local/spr_make_vocab.sh --lowercase-text true data/vocab/20k_lower 20 data-prep/lexicon"
    echo "main options (for others, see top of script file)"
    echo "     --lowercase-text (true|false)   # Lowercase everthing"
    echo "     --accents (true|false)   # use accents on phones"
