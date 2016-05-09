@@ -21,10 +21,10 @@ def main(model, countfile, segmentedfile, vocab, lowercase):
             if vocab is not None:
                 if any(p not in vocab for p in parts[:-1]):
                     continue
-                    
-            result = []
+
+            result = ""
             for p in parts[:-1]:
-                result.extend(m.viterbi_segment(p)[0])
+                result = result + " " + "+ +".join(m.viterbi_segment(p)[0])
 
             if len(result) < min_size:
                 min_size = len(result)
@@ -32,8 +32,8 @@ def main(model, countfile, segmentedfile, vocab, lowercase):
             if len(result) > max_size:
                 max_size = len(result)
 
-            result.append(parts[-1])
-            print(" ".join(result), file=out_f)
+            result = result + " " + parts[-1]
+            print(result, file=out_f)
 
     print("Min context: {}, max context: {}".format(min_size, max_size))
 
