@@ -26,7 +26,7 @@ if [ $# != 2 ]; then
 fi
 
 inlex=$1
-outdir=$3
+outdir=$2
 
 lc=false
 ac=false
