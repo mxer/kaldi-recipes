@@ -47,14 +47,14 @@ morfessor-train -s $outdir/morfessor.bin ${vocab_dir}/vocab -d ones
 
 mkdir -p tmp
 tmpcount=$(mktemp -d --tmpdir=tmp)
-echo "Temporary directories (should be cleaned afterwards):" ${vocab_dir}
+echo "Temporary directories (should be cleaned afterwards):" ${tmpcount}
 
 spr_local/to_lower.py < data-prep/ngram/corpus | split -l 1000000 --numeric-suffixes=1000 -a4 - $tmpcount/
 
 last=$(ls -1 $tmpcount | sort -n | tail -n1)
 mkdir $tmpcount/out
 mkdir $tmpcount/log
-$cmd JOB=1000:$last $tmpcount/log/JOB.log morfessor-segment -l morfessor.bin < $tmpcount/JOB > $tmpcount/out/JOB
+$cmd JOB=1000:$last $tmpcount/log/JOB.log "morfessor-segment -l morfessor.bin < $tmpcount/JOB > $tmpcount/out/JOB"
 
 cat $tmpcount/out/* $outdir/corpus
 
