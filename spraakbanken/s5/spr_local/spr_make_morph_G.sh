@@ -30,12 +30,12 @@ outdir=$2
 
 lc=false
 ac=false
-if $lowercase_text; then
+#if $lowercase_text; then
 lc=true
-fi
-if $accents; then
-ac=true
-fi
+#fi
+#if $accents; then
+#ac=true
+#fi
 
 vocab_dir=$(mktemp -d)
 
