@@ -14,7 +14,7 @@ def main(model, infile, outfile):
             np = []
 
             for p in parts:
-                if p in {".","?","!",";",",",":"}:
+                if p in {".","?","!",";",",",":","\""}:
                     continue
                 if any(c in "<>." for c in p):
                     np.append(p)
