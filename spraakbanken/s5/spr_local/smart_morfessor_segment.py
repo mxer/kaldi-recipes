@@ -14,11 +14,13 @@ def main(model, infile, outfile):
             np = []
 
             for p in parts:
+                if p in {".","?","!",";",",",":"}:
+                    continue
                 if any(c in "<>." for c in p):
                     np.append(p)
                 else:
-                    np.append(" ".join(m.viterbi_segment(p)[0]))
-            result = " ".join(np)
+                    np.append("+ +".join(m.viterbi_segment(p)[0]))
+            result = " ".join(a.lower() for a in np)
 
             print(result, file=out_f)
 
