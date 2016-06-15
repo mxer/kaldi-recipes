@@ -46,7 +46,7 @@ spr_local/spr_make_vocab.sh --lowercase-text $lc --accents $ac ${vocab_dir} 200 
 morfessor-train -s $outdir/morfessor.bin -S $outdir/morfessor.txt ${vocab_dir}/vocab -d ones
 
 mkdir -p tmp
-tmpcount=$(mktemp -d)
+tmpcount=$(mktemp -d --tmpdir=tmp)
 echo "Temporary directories (should be cleaned afterwards):" ${tmpcount}
 
 spr_local/to_lower.py < data-prep/ngram/corpus | split -l 1000000 --numeric-suffixes=1000 -a4 - $tmpcount/
