@@ -43,7 +43,7 @@ mkdir -p $outdir
 echo "Temporary directories (should be cleaned afterwards):" ${vocab_dir}
 spr_local/spr_make_vocab.sh --lowercase-text $lc --accents $ac ${vocab_dir} 200 $inlex
 
-morfessor-train -s $outdir/morfessor.bin ${vocab_dir}/vocab -d ones
+morfessor-train -s $outdir/morfessor.bin -S $outdir/morfessor.txt ${vocab_dir}/vocab -d ones
 
 mkdir -p tmp
 tmpcount=$(mktemp -d)
