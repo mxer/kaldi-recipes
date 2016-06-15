@@ -46,7 +46,7 @@ spr_local/spr_make_vocab.sh --lowercase-text $lc --accents $ac ${vocab_dir} 200 
 morfessor-train -s $outdir/morfessor.bin ${vocab_dir}/vocab -d ones
 
 mkdir -p tmp
-tmpcount=$(mktemp -d --tmpdir=tmp)
+tmpcount=$(mktemp -d)
 echo "Temporary directories (should be cleaned afterwards):" ${tmpcount}
 
 spr_local/to_lower.py < data-prep/ngram/corpus | split -l 1000000 --numeric-suffixes=1000 -a4 - $tmpcount/
@@ -59,7 +59,46 @@ $cmd JOB=1000:$last $tmpcount/log/JOB.log spr_local/smart_morfessor_segment.py $
 
 cat $tmpcount/out/* > $outdir/corpus
 
+rm -Rf $tmpcount $vocab_dir
 
+spr_local/make_recog_vocab_corpus.py $outdir/corpus 100 $outdir/morph_vocab
+spr_local/spr_make_lex.sh --accents false ${outdir}/lex $outdir/morph_vocab data/lexicon
+utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt $outdir/morph_vocab "<UNK>" ${outdir}/lang/local ${outdir}/lang
 
+order=3
 
+for wtb in $(seq 0 ${order}); do
+    INTERPOLATE=$(seq 1 ${order} | sed "s/^/-interpolate/" | tr "\n" " ")
+
+    MINCOUNT=""
+    if [ $order -ge 1 ]; then
+         MINCOUNT=$(seq 2 ${order} | sed "s/^/-gt/" | sed "s/$/min 3/" | tr "\n" " ")
+    fi
+
+    KNDISCOUNT=""
+    if [ $wtb -lt ${order} ]; then
+         KNDISCOUNT=$(seq $((wtb+1)) ${order} | sed "s/^/-kndiscount/" | tr "\n" " ")
+    fi
+
+    WBDISCOUNT=""
+    if [ $wtb -gt 0 ]; then
+        WBDISCOUNT=$(seq 1 ${wtb} | sed "s/^/-wbdiscount/" | tr "\n" " ")
+    fi
+
+    echo $KNDISCOUNT $WBDISCOUNT $MINCOUNT $INTERPOLATE
+
+    again=0
+
+    ngram-count -memuse -text $outdir/corpus -lm  ${outdir}/lang/arpa -vocab $outdir/morph_vocab/vocab -order ${order} $MINCOUNT $INTERPOLATE $KNDISCOUNT $WBDISCOUNT || again=1
+
+    if [ $again -eq 0 ]; then
+        break
+    fi
+done
+
+arpa2fst ${outdir}/lang/arpa | fstprint | utils/eps2disambig.pl | utils/s2eps.pl | fstcompile --isymbols=${outdir}/lang/words.txt \
+      --osymbols=${outdir}/lang/words.txt  --keep_isymbols=false --keep_osymbols=false | \
+     fstrmepsilon | fstarcsort --sort_type=ilabel > ${outdir}/lang/G.fst
+
+utils/validate_lang.pl ${outdir}/lang
 
