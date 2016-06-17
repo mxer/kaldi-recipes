@@ -66,7 +66,7 @@ rm -Rf $tmpcount $vocab_dir
 
 spr_local/make_recog_vocab_corpus.py $outdir/corpus 100 $outdir/morph_vocab
 spr_local/spr_make_lex.sh --accents false ${outdir}/lex $outdir/morph_vocab data/lexicon
-utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt $outdir/morph_vocab "<UNK>" ${outdir}/lang/local ${outdir}/lang
+utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt $outdir/lex "<UNK>" ${outdir}/lang/local ${outdir}/lang
 
 order=3
 
