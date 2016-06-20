@@ -1,1 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+export LC_ALL=C
+
