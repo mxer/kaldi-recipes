@@ -30,4 +30,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main({args.selection.split("|")}, args.infile, args.outfile)
+    main({c for c in args.selection.split("|")}, args.infile, args.outfile)
