@@ -7,7 +7,7 @@ from pynlpl.formats import folia
 
 def main(selection, infile, outfile):
     with open(outfile, 'w', encoding='utf-8') as of:
-        t = tarfile.TarFile(infile, 'r|*')
+        t = tarfile.open(infile, 'r|*')
 
         while True:
             ti = t.next()
