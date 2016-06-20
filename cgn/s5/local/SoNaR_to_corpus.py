@@ -9,18 +9,16 @@ def main(selection, infile, outfile):
     with open(outfile, 'w', encoding='utf-8') as of:
         t = tarfile.open(infile, 'r|*')
 
-        while True:
-            ti = t.next()
-            if ti is None:
-                break
-
+        for ti in t:
             if not ti.name.endswith(".folia.xml") or not any(c in ti.name for c in selection):
+                print(".", end="")
                 continue
 
             print("FILE: {}".format(ti.name), file=of)
+            print("FILE: {}".format(ti.name), )
 
             for s in folia.Document(string=t.extractfile(ti).read()).sentences():
-                print(s.strip(), file=of)
+                print(s, file=of)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract corpus from SoNaR')
