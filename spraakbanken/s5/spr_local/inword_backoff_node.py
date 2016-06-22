@@ -12,8 +12,10 @@ def main(inf, outf, word_map):
     
     max_node = 0
 
+    backoff_node = None
+
     for line in inf:
-        parts = line.strip("\n").split("\t")
+        parts = line.split()
         if len(parts) < 3:
             print("\t".join(parts), file=outf)
             continue
@@ -22,29 +24,32 @@ def main(inf, outf, word_map):
         node_in = int(parts[1])
         max_node = max(max_node, node_in, node_out)
 
-        if node_out == 0:
+        if backoff_node is None and word_map.get(parts[2],parts[2]) == word_map.get("#0", "#0"):
+            backoff_node = int(parts[1])
+
+        if node_out == backoff_node:
             word = word_map.get(parts[2],parts[2])
             if word.endswith('+'):
                 iw_ending_nodes.add(node_in)
             if word.startswith('+'):
                 iw_backoff_outgoing.append(parts)
                 continue
-        if node_in == 0:
+        if node_in == backoff_node:
             if node_out in iw_ending_nodes:
                 iw_backoff_incoming.append(parts)
                 continue
         print("\t".join(parts), file=outf)
 
-    backoff_node = str(max_node + 1)
-    print("Backoff node: {}".format(backoff_node), file=sys.stderr)
+    iw_backoff_node = str(max_node + 1)
+    print("Backoff node: {}".format(iw_backoff_node), file=sys.stderr)
     print("Incoming arcs iw-backoff: {}".format(len(iw_backoff_incoming)), file=sys.stderr)
     print("Outcoming arcs iw-backoff: {}".format(len(iw_backoff_outgoing)), file=sys.stderr)
 
     for parts in iw_backoff_outgoing:
-        parts[0] = backoff_node
+        parts[0] = iw_backoff_node
         print("\t".join(parts), file=outf)
     for parts in iw_backoff_incoming:
-        parts[1] = backoff_node
+        parts[1] = iw_backoff_node
         print("\t".join(parts), file=outf)
 
 
