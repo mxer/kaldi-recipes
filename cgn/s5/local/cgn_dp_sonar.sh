@@ -36,7 +36,7 @@ mkdir -p tmp
 tartmpdir=$(mktemp -d --tmpdir=tmp/)
 
 for f in $(ls -1 ${tmpdir}/filelists/); do
-    tar cJf $tartmpdir/$f.tar -T ${tmpdir}/filelists/$f
+    tar cf $tartmpdir/$f.tar -T ${tmpdir}/filelists/$f
 done
 
 last=$(ls -1 ${tmpdir}/filelists/ | sort -n | tail -n1)
@@ -48,3 +48,5 @@ source activate pineapple
 $cmd JOB=1000:$last $tartmpdir/log/JOB.log local/SoNaR_to_corpus.py $tartmpdir/JOB.tar $tartmpdir/out/JOB
 
 cat $tartmpdir/out/* > $outfile
+
+rm -Rf tmp/
