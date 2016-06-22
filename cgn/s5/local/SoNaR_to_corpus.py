@@ -2,30 +2,29 @@
 import argparse
 import tarfile
 
+import sys
 from pynlpl.formats import folia
 
 
-def main(selection, infile, outfile):
-    with open(outfile, 'w', encoding='utf-8') as of:
-        t = tarfile.open(infile, 'r|*')
+def main(infile, outfile):
 
-        for ti in t:
-            if not ti.name.endswith(".folia.xml") or not any(c in ti.name for c in selection):
-                print(".", end="")
-                continue
+    t = tarfile.open(mode='r|*', fileobj=infile)
 
-            print("FILE: {}".format(ti.name), file=of)
-            print("FILE: {}".format(ti.name), )
+    for ti in t:
+        if not ti.name.endswith(".folia.xml"):
+            continue
 
-            for s in folia.Document(string=t.extractfile(ti).read()).sentences():
-                print(s, file=of)
+        print("FILE: {}".format(ti.name), file=outfile)
+        print("FILE: {}".format(ti.name), )
+
+        for s in folia.Document(string=t.extractfile(ti).read()).sentences():
+            print(s, file=outfile)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract corpus from SoNaR')
-    parser.add_argument('selection')
-    parser.add_argument('infile')
-    parser.add_argument('outfile')
+    parser.add_argument('infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
+    parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
 
     args = parser.parse_args()
 
-    main({c for c in args.selection.split("|")}, args.infile, args.outfile)
+    main(args.infile, args.outfile)
