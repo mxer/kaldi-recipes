@@ -116,6 +116,8 @@ cat $tartmpdir/out/* | xz > ${dataprep_dir}/text/text.orig.xz
 
 rm -Rf $tartmpdir
 
+common/train_phonetisaurus.sh ${dataprep_dir}/lexicon/lexicon.txt ${dataprep_dir}/lexicon/g2p_wfsa
+
 if [ -e data-prep ]; then
 rm data-prep
 fi
