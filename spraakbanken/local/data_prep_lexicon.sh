@@ -41,7 +41,7 @@ if ! $accents; then
     opt2="--no-accents"
 fi
 
-spr_local/spr_prep_lex.py ${data_dir} ${data_dir}/lexicon.txt definitions/dict_prep/vowels definitions/dict_prep/consonants --lowercase --no-accents
+local/spr_prep_lex.py ${data_dir} ${data_dir}/lexicon.txt definitions/dict_prep/vowels definitions/dict_prep/consonants --lowercase --no-accents
 
 mkdir -p ${out_dir}
 sort -u < ${data_dir}/lexicon.txt > ${out_dir}/lexicon.txt
