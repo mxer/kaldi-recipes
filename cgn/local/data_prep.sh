@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -t 24:00:00
 #SBATCH --mem-per-cpu 5G
-#SBATCH --gres spindle:1
+## #SBATCH --gres spindle:1
 
 set -e
 
@@ -17,7 +17,7 @@ echo "$0 $@"  # Print the command line for logging
 [ -f path.sh ] && . ./path.sh # source the path.
 . parse_options.sh || exit 1;
 
-if [ $# != 1 ]; then
+if [ $# != 2 ]; then
    echo "usage: local/data_prep.sh cgn_dir sonar_file"
    echo "e.g.:  local/data_prep.sh \$GROUP_DIR/c/cgn \$USER_DIR/c/SoNaR/20150602_SoNaRCorpus_NC_1.2.1.gz"
    echo "main options (for others, see top of script file)"
@@ -31,7 +31,7 @@ cgn_dir=$1
 sonar_file=$2
 
 if [ -d $dataprep_dir/cgn/kaldi-prep ]; then
-    mv $dataprep_dir/cgn/kaldi-prep.$(date +%s)
+    mv $dataprep_dir/cgn/kaldi-prep $dataprep_dir/cgn/kaldi-prep.$(date +%s)
 fi
 
 mkdir -p $dataprep_dir/cgn/kaldi-prep

@@ -7,4 +7,5 @@ exp
 cmd.sh
 path.sh
 slurm*.out
+slurm.conf
 log
