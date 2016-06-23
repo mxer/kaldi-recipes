@@ -115,3 +115,9 @@ mkdir -p mkdir -p ${dataprep_dir}/text
 cat $tartmpdir/out/* | xz > ${dataprep_dir}/text/text.orig.xz
 
 rm -Rf $tartmpdir
+
+if [ -e data-prep ]; then
+rm data-prep
+fi
+
+ln -s $dataprep_dir data-prep
