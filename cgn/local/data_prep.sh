@@ -1,4 +1,7 @@
 #!/bin/bash
+#SBATCH -t 24:00:00
+#SBATCH --mem-per-cpu 5G
+#SBATCH --gres spindle:1
 
 set -e
 
