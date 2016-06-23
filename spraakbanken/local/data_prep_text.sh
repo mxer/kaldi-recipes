@@ -24,13 +24,13 @@ result_dir=$2
 
 echo $(date) "Check the integrity of the archives"
 wd=$(pwd)
-(cd ${spr_dir} && md5sum -c ${wd}/local/checksums/ngram) || exit 1
+(cd ${spr_dir} && md5sum -c ${wd}/definitions/checksums/ngram) || exit 1
 
 data_dir=$(mktemp -d)
 
 echo "Temporary directories (should be cleaned afterwards):" ${data_dir}
 
-(cd ${spr_dir} && cut -f3- -d" " ${wd}/local/checksums/ngram | xargs tar xz --strip-components=1 -C ${data_dir} -f)
+(cd ${spr_dir} && cut -f3- -d" " ${wd}/definitions/checksums/ngram | xargs tar xz --strip-components=1 -C ${data_dir} -f)
 
 echo $(date) "Copy files to right locations"
 
