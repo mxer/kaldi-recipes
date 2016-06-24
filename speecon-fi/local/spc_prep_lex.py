@@ -24,8 +24,8 @@ def transform_lexicon(input, output):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('infile', nargs='?', type=argparse.FileType('r', encoding='iso-8859-15'), default=codecs.getreader('iso-8859-15')(sys.stdin))
-    parser.add_argument('outfile', nargs='?', type=argparse.FileType('w', encoding='utf-8'), default=codecs.getwriter('utf-8')(sys.stdout))
+    parser.add_argument('infile', nargs='?', type=argparse.FileType('r', encoding='iso-8859-15'), default=codecs.getreader('iso-8859-15')(sys.stdin.buffer))
+    parser.add_argument('outfile', nargs='?', type=argparse.FileType('w', encoding='utf-8'), default=codecs.getwriter('utf-8')(sys.stdout.buffer))
 
     args = parser.parse_args()
 
