@@ -43,7 +43,7 @@ ln -s ${tdir} data-prep
 . ./cmd.sh
 . common/slurm_dep_graph.sh
 
-JOB_PREFIX=spc_
+JOB_PREFIX=FI_
 
 job prep_audio 1 24 NONE -- local/data_prep_audio.sh ${spc_dir} ${tdir}/audio
 job prep_text 1 1 NONE -- local/data_prep_text.sh ${spc_dir} ${tdir}/text

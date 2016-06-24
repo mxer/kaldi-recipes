@@ -35,14 +35,15 @@ if [ -e data-prep ]; then
 rm data-prep
 fi
 
-ln -s $dataprep_dir data-prep
+ln -s $dataprep_dir/cgn/kaldi-prep data-prep
 
 
 . ./cmd.sh
 . common/slurm_dep_graph.sh
+JOB_PREFIX=NL_
 
-job prep_audio 4 24 NONE -- local/data_prep_audio.sh $cgn_dir $dataprep_dir/cgn/kaldi-prep/audio
+job prep_audio 1 4 NONE -- local/data_prep_audio.sh $cgn_dir $dataprep_dir/cgn/kaldi-prep/audio
 job prep_text 4 24 NONE -- local/data_prep_text.sh $sonar_file $dataprep_dir/cgn/kaldi-prep/text
-job prep_lexicon 4 4 NONE -- local/data_prep_lexicon.sh $cgn_dir $dataprep_dir/cgn/kaldi-prep/lexicon
+job prep_lexicon 1 1 NONE -- local/data_prep_lexicon.sh $cgn_dir $dataprep_dir/cgn/kaldi-prep/lexicon
 
-job g2p_train 4 24 prep_lexicon -- common/train_phonetisaurus.sh $dataprep_dir/cgn/kaldi-prep/lexicon/lexicon.txt $dataprep_dir/cgn/kaldi-prep/g2p_wfsa
+job g2p_train 1 1 prep_lexicon -- common/train_phonetisaurus.sh $dataprep_dir/cgn/kaldi-prep/lexicon/lexicon.txt $dataprep_dir/cgn/kaldi-prep/lexicon/g2p_wfsa

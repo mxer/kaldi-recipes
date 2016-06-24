@@ -22,4 +22,6 @@ fi
 spc_dir=$1
 result_dir=$2
 
+mkdir -p ${result_dir}
+
 find ${spc_dir} -name "LEXICON.TBL" | xargs cat | local/spc_prep_lex.py | sort -u > ${result_dir}/lexicon.txt
