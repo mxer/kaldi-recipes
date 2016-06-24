@@ -13,7 +13,7 @@ def main(in_dir, out_scp, out_segments, out_dir):
     fd_text = open(os.path.join(out_dir, 'text.orig'), 'w', encoding='utf-8')
 
     fd_utt2spk = open(os.path.join(out_dir, 'utt2spk'), 'w', encoding='utf-8')
-    fd_utt2comp = open(os.path.join(out_dir, 'utt2comp'), 'w', encoding='utf-8')
+    fd_utt2comp = open(os.path.join(out_dir, 'utt2type'), 'w', encoding='utf-8')
     fd_utt2accent = open(os.path.join(out_dir, 'utt2accent'), 'w', encoding='utf-8')
 
     wav_files = {}

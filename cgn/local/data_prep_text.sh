@@ -50,7 +50,7 @@ echo $(date) "Run text jobs"
 
 $cmd JOB=1000:$last $tartmpdir/log/JOB.log local/SoNaR_to_corpus.py $tartmpdir/JOB.tar $tartmpdir/out/JOB
 
-mkdir -p mkdir -p $result_dir
+mkdir -p $result_dir
 
 cat $tartmpdir/out/* | xz > ${result_dir}/text.orig.xz
 

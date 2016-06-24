@@ -12,9 +12,9 @@ echo "$0 $@"  # Print the command line for logging
 [ -f path.sh ] && . ./path.sh # source the path.
 . parse_options.sh || exit 1;
 
-if [ $# != 1 ]; then
-   echo "usage: local/data_prep.sh speecon_dir"
-   echo "e.g.:  local/data_prep.sh \$GROUP_DIR/c/speecon-fi"
+if [ $# != 2 ]; then
+   echo "usage: local/data_prep.sh speecon_dir kielipankkifile"
+   echo "e.g.:  local/data_prep.sh \$GROUP_DIR/c/speecon-fi \$GROUP_DIR/c/kielipankki/traindata.txt.gz"
    echo "main options (for others, see top of script file)"
    echo "     --dataprep-dir director   # location to put the dataprep directory"
 
@@ -22,6 +22,7 @@ if [ $# != 1 ]; then
 fi
 
 spc_dir=$1
+kpk_file=$2
 
 tdir=$dataprep_dir/speecon-fi/kaldi-prep
 
@@ -46,7 +47,7 @@ ln -s ${tdir} data-prep
 JOB_PREFIX=FI_
 
 job prep_audio 1 24 NONE -- local/data_prep_audio.sh ${spc_dir} ${tdir}/audio
-job prep_text 1 1 NONE -- local/data_prep_text.sh ${spc_dir} ${tdir}/text
+job prep_text 4 1 NONE -- local/data_prep_text.sh ${kpk_file} ${tdir}/text
 job prep_lexicon 1 1 NONE -- local/data_prep_lexicon.sh ${spc_dir} ${tdir}/lexicon
 
 job g2p_train 2 4 prep_lexicon -- common/train_phonetisaurus.sh ${tdir}/lexicon/lexicon.txt ${tdir}/lexicon/g2p_wfsa
