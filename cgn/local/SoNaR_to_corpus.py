@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import codecs
 import tarfile
 
 import sys
@@ -23,7 +24,7 @@ def main(infile, outfile):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract corpus from SoNaR')
     parser.add_argument('infile', nargs='?', type=argparse.FileType('rb'), default=sys.stdin)
-    parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
+    parser.add_argument('outfile', nargs='?', type=argparse.FileType('w', encoding='utf-8'), default=sys.stdout)
 
     args = parser.parse_args()
 
