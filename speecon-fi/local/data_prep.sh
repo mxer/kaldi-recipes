@@ -46,7 +46,7 @@ ln -s ${tdir} data-prep
 
 JOB_PREFIX=FI_
 
-job prep_audio 1 24 NONE -- local/data_prep_audio.sh ${spc_dir} ${tdir}/audio
+job prep_audio 1 10 NONE -- local/data_prep_audio.sh ${spc_dir} ${tdir}/audio
 job prep_text 4 1 NONE -- local/data_prep_text.sh ${kpk_file} ${tdir}/text
 job prep_lexicon 1 1 NONE -- local/data_prep_lexicon.sh ${spc_dir} ${tdir}/lexicon
 

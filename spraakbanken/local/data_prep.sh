@@ -14,7 +14,7 @@ echo "$0 $@"  # Print the command line for logging
 
 if [ $# != 1 ]; then
    echo "usage: local/data_prep.sh spraakbanken_dir"
-   echo "e.g.:  local/data_prep.sh \$GROUP_DIR/c/spraakbanken \$USER_DIR/c/SoNaR/20150602_SoNaRCorpus_NC_1.2.1.gz"
+   echo "e.g.:  local/data_prep.sh \$GROUP_DIR/c/spraakbanken"
    echo "main options (for others, see top of script file)"
    echo "     --dataprep-dir director   # location to put the dataprep directory"
 

@@ -2,10 +2,8 @@
 import argparse
 import locale
 import os
-
-import sys
-
 import re
+import sys
 
 locale.setlocale(locale.LC_ALL, 'C')
 
