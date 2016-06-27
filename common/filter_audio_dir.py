@@ -63,4 +63,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(args.indir, args.outdir, args.specification, {'wav.ark',})
+    main(args.indir, args.outdir, args.specifications, {'wav.ark',})
