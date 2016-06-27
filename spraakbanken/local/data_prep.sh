@@ -44,7 +44,7 @@ ln -s $dataprep_dir/spraakbanken/$lang/kaldi-prep data-prep
 JOB_PREFIX=$(basename $(pwd))_
 
 job prep_audio 4 24 NONE -- local/data_prep_audio.sh $spr_dir $dataprep_dir/spraakbanken/$lang/kaldi-prep/audio
-job prep_text 32 24 NONE -- local/data_prep_text.sh $spr_dir $dataprep_dir/spraakbanken/$lang/kaldi-prep/text
+job prep_text 64 24 NONE -- local/data_prep_text.sh $spr_dir $dataprep_dir/spraakbanken/$lang/kaldi-prep/text
 job prep_lexicon 70 4 NONE -- local/data_prep_lexicon.sh $spr_dir $dataprep_dir/spraakbanken/$lang/kaldi-prep/lexicon
 
 job g2p_train 45 4 prep_lexicon -- common/train_phonetisaurus.sh $dataprep_dir/spraakbanken/$lang/kaldi-prep/lexicon/lexicon.txt $dataprep_dir/spraakbanken/$lang/kaldi-prep/lexicon/g2p_wfsa
