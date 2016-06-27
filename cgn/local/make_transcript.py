@@ -8,7 +8,7 @@ def main(dir):
         for line in open(os.path.join(dir, 'text.orig'), encoding='utf-8'):
             key, sent = line.strip().split(None, 1)
 
-            print("{} {}".format(key, " ".join(w.lower().strip(".?") for w in sent.split())), file=out_f)
+            print("{} {}".format(key, " ".join(w.lower().split("*")[0].strip(".?") for w in sent.split())), file=out_f)
 
 
 if __name__ == "__main__":
