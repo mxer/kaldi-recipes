@@ -15,10 +15,13 @@ def gen_utts(indir, filenames):
     files = {}
 
     def advance(f):
+        files[f]['utt'], files[f]['val'] = None, ""
         try:
-            files[f]['utt'], files[f]['val'] = files[f].readline().strip().split(None, 1)
+            parts = files[f]['file'].readline().strip().split(None, 1)
+            files[f]['utt'] = parts[0]
+            files[f]['val'] = parts[1]
         except:
-            files[f]['utt'], files[f]['val'] = None, None
+            pass
 
     for filename in filenames:
         files[filename] = {}
@@ -27,7 +30,7 @@ def gen_utts(indir, filenames):
 
     all_run_out = False
     while not all_run_out:
-        min_key = min((files[f]['utt'] for f in filenames if files[f]['utt'] is not None), key=locale.strcoll)
+        min_key = min((files[f]['utt'] for f in filenames if files[f]['utt'] is not None), key=locale.strxfrm)
 
         files_without_minkey = set(f for f in filenames if files[f]['utt'] != min_key)
         if len(files_without_minkey) > 0:
@@ -51,6 +54,8 @@ def main(indir, outdir, specs, ignores):
     out_files = {filename: open(os.path.join(outdir, filename), 'w', encoding='utf-8') for filename in filenames}
 
     for utt, vals in gen_utts(indir, filenames):
+        if utt.startswith('SES002') and "CC" in utt:
+            pass
         if key_r.match(utt) is not None and all(r.match(vals[f]) is not None for f,r in val_rd.items()):
             for f in filenames:
                 print("{} {}".format(utt, vals[f]), file=out_files[f])
