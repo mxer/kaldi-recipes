@@ -18,10 +18,16 @@ def preprocess_corpus(inf, outf):
                 continue
             sent.append(w)
 
+        if len(sent) == 0:
+            continue
+
         if sent[0] != "<s>":
             sent = ["<s>"] + sent
         if sent[-1] != "</s>":
             sent.append("</s>")
+
+        if len(sent) < 3:
+            continue
 
         print(" ".join(sent), file=outf)
 
