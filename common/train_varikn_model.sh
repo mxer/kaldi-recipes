@@ -11,8 +11,8 @@ echo "$0 $@"  # Print the command line for logging
 . parse_options.sh || exit 1;
 
 if [ $# != 4 ]; then
-   echo "usage: common/train_srilm_model.sh corpus vocab order outfile"
-   echo "e.g.:  common/train_srilm_model.sh data-prep/text/text.orig.xz data/dicts/word_20k 3 data/word_lm/srilm_20k_3gram/arpa"
+   echo "usage: common/train_varikn_model.sh corpus vocab d order outfile"
+   echo "e.g.:  common/train_varikn_model.sh data-prep/text/text.orig.xz data/dicts/word_20k 0.05 3 data/word_lm/srilm_20k_3gram/arpa"
    echo "main options (for others, see top of script file)"
 
    exit 1;
@@ -20,8 +20,12 @@ fi
 
 corpus=$1
 vocab=$2
-order=$3
-outfile=$4
+d=$3
+order=$4
+outfile=$5
+
+e=0$(echo "2*$d" | bc)
+
 
 for wtb in $(seq 0 ${order}); do
     INTERPOLATE=$(seq 1 ${order} | sed "s/^/-interpolate/" | tr "\n" " ")
@@ -51,3 +55,11 @@ for wtb in $(seq 0 ${order}); do
         break
     fi
 done
+
+
+tmpdir=$(mktemp -d)
+
+common/corpus_split_varikn.py ${corpus} 100000 ${tmpdir}/train ${tmpdir}/dev
+varigram_kn -N -n ${order} -D ${d} -E ${e} -a -3 -B ${vocab} -C -o ${tmpdir}/dev ${tmpdir}/train - | xz > ${outfile}
+
+rm -Rf ${tmpdir}

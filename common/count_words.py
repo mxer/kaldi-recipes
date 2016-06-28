@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import codecs
+import lzma
 
 import sys
 
@@ -8,6 +9,7 @@ import collections
 
 
 def count_words(inf, outf, nmost):
+    inf = lzma.open(inf, 'rt', encoding='utf-8')
     c = collections.Counter()
     for line in inf:
         c.update(line.split())
@@ -24,7 +26,7 @@ def count_words(inf, outf, nmost):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('infile', nargs='?', type=argparse.FileType('r', encoding='utf-8'), default=codecs.getreader('utf-8')(sys.stdin.buffer))
+    parser.add_argument('infile', nargs='?', type=argparse.FileType('rb'), default=sys.stdin.buffer)
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('w', encoding='utf-8'), default=codecs.getwriter('utf-8')(sys.stdout.buffer))
     parser.add_argument("--nmost", type=int, default=None)
 

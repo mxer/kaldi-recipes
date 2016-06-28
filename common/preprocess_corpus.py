@@ -7,6 +7,7 @@ import unicodedata
 
 
 def preprocess_corpus(inf, outf):
+    outf = lzma.open(outf, 'wt', encoding='utf-8')
     for line in lzma.open(inf, 'rt', encoding='utf-8'):
         if line.startswith("FILE"):
             continue
@@ -35,7 +36,7 @@ def preprocess_corpus(inf, outf):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('infile', nargs='?', type=argparse.FileType('rb'), default=sys.stdin.buffer)
-    parser.add_argument('outfile', nargs='?', type=argparse.FileType('w', encoding='utf-8'), default=codecs.getwriter('utf-8')(sys.stdout.buffer))
+    parser.add_argument('outfile', nargs='?', type=argparse.FileType('wb'), default=sys.stdout.buffer)
 
     args = parser.parse_args()
 
