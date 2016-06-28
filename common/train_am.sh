@@ -7,7 +7,7 @@ set -e
 
 . common/slurm_dep_graph.sh
 
-JOB_PREFIX=$(basename $(pwd))
+JOB_PREFIX=$(cat id)_
 
 function error_exit {
     echo "$1" >&2
@@ -17,6 +17,8 @@ function error_exit {
 if [ ! -d "data-prep" ]; then
  error_exit "The directory data-prep needs to exist. Run local/data_prep.sh"
 fi
+
+rm -Rf data mfcc
 
 job make_subset 4 1 NONE -- common/data_subset.sh
 job make_lex 4 4 make_subset -- common/make_dict.sh data/train/vocab data/dict_train
@@ -47,8 +49,11 @@ accents=false
 mfccdir=mfcc
 numjobs=50
 
+mkdir -p mfcc
+command -v lfs > /dev/null && lfs setstripe -c 6 $mfccdir
+
 for set in "train" "dev"; do
- job mfcc_$set 4 4 make_corpus_$set -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
+ job mfcc_$set 4 4 make_subset -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
  job cmvn_$set 4 4 LAST      -- steps/compute_cmvn_stats.sh data/${set} exp/make_mfcc/${set} ${mfccdir}
  job val_data_$set 4 4 LAST  -- utils/validate_data_dir.sh data/${set}
 done

@@ -31,9 +31,11 @@ mkdir -p ${outdir}
 cat ${tmpdir}/found.lex ${tmpdir}/oov.lex definitions/dict_prep/lex | sort -u > ${outdir}/lexicon.txt
 
 echo "SIL" > ${tmpdir}/silence_phones.txt
-cut -f2 definitions/dict_prep/lex > ${tmpdir}/silence_phones.txt
+cut -f2 definitions/dict_prep/lex >> ${tmpdir}/silence_phones.txt
 sort -u < ${tmpdir}/silence_phones.txt > ${outdir}/silence_phones.txt
 
-awk '{print substr($0, index($0, $1))}' < ${outdir}/lexicon.txt | tr ' ' '\n' | sort -u | grep -v -F -f ${outdir}/silence_phones.txt > ${outdir}/nonsilence_phones.txt
+echo "SIL" > ${outdir}/optional_silence.txt
+
+cut -f2- < ${outdir}/lexicon.txt | tr ' ' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed '/^$/d' | sort -u | grep -v -F -f ${outdir}/silence_phones.txt > ${outdir}/nonsilence_phones.txt
 
 rm -Rf ${tmpdir}
