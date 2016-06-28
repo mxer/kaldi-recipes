@@ -1,2 +1,3 @@
 ^.....[0-7]
-^comp-o$
+utt2type ^comp-o$
+text.orig ^.((?!\*(v|x|d|a|u|z)).)*$ 

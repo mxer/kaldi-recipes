@@ -21,6 +21,8 @@ fi
 spr_dir=$1
 result_dir=$2
 
+find /tmp -maxdepth 1 -type d -ctime +1 -exec rm -rf {} +
+
 echo $(date) "Check the integrity of the archives"
 wd=$(pwd)
 (cd ${spr_dir} && md5sum -c ${wd}/definitions/checksums/corpus) || exit "The spraakbankenarchives gave unexpected md5 sums"

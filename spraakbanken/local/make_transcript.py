@@ -12,13 +12,14 @@ def main(dir, lexicon):
 
             sent = []
 
-            for w in raw.replace('\\', ' ').lower().split():
+            for w in raw.replace('\\', ' ').replace(',', ' ').replace(">", "> ").lower().split():
                 if w in lexicon:
                     sent.append(w)
                 else:
-                    sent.append(w.strip(".,?()/"))
+                    w = w.replace("?", " ").replace("."," ")
+                    sent.extend(w.strip().strip("´.,?()/!;`\"").split())
 
-            print("{} {}".format(key, " ".join(sent), file=out_f))
+            print("{} {}".format(key, " ".join(sent)), file=out_f)
 
 
 if __name__ == "__main__":

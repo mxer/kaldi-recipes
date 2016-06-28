@@ -24,6 +24,8 @@ fi
 sonar_file=$1
 result_dir=$2
 
+find /tmp -maxdepth 1 -type d -ctime +1 -exec rm -rf {} +
+
 echo $(date) "Start text gathering"
 tmpdir=$(mktemp -d)
 
@@ -48,7 +50,7 @@ source activate pineapple
 
 echo $(date) "Run text jobs"
 
-$cmd JOB=1000:$last $tartmpdir/log/JOB.log local/SoNaR_to_corpus.py $tartmpdir/JOB.tar $tartmpdir/out/JOB
+$cmd JOB=1000:$last $tartmpdir/log/JOB.log $(command -v python3) local/SoNaR_to_corpus.py $tartmpdir/JOB.tar $tartmpdir/out/JOB
 
 mkdir -p $result_dir
 

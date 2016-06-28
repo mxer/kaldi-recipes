@@ -22,13 +22,13 @@ vocab=$1
 outdir=$2
 
 tmpdir=$(mktemp -d)
-
+echo "Tmpdir: ${tmpdir}"
 cat data-prep/lexicon/lexicon.txt definitions/dict_prep/lex | common/filter_lex.py - ${vocab} ${tmpdir}/found.lex ${tmpdir}/oov
 
 phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov | sed "s/\t$/\tSIL/" > ${tmpdir}/oov.lex
 
 mkdir -p ${outdir}
-cat ${tmpdir}/found.lex ${tmpdir}/oov.lex | sort -u > ${outdir}/lexicon.txt
+cat ${tmpdir}/found.lex ${tmpdir}/oov.lex definitions/dict_prep/lex | sort -u > ${outdir}/lexicon.txt
 
 echo "SIL" > ${tmpdir}/silence_phones.txt
 cut -f2 definitions/dict_prep/lex > ${tmpdir}/silence_phones.txt

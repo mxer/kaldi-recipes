@@ -39,7 +39,7 @@ def main(inf, outf, lowercase):
     for key, value in d.items():
         for v in value:
             if len(" ".join(v).strip()) > 0:
-                print("{} {}".format(key, " ".join(v)), file=outf)
+                print("{}\t{}".format(key, " ".join(v)), file=outf)
 
 
 if __name__ == "__main__":

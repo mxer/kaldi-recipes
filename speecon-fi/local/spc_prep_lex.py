@@ -16,10 +16,7 @@ def transform_lexicon(input, output):
         for c in pron:
             phone_set.add(c)
 
-        print("{} {}".format(orth, " ".join(pron)), file=output)
-
-    for s in "[spk]", "<UNK>":
-        print("{} {}".format(s, "SPN"), file=output)
+        print("{}\t{}".format(orth.lstrip("_"), " ".join(pron)), file=output)
 
 
 if __name__ == "__main__":
