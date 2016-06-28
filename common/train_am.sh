@@ -18,8 +18,8 @@ if [ ! -d "data-prep" ]; then
  error_exit "The directory data-prep needs to exist. Run local/data_prep.sh"
 fi
 
-common/data_subset.sh
-job make_lex 4 4 NONE -- common/make_dict.sh data/train/vocab data/dict_train
+job make_subset 4 1 NONE -- common/data_subset.sh
+job make_lex 4 4 make_subset -- common/make_dict.sh data/train/vocab data/dict_train
 job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict_train "<UNK>" data/lang_train/local data/lang_train
 
 #ln -s ../data-prep/lexicon_lc_na data/lexicon
