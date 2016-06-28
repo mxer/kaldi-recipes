@@ -13,7 +13,7 @@ def preprocess_corpus(inf, outf):
 
         sent = []
 
-        for w in line.strip().split():
+        for w in line.lower().strip().split():
             if not any(unicodedata.category(c).startswith("L") for c in w):
                 continue
             sent.append(w)
