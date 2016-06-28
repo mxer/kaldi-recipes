@@ -11,6 +11,12 @@ def count_words(inf, outf, nmost):
     for line in inf:
         c.update(line.split())
 
+    if "<s>" in c:
+        del c["<s>"]
+
+    if "</s>" in c:
+        del c["</s>"]
+
     for k,c in c.most_common(nmost):
         print("{}\t{}".format(k,c), file=outf)
 

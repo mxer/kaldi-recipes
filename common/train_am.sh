@@ -1,6 +1,14 @@
 #!/bin/bash
 
-set -e
+echo "$0 $@"  # Print the command line for logging
+
+[ -f path.sh ] && . ./path.sh # source the path.
+. parse_options.sh || exit 1;
+
+if [ $# != 0 ]; then
+   echo "usage: train_am.sh"
+   exit 1;
+fi
 
 . ./cmd.sh ## You'll want to change cmd.sh to something that will work on your system.
            ## This relates to the queue.
