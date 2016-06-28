@@ -26,37 +26,6 @@ outfile=$5
 
 e=0$(echo "2*$d" | bc)
 
-
-for wtb in $(seq 0 ${order}); do
-    INTERPOLATE=$(seq 1 ${order} | sed "s/^/-interpolate/" | tr "\n" " ")
-
-    MINCOUNT=""
-    if [ $order -ge 1 ]; then
-         MINCOUNT=$(seq 2 ${order} | sed "s/^/-gt/" | sed "s/$/min 3/" | tr "\n" " ")
-    fi
-
-    KNDISCOUNT=""
-    if [ $wtb -lt ${order} ]; then
-         KNDISCOUNT=$(seq $((wtb+1)) ${order} | sed "s/^/-kndiscount/" | tr "\n" " ")
-    fi
-
-    WBDISCOUNT=""
-    if [ $wtb -gt 0 ]; then
-        WBDISCOUNT=$(seq 1 ${wtb} | sed "s/^/-wbdiscount/" | tr "\n" " ")
-    fi
-
-    echo $KNDISCOUNT $WBDISCOUNT $MINCOUNT $INTERPOLATE
-
-    again=0
-
-    ngram-count -memuse -text ${corpus} -lm ${outfile} -vocab ${vocab} -order ${order} $MINCOUNT $INTERPOLATE $KNDISCOUNT $WBDISCOUNT || again=1
-
-    if [ $again -eq 0 ]; then
-        break
-    fi
-done
-
-
 tmpdir=$(mktemp -d)
 
 common/corpus_split_varikn.py ${corpus} 100000 ${tmpdir}/train ${tmpdir}/dev
