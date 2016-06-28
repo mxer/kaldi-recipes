@@ -17,10 +17,12 @@ fi
 
 JOB_PREFIX=$(cat id)_
 
+mkdir -p data/segmentation/word
+job make_word_segm 4 4 NONE -- common/preprocess_corpus.py data-prep/text/text.orig.xz data/segmentation/word/corpus
 for size in "20" "50" "100" "150"; do
     mkdir -p data/dicts/word_${size}k
     mkdir -p data/langs/word_${size}k
-    job make_vocab_${size}k 4 4 NONE -- common/preprocess_corpus.py data-prep/text/text.orig.xz \| common/count_words.py --nmost=${size}000 - data/dicts/word_${size}k/vocab
+    job make_vocab_${size}k 4 4 make_word_segm -- common/count_words.py --nmost=${size}000 data/segmentation/word/corpus data/dicts/word_${size}k/vocab
     job make_lex_${size}k 4 4 make_vocab_${size}k -- common/make_dict.sh data/dicts/word_${size}k/vocab data/dicts/word_${size}k
     job make_lang_${size}k 4 4 make_lex_${size}k -- utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt data/dicts/word_${size}k "<UNK>" data/langs/word_${size}k/local data/langs/word_${size}k
 
