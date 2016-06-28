@@ -33,7 +33,7 @@ tar xf $sonar_file -C ${tmpdir} ./SoNaRCorpus_NC_1.2/SONAR500/FoLiA/WR-P-E-G_sub
 
 mkdir $tmpdir/filelists
 
-find $tmpdir -name "*.folia.xml" -type f | split -l 10000 --numeric-suffixes=1000 -a4 - ${tmpdir}/filelists/
+find $tmpdir -name "*.folia.xml" -type f | split -l 1000 --numeric-suffixes=1000 -a4 - ${tmpdir}/filelists/
 
 echo $(date) "Create text jobs"
 tartmpdir=$(mktemp -d --tmpdir=./)
