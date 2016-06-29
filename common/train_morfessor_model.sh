@@ -26,4 +26,4 @@ lexfile=$4
 tmpfile=$(mktemp)
 common/preprocess_corpus.py $corpus | common/count_words.py --nmost=${input_vocab_size} | cut -f1 | morfessor-train -e utf-8 -d ones -s ${model} -S ${tmpfile} -
 
-cut -f2 -d" " < ${tmpfile} | sed "s/ + /+ +/g" | tr ' ' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed '/^$/d' |sort -u > ${lexfile}
+cut -f2- -d" " < ${tmpfile} | sed "s/ + /+ +/g" | tr ' ' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed '/^$/d' |sort -u > ${lexfile}
