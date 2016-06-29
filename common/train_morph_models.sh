@@ -18,8 +18,8 @@ fi
 JOB_PREFIX=$(cat id)_
 
 mkdir -p data/segmentation/morph1
-job train_morfessor 10 10 NONE -- train_morfessor_model.sh data-prep/text/text.orig.xz 300000 data/segmentation/morph1/morfessor.bin data/segmentation/morph1/vocab
-job morfessor_segment 4 4 train_morfessor -- morfessor_segment.sh data-prep/text/text.orig.xz data/segmentation/morph1/morfessor.bin data/segmentation/morph1/corpus.xz
+job train_morfessor 10 10 NONE -- common/train_morfessor_model.sh data-prep/text/text.orig.xz 300000 data/segmentation/morph1/morfessor.bin data/segmentation/morph1/vocab
+job morfessor_segment 4 4 train_morfessor -- common/morfessor_segment.sh data-prep/text/text.orig.xz data/segmentation/morph1/morfessor.bin data/segmentation/morph1/corpus.xz
 
 for d in "0.05" "0.02" "0.01"; do
 

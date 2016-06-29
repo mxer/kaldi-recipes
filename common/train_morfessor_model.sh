@@ -23,4 +23,4 @@ input_vocab_size=$2
 model=$3
 lexfile=$4
 
-common/preprocess_corpus.py $corpus | common/count_words.py --nmost=${input_vocab_size} | morfessor-train -d ones -s ${model} -x ${lexfile} -
+common/preprocess_corpus.py $corpus | common/count_words.py --nmost=${input_vocab_size} | cut -f1 | morfessor-train -e utf-8 -d ones -s ${model} -x ${lexfile} -

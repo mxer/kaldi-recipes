@@ -22,4 +22,4 @@ corpusin=$1
 model=$2
 corpusout=$3
 
-common/preprocess_corpus.py ${corpusin} | xzcat | morfessor-segment -l ${model} | xz > ${corpusout}
+common/preprocess_corpus.py ${corpusin} | xzcat | morfessor-segment -e utf-8 -l ${model} - | xz > ${corpusout}

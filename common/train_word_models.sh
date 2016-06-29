@@ -28,6 +28,6 @@ for size in "20" "50" "100" "150"; do
 
     for order in "2" "3" "5"; do
         mkdir -p data/lm/word/srilm/${size}k_${order}g
-        job srilm_${size}k_${order}g $(expr ${order} \* 12) 4 make_vocab_${size}k -- common/train_srilm_model.sh data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${order} data/lm/word/srilm/${size}k_${order}g/arpa.xz
+        job srilm_${size}k_${order}g $(expr ${order} \* 15) 4 make_vocab_${size}k -- common/train_srilm_model.sh data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${order} data/lm/word/srilm/${size}k_${order}g/arpa.xz
     done
 done
