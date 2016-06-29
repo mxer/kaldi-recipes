@@ -28,7 +28,11 @@ e=0$(echo "2*$d" | bc)
 
 tmpdir=$(mktemp -d)
 
+cat $vocab > $tmpdir/vocab
+echo "<s>" >> $tmpdir/vocab
+echo "</s>" >> $tmpdir/vocab
+
 common/corpus_split_varikn.py ${corpus} 100000 ${tmpdir}/train ${tmpdir}/dev
-varigram_kn -N -n ${order} -D ${d} -E ${e} -a -3 -B ${vocab} -C -o ${tmpdir}/dev ${tmpdir}/train - | xz > ${outfile}
+varigram_kn -N -n ${order} -D ${d} -E ${e} -a -3 -B ${tmpdir}/vocab -C -o ${tmpdir}/dev ${tmpdir}/train - | xz > ${outfile}
 
 rm -Rf ${tmpdir}

@@ -31,5 +31,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(lzma.open(args.infile, 'rt', encoding='utf-8'), args.lines, args.out1, args.out2)
+    main(args.infile, args.lines, args.out1, args.out2)
 
