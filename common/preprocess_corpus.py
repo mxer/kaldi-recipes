@@ -17,7 +17,7 @@ def preprocess_corpus(inf, outf):
         for w in line.lower().strip().split():
             if not any(unicodedata.category(c).startswith("L") for c in w):
                 continue
-            sent.append(w)
+            sent.append(w.strip("!.,:;\"<>(){}[]#+"))
 
         if len(sent) == 0:
             continue
