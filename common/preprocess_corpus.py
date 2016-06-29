@@ -17,20 +17,14 @@ def preprocess_corpus(inf, outf):
         for w in line.lower().strip().split():
             if not any(unicodedata.category(c).startswith("L") for c in w):
                 continue
+            if w == "<s>" or w == "</s>":
+                continue
             sent.append(w.strip("!.,:;\"<>(){}[]#+"))
 
         if len(sent) == 0:
             continue
 
-        if sent[0] != "<s>":
-            sent = ["<s>"] + sent
-        if sent[-1] != "</s>":
-            sent.append("</s>")
-
-        if len(sent) < 3:
-            continue
-
-        print(" ".join(sent), file=outf)
+        print("<s> {} </s>".format(" ".join(sent)), file=outf)
 
 
 if __name__ == "__main__":

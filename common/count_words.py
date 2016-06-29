@@ -19,8 +19,6 @@ def count_words(inf, outf, nmost, lexicon, inword_punc):
             if (lexicon is not None and word in lexicon) or all(unicodedata.category(c).startswith("L") or (c in inword_punc) for c in word):
                 c[word] += 1
 
-        c.update(line.split())
-
     if "<s>" in c:
         del c["<s>"]
 
