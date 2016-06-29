@@ -43,20 +43,20 @@ nj=$(cat ${dataset}/spk2utt | wc -l)
 for am in "${ams[@]}"; do
   case $am in
   mono*)
-    echo job ${am} 26 40 $prev -- utils/mkgraph.sh --mono ${smalllm} exp/${am} exp/${am}/graph_${sname}
+    job ${am} 26 40 $prev -- utils/mkgraph.sh --mono ${smalllm} exp/${am} exp/${am}/graph_${sname}
     ;;
   tri*)
-    echo job ${am} 26 40 $prev -- utils/mkgraph.sh ${smalllm} exp/${am} exp/${am}/graph_${sname}
+    job ${am} 26 40 $prev -- utils/mkgraph.sh ${smalllm} exp/${am} exp/${am}/graph_${sname}
     ;;
   esac
 
   case $am in
   mono*|tri[1-2]*)
-    echo job dec_bl_${am} 6 40 LAST -- steps/decode_biglm.sh --nj ${nj} --cmd "$decode_cmd" exp/${am}/graph_${sname} $smalllm/G.fst ${biglm}/G.fst ${dataset} exp/${am}/decode_${sname}_bl_${bname}
+    job dec_bl_${am} 6 40 LAST -- steps/decode_biglm.sh --nj ${nj} --cmd "$decode_cmd" exp/${am}/graph_${sname} $smalllm/G.fst ${biglm}/G.fst ${dataset} exp/${am}/decode_${sname}_bl_${bname}
     ;;
   tri[3-4]*)
-    echo job dec_${am} 6 40 LAST -- steps/decode_fmllr.sh --nj ${nj} --cmd "$decode_cmd" --max-fmllr-jobs ${nj} exp/${am}/graph_${sname} ${dataset} exp/${am}/decode_${sname}
-    echo job dec_rs_${am} 6 40 dec_${am} -- steps/lmrescore.sh --cmd "$decode_cmd" $smalllm ${biglm} ${dataset} exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
+    job dec_${am} 6 40 LAST -- steps/decode_fmllr.sh --nj ${nj} --cmd "$decode_cmd" --max-fmllr-jobs ${nj} exp/${am}/graph_${sname} ${dataset} exp/${am}/decode_${sname}
+    job dec_rs_${am} 6 40 dec_${am} -- steps/lmrescore.sh --cmd "$decode_cmd" $smalllm ${biglm} ${dataset} exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
     ;;
   esac
 
