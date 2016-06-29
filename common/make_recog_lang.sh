@@ -11,7 +11,7 @@ echo "$0 $@"  # Print the command line for logging
 [ -f path.sh ] && . ./path.sh # source the path.
 . parse_options.sh || exit 1;
 
-if [ $# != 2 ]; then
+if [ $# != 3 ]; then
    echo "usage: common/make_recog_lang.sh arpa.xz source_lang target_lang"
    echo "e.g.:  common/make_recog_lang data/word_lm/srilm_20k_3gram/arpa.xz data/langs/word_20k/ data/recog_langs/word_s_20k_3gram"
    echo "main options (for others, see top of script file)"

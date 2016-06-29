@@ -22,4 +22,4 @@ corpusin=$1
 model=$2
 corpusout=$3
 
-common/preprocess_corpus.py ${corpusin} | xzcat | morfessor-segment -e utf-8 -l ${model} - | xz > ${corpusout}
+common/preprocess_corpus.py ${corpusin} | xzcat | sed "s#<s>##g;s#</s>##g" | morfessor-segment -e utf-8 -l ${model} - --output-newlines --output-format-separator="+ +" --output-format="{analysis} " | sed "s#^\s*#<s> #g" | sed "s/\s*$/ <\\/s>/g" | xz > ${corpusout}
