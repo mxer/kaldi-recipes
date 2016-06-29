@@ -16,7 +16,7 @@ def count_words(inf, outf, nmost, lexicon, inword_punc):
     c = collections.Counter()
     for line in inf:
         for word in line.split():
-            if (lexicon is not None and word in lexicon) or all(unicodedata.category(c).starswith("L") or c in inword_punc for c in word):
+            if (lexicon is not None and word in lexicon) or all(unicodedata.category(c).startswith("L") or (c in inword_punc) for c in word):
                 c[word] += 1
 
         c.update(line.split())
