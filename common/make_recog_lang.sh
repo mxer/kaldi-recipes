@@ -31,7 +31,7 @@ mkdir -p $(dirname ${targetlang})
 cp -R ${sourcelang} ${targetlang}
 
 if $inwordbackoff; then
-    xzcat ${arpa} | arpa2fst --disambig-symbol="#0" --read-symbol-table=${targetlang}/words.txt - - | fstprint | common/inword_backoff_node.py | fstcompile | fstrmepsilon | fstarcsort > ${targetlang}/G.fst
+    xzcat ${arpa} | arpa2fst --disambig-symbol="#0" --read-symbol-table=${targetlang}/words.txt - - | fstprint | common/inword_backoff_node.py --symbols=${targetlang}/words.txt | fstcompile | fstrmepsilon | fstarcsort > ${targetlang}/G.fst
 else
     xzcat ${arpa} | arpa2fst --disambig-symbol="#0" --read-symbol-table=${targetlang}/words.txt - ${targetlang}/G.fst
 fi
