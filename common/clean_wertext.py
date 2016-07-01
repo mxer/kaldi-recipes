@@ -2,4 +2,6 @@
 import sys
 
 for line in sys.stdin:
-    print(line.lower().replace("+ +","").replace(" +", "").replace("+ ", ""), end="")
+    key, val = line.split(None, 1)
+
+    print("{} {}".format(key, val.lower().replace("+ +","").replace(" +", "").replace("+ ", ""), end=""))

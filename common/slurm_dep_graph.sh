@@ -36,6 +36,13 @@ done
 ;;
 esac
 
+if [ -n "$DEP_LIST" ]; then
+IFS=',' read -r -a ids <<< "$DEP_LIST"
+for i in ${ids[@]}; do
+    dep+=($i)
+done
+fi
+
 deparg=""
 if [ ${#dep[@]} -gt 0 ]
 then
