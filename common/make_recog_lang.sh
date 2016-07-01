@@ -15,7 +15,7 @@ if [ $# != 3 ]; then
    echo "usage: common/make_recog_lang.sh arpa.xz source_lang target_lang"
    echo "e.g.:  common/make_recog_lang data/word_lm/srilm_20k_3gram/arpa.xz data/langs/word_20k/ data/recog_langs/word_s_20k_3gram"
    echo "main options (for others, see top of script file)"
-   echo "     --inwordbackoff (true|false)   # Lowercase lexicon items"
+   echo "     --inwordbackoff (true|false)   # Create a separate inword-backoff node in G.fst"
    exit 1;
 fi
 

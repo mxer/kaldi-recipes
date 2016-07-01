@@ -14,7 +14,7 @@ echo "$0 $@"  # Print the command line for logging
 
 if [ $# != 2 ]; then
    echo "usage: local/data_prep_text.sh spr_dir data_prep_dir"
-   echo "e.g.:  local/data_prep.sh \$GROUP_DIR/c/spraakbanken data-prep/text"
+   echo "e.g.:  local/data_prep_text.sh \$GROUP_DIR/c/spraakbanken data-prep/text"
    echo "main options (for others, see top of script file)"
    exit 1;
 fi
