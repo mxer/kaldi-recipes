@@ -12,8 +12,8 @@ echo "$0 $@"  # Print the command line for logging
 . parse_options.sh || exit 1;
 
 if [ $# != 2 ]; then
-   echo "usage: spr_local/spr_dp_lex.sh spr_dir out_dir "
-   echo "e.g.:  steps/spr_dp_lex.sh \$GROUP_DIR/c/spraakbanken data-prep/lexicon"
+   echo "usage: local/data_prep_lexicon.sh spr_dir out_dir "
+   echo "e.g.:  local/data_prep_lexicon.sh \$GROUP_DIR/c/spraakbanken data-prep/lexicon"
    echo "main options (for others, see top of script file)"
    exit 1;
 fi

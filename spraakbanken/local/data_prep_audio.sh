@@ -13,7 +13,7 @@ echo "$0 $@"  # Print the command line for logging
 
 if [ $# != 2 ]; then
    echo "usage: local/data_prep_audio.sh spraakbanken_dir data_prep_dir"
-   echo "e.g.:  local/data_prep.sh \$GROUP_DIR/c/spraakbanken some_data_prep_dir"
+   echo "e.g.:  local/data_prep_audio.sh \$GROUP_DIR/c/spraakbanken some_data_prep_dir"
    echo "main options (for others, see top of script file)"
    exit 1;
 fi
