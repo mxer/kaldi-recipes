@@ -42,7 +42,7 @@ for d in "0.05" "0.02" "0.01" "0.005" "0.002" "0.001"; do
         job recog_lang_${d}_${order}g 16 1 vari_${d}_${order}g,make_morph_lang -- common/make_recog_lang.sh data/lm/morph1/vk/${d}_${order}g/arpa.xz data/langs/morph1_base data/recog_langs/morph1_base_v_${d}_${order}gram
         job recog_lang_${d}_${order}g2 16 1 vari_${d}_${order}g,make_morph_lang -- common/make_recog_lang.sh --inwordbackoff true data/lm/morph1/vk/${d}_${order}g/arpa.xz data/langs/morph1_base data/recog_langs/morph1_base_backoff_v_${d}_${order}gram
         
-        job recog_lang_${d}_${order}g_fix1 16 1 vari_${d}_${order}g,make_morph_lang -- common/make_recog_lang.sh data/lm/morph1/vk/${d}_${order}g/arpa.xz data/langs/morph1_fix1 data/recog_langs/morph1_fix1_v_${d}_${order}gram
-        job recog_lang_${d}_${order}g2_fix1 16 1 vari_${d}_${order}g,make_morph_lang -- common/make_recog_lang.sh --inwordbackoff true data/lm/morph1/vk/${d}_${order}g/arpa.xz data/langs/morph1_fix1 data/recog_langs/morph1_fix1_backoff_v_${d}_${order}gram
+        job recog_lang_${d}_${order}g_fix1 16 1 vari_${d}_${order}g,make_morph_lang_fix1 -- common/make_recog_lang.sh data/lm/morph1/vk/${d}_${order}g/arpa.xz data/langs/morph1_fix1 data/recog_langs/morph1_fix1_v_${d}_${order}gram
+        job recog_lang_${d}_${order}g2_fix1 16 1 vari_${d}_${order}g,make_morph_lang_fix1 -- common/make_recog_lang.sh --inwordbackoff true data/lm/morph1/vk/${d}_${order}g/arpa.xz data/langs/morph1_fix1 data/recog_langs/morph1_fix1_backoff_v_${d}_${order}gram
     done
 done
