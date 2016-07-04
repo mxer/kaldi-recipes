@@ -33,9 +33,9 @@ job make_morph_lex 4 4 train_morfessor -- common/make_dict.sh data/segmentation/
 job make_morph_lang 4 4 LAST -- utils/prepare_lang.sh --phone-symbol-table data/lang_train/phones.txt data/dicts/morph1 "<UNK>" data/langs/morph1_base/local data/langs/morph1_base
 job make_morph_lang_fix1 4 4 LAST -- common/prepare_lang_morph.sh --phone-symbol-table data/lang_train/phones.txt data/dicts/morph1 "<UNK>" data/langs/morph1_fix1/local data/langs/morph1_fix1
 
-for d in "0.05" "0.02" "0.01" "0.005" "0.002" "0.001"; do
+for d in "0.01" "0.005" "0.002" "0.001" "0.0001" "0.00001"; do
 
-    for order in "3" "5" "30"; do
+    for order in "3" "5" "8" "10"; do
         mkdir -p data/lm/morph1/vk/${d}_${order}g
         job vari_${d}_${order}g 45 72 morfessor_segment -- common/train_varikn_model.sh data/segmentation/morph1/corpus.xz data/segmentation/morph1/vocab ${d} ${order} data/lm/morph1/vk/${d}_${order}g/arpa.xz
 

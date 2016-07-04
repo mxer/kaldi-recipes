@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#SBATCH --gres=spindle:1
 export LC_ALL=C
 
 # Begin configuration section.
@@ -24,7 +24,7 @@ d=$3
 order=$4
 outfile=$5
 
-e=$(python3 -c "print($d*2)")
+e=$(python3 -c "print($d*1.3)")
 
 tmpdir=$(mktemp -d)
 
@@ -33,6 +33,6 @@ echo "<s>" >> $tmpdir/vocab
 echo "</s>" >> $tmpdir/vocab
 
 common/corpus_split_varikn.py ${corpus} 100000 ${tmpdir}/train ${tmpdir}/dev
-varigram_kn -N -n ${order} -D ${d} -E ${e} -a -3 -B ${tmpdir}/vocab -C -o ${tmpdir}/dev -O "0 0 1 1 1 2 3 4" ${tmpdir}/train - | xz > ${outfile}
+varigram_kn -N -n ${order} -D ${d} -E ${e} -a -B ${tmpdir}/vocab -C -o ${tmpdir}/dev -O "0 0 1 1 1 2 3 4" ${tmpdir}/train - | xz > ${outfile}
 
 rm -Rf ${tmpdir}
