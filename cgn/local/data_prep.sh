@@ -41,7 +41,6 @@ ln -s $dataprep_dir/cgn/kaldi-prep data-prep
 . ./cmd.sh
 . common/slurm_dep_graph.sh
 JOB_PREFIX=NL_
-SLURM_EXTRA_ARGS="--gres=spindle:2"
 
 job prep_audio 1 4 NONE -- local/data_prep_audio.sh $cgn_dir $dataprep_dir/cgn/kaldi-prep/audio
 job prep_text 4 24 NONE -- local/data_prep_text.sh --cmd "$base_cmd" $sonar_file $dataprep_dir/cgn/kaldi-prep/text

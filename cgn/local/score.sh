@@ -1,1 +1,1 @@
-../../kaldi-trunk/egs/wsj/s5/steps/score_kaldi.sh
+../common/score.sh

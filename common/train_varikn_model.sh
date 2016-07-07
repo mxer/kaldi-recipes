@@ -1,5 +1,7 @@
 #!/bin/bash
 #SBATCH --gres=spindle:1
+set -e
+
 export LC_ALL=C
 
 # Begin configuration section.

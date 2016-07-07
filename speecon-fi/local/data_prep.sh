@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 export LC_ALL=C
 
@@ -45,7 +46,6 @@ ln -s ${tdir} data-prep
 . common/slurm_dep_graph.sh
 
 JOB_PREFIX=FI_
-SLURM_EXTRA_ARGS="--gres=spindle:1"
 
 job prep_audio 1 10 NONE -- local/data_prep_audio.sh ${spc_dir} ${tdir}/audio
 job prep_text 4 1 NONE -- local/data_prep_text.sh ${kpk_file} ${tdir}/text

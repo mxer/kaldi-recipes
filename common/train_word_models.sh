@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "$0 $@"  # Print the command line for logging
 

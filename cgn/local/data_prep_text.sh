@@ -1,4 +1,6 @@
 #!/bin/bash
+#SBATCH --gres=spindle:2
+#SBATCH --tmp=500000
 
 set -e
 
