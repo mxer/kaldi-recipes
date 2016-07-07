@@ -16,6 +16,7 @@ fi
 . common/slurm_dep_graph.sh
 
 JOB_PREFIX=$(cat id)_
+SLURM_EXTRA_ARGS="--gres=spindle:1"
 
 mkdir -p data/segmentation/morph1
 job train_morfessor 10 24 NONE -- common/train_morfessor_model.sh data-prep/text/text.orig.xz 300000 data/segmentation/morph1/morfessor.bin data/segmentation/morph1/vocab

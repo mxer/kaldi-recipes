@@ -2,6 +2,7 @@
 import argparse
 import codecs
 import collections
+import itertools
 import lzma
 import sys
 import unicodedata
@@ -9,14 +10,18 @@ import unicodedata
 
 def count_words(inf, outf, nmost, lexicon, inword_punc):
     inword_punc = set(inword_punc)
+    chars_in_lex = None
     if lexicon is not None:
         lexicon = {p.split()[0] for p in lexicon}
+        chars_in_lex = set(itertools.chain(*lexicon))
 
     inf = lzma.open(inf, 'rt', encoding='utf-8')
     c = collections.Counter()
     for line in inf:
         for word in line.split():
-            if (lexicon is not None and word in lexicon) or all(unicodedata.category(c).startswith("L") or (c in inword_punc) for c in word):
+            if lexicon is not None and (word in lexicon or all(c in chars_in_lex and (unicodedata.category(c).startswith("L") or (c in inword_punc)) for c in word)):
+                c[word] += 1
+            elif lexicon is None and all(unicodedata.category(c).startswith("L") or (c in inword_punc) for c in word):
                 c[word] += 1
 
     if "<s>" in c:

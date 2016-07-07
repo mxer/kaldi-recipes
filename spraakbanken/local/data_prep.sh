@@ -42,6 +42,7 @@ ln -s $dataprep_dir/spraakbanken/$lang/kaldi-prep data-prep
 . common/slurm_dep_graph.sh
 
 JOB_PREFIX=$(basename $(pwd))_
+SLURM_EXTRA_ARGS="--gres=spindle:2"
 
 job prep_audio 4 24 NONE -- local/data_prep_audio.sh $spr_dir $dataprep_dir/spraakbanken/$lang/kaldi-prep/audio
 job prep_text 128 24 NONE -- local/data_prep_text.sh $spr_dir $dataprep_dir/spraakbanken/$lang/kaldi-prep/text
