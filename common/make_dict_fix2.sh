@@ -26,6 +26,8 @@ tmpdir=$(mktemp -d)
 echo "Tmpdir: ${tmpdir}"
 common/make_m2m_lex.py ${m2m} ${vocab} ${tmpdir}/found.lex ${tmpdir}/oov
 
+echo "$(wc -l ${tmpdir}/oov) morphs were not found in dict"
+
 phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov | sed "s/\t$/\tSIL/" > ${tmpdir}/oov.lex
 
 mkdir -p ${outdir}
