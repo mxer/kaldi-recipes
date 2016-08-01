@@ -46,7 +46,7 @@ def main(m2m, morph_list, outlex, oovlist):
 
             for s, e in itertools.product(possible_starts, possible_ends):
                 if e > s:
-                    print("".format(m, " ".join(itertools.chain(*parts[1][s:e]))), file=outlex)
+                    print("{} {}".format(m, " ".join(itertools.chain(*parts[1][s:e]))), file=outlex)
             si = ei
 
 if __name__ == "__main__":
