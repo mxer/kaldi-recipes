@@ -57,4 +57,4 @@ if __name__ == "__main__":
     parser.add_argument('oovlist', type=argparse.FileType('w', encoding='utf-8'))
     args = parser.parse_args()
 
-    main(args.inm2m, args.invocab, args.outlex, args.oovlist)
+    main(args.inm2m, args.inmorph, args.outlex, args.oovlist)
