@@ -10,12 +10,12 @@ def main(m2m, vocab, outlex, oovlist):
     alignment = {}
     for line in m2m:
         l,r = line.strip().split("\t", 1)
-        l_parts = tuple(x for x in l.replace("+", "").split("|") if len(x) > 0)
-        l_parts = tuple([0] + list(itertools.accumulate(len(x) for x in l_parts)))
+        l_strings = tuple(x for x in l.replace("+", "").split("|") if len(x) > 0)
+        l_indexes = tuple([0] + list(itertools.accumulate(len(x) for x in l_strings)))
 
         r_parts = tuple(tuple(x.split("+")) for x in r.replace("+", "").split("|") if len(x) > 0 )
 
-        alignment[''.join(l_parts)] = (l_parts, r_parts)
+        alignment[''.join(l_strings)] = (l_indexes, r_parts)
 
     for v in vocab:
         transcriptions = set()
