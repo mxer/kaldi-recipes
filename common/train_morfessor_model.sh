@@ -20,10 +20,14 @@ fi
 
 corpus=$1
 input_vocab_size=$2
-model=$3
+model_dir=$3
 lexfile=$4
 
-tmpfile=$(mktemp)
-common/preprocess_corpus.py $corpus | common/count_words.py --lexicon=data-prep/lexicon/lexicon.txt --nmost=${input_vocab_size} | cut -f1 | morfessor-train -e utf-8 -d ones -s ${model} -S ${tmpfile} -
 
-cut -f2- -d" " < ${tmpfile} | sed "s/ + /+ +/g" | tr ' ' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed '/^$/d' |sort -u > ${lexfile}
+mkdir -p $(model_dir)
+
+common/preprocess_corpus.py $corpus | common/count_words.py --lexicon=data-prep/lexicon/lexicon.txt --nmost=${input_vocab_size} | cut -f1 > ${model_dir}/train_list
+
+morfessor-train -e utf-8 -d ones -s ${model_dir}/morfessor.bin -S ${model_dir}/morfessor.txt ${model_dir}/train_list
+
+cut -f2- -d" " < ${model_dir}/morfessor.txt | sed "s/ + /+ +/g" | tr ' ' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed '/^$/d' |sort -u > ${lexfile}
