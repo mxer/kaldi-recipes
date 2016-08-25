@@ -1,2 +1,2 @@
-^(4|0467).*$
+^spr-(4|0467).*-ch1-.*$
 utt2type ^(ISa|cISa|FF|CD|dISa|ISp|pIWp|prIWp|cIWp|phIWp|IWp)[0-9]+$

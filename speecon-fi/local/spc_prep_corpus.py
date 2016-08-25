@@ -52,7 +52,7 @@ def main(in_dir, out_scp, out_dir):
                 print("Missing: {}".format(file_name))
                 continue
 
-            utt_key = "{}-{}-{}".format(key[:5], key[5:8], chan)
+            utt_key = "{}-ch{}-{}".format(key[:5], chan, key[5:8])
 
             print("{} sox -b 16 -e signed-integer -r 16000 -t raw {} -r 16000 -t wav - |".format(utt_key, file_name), file=fd_scp)
 
@@ -60,7 +60,7 @@ def main(in_dir, out_scp, out_dir):
             print("{} {}".format(utt_key, ort2), file=fd_ort2)
             print("{} {}".format(utt_key, prompt), file=fd_prompt)
 
-            print("{} {}".format(utt_key, speaker), file=fd_utt2spk)
+            print("{} {}".format(utt_key, "{}-ch{}".format(speaker,chan)), file=fd_utt2spk)
             print("{} {}".format(utt_key, type), file=fd_utt2type)
 
             print("{} {}".format(utt_key, sex), file=fd_utt2sex)

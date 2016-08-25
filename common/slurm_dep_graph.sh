@@ -51,7 +51,7 @@ then
 fi
 
 IFS=" "
-ret=$(sbatch -p batch,coin --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
+ret=$(sbatch -p batch-ivb,batch-wsm,batch-hsw,coin --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
 
 echo $ret
 rid=$(echo $ret | awk '{print $4;}')

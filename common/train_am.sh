@@ -43,55 +43,36 @@ numjobs=50
 mkdir -p mfcc
 command -v lfs > /dev/null && lfs setstripe -c 6 $mfccdir
 
-for set in "train" "dev"; do
+for set in "train" "dev" "eval"; do
  job mfcc_$set 4 4 make_subset -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
  job cmvn_$set 4 4 LAST      -- steps/compute_cmvn_stats.sh data/${set} exp/make_mfcc/${set} ${mfccdir}
  job val_data_$set 4 4 LAST  -- utils/validate_data_dir.sh data/${set}
 done
 
-numjobs=10
-job subset_2kshort 2 4 val_data_train \
- -- utils/subset_data_dir.sh --shortest data/train 2000 data/train_2kshort
+numjobs=35
+job subset_10kshort 2 4 val_data_train \
+ -- utils/subset_data_dir.sh --shortest data/train 10000 data/train_10kshort
 
-job subset_4k 2 4 val_data_train \
- -- utils/subset_data_dir.sh data/train 4000 data/train_4k
+job tra_mono 2 40 subset_10kshort,make_lang \
+ -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_10kshort data/lang_train exp/mono
 
-job subset_8k 2 4 val_data_train \
- -- utils/subset_data_dir.sh data/train 8000 data/train_8k
+job ali_mono 2 40 tra_mono,val_data_train \
+ -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/mono exp/mono_ali
 
-job tra_mono0a 2 40 subset_2kshort,make_lang \
- -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_2kshort data/lang_train exp/mono0a
+job tra_tri1 2 40 ali_mono \
+ -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2500 30000 data/train data/lang_train exp/mono_ali exp/tri1
 
-numjobs=20
-job ali_mono0a 2 40 tra_mono0a,subset_4k \
- -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_4k data/lang_train exp/mono0a exp/mono0a_ali
+job ali_tri1 2 40 tra_tri1 \
+ -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/tri1 exp/tri1_ali
 
-job tra_tri1 2 40 ali_mono0a \
- -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2000 10000 data/train_4k data/lang_train exp/mono0a_ali exp/tri1
+job tra_tri2 2 40 ali_tri1 \
+ -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 4000 50000 data/train data/lang_train exp/tri1_ali exp/tri2
 
-numjobs=30
-job ali_tri1 2 40 tra_tri1,subset_8k \
- -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train_8k data/lang_train exp/tri1 exp/tri1_ali
+job ali_tri2 2 40 tra_tri2 \
+ -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd"  data/train data/lang_train exp/tri2 exp/tri2_ali
 
-
-job tra_tri2a 2 40 ali_tri1 \
- -- steps/train_deltas.sh --cmd "$train_cmd" 2500 15000 data/train_8k data/lang_train exp/tri1_ali exp/tri2a
-job tra_tri2b 2 40 ali_tri1 \
- -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 2500 15000 data/train_8k data/lang_train exp/tri1_ali exp/tri2b
-
-job ali_tri2b 2 40 tra_tri2b \
- -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd" --use-graphs true data/train_8k data/lang_train exp/tri2b exp/tri2b_ali
-
-job tra_tri3b 2 40 ali_tri2b \
- -- steps/train_sat.sh --cmd "$train_cmd" 2500 15000 data/train_8k data/lang_train exp/tri2b_ali exp/tri3b
-job ali_tri3b 2 40 LAST \
- -- steps/align_fmllr.sh  --nj ${numjobs} --cmd "$train_cmd" data/train data/lang_train exp/tri3b exp/tri3b_ali
-
-job tra_tri4a 2 40 ali_tri3b \
- -- steps/train_sat.sh  --cmd "$train_cmd" 4200 40000 data/train data/lang_train exp/tri3b_ali exp/tri4a
-
-job tra_tri4b 2 40 ali_tri3b \
- -- steps/train_quick.sh --cmd "$train_cmd" 4200 40000 data/train data/lang_train exp/tri3b_ali exp/tri4b
+job tra_tri3 2 40 ali_tri2 \
+ -- steps/train_sat.sh --cmd "$train_cmd" 5000 100000 data/train data/lang_train exp/tri2_ali exp/tri3
 
 
 #job mkg_mono0a 26 40 tra_mono0a,make_arpa_20k_2g \
@@ -102,7 +83,7 @@ job tra_tri4b 2 40 ali_tri3b \
 #echo "Changing numjobs to ${numjobs}"
 #for model in "tri1" "tri2a" "tri2b"; do
 #    job mkg_${model} 26 40 tra_${model},make_arpa_20k_2g \
-#     -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20k
+#     -- utils/mkgraph.sh data/20k_2gram exp/${model} exp/${model}/graph_nst_2g_20
 #    job dec_${model} 6 40 LAST \
 #     -- steps/decode.sh --nj ${numjobs} --cmd "$decode_cmd" exp/${model}/graph_2g_20k data/dev exp/${model}/decode_2g_20k_dev
 #done

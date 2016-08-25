@@ -7,6 +7,8 @@ import sys
 
 def transform(i,o):
     for line in i:
+        if len(line.strip()) == 0:
+            continue
         key, trans = line.strip().split(None, 1)
         print("{} {}".format(key, " ".join(list(trans.replace(' ', '_')))))
 

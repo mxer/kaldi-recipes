@@ -31,7 +31,7 @@ common/preprocess_corpus.py ${corpusin} | xzcat | sed "s#<s>##g;s#</s>##g" | spl
 
 last=$(ls -1 ${tmpdir}/ | sort -n | tail -n1)
 
-JOB=1000:$last $tmpdir/log/JOB.log morfessor-segment -e utf-8 -l ${model} ${tmpdir}/JOB --output-newlines --output-format-separator="+ +" --output-format="{analysis} " | sed "s#^\s*#<s> #g" | sed "s/\s*$/ <\\/s>/g" \> ${tmpdir}/JOB.out
+$cmd JOB=1000:$last $tmpdir/log/JOB.log morfessor-segment -e utf-8 -L ${model} ${tmpdir}/JOB --output-newlines --output-format-separator="+ +" --output-format="{analysis} " | sed "s#^\s*#<s> #g" | sed "s/\s*$/ <\\/s>/g" \> ${tmpdir}/JOB.out
 
 cat ${tmpdir}/*.out | xz > ${corpusout}
 

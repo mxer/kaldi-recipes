@@ -63,11 +63,11 @@ def main(in_dir, out_scp, out_dir):
                 continue
 
             for channel in ("1", "2"):
-                utt_key = "{}-{}-{}-{}".format(key[:8], spl_wav_filename[1:5], spl_wav_filename[5:], channel)
+                utt_key = "spr-{}-{}-ch{}-{}".format(key[:8], spl_wav_filename[1:5], channel, spl_wav_filename[5:])
 
                 print("{} sph2pipe -f wav -p -c {} {} |".format(utt_key, channel, file_name), file=fd_scp)
                 print("{} {}".format(utt_key, utt_text), file=fd_text)
-                print("{} {}".format(utt_key, utt_key[:13]), file=fd_utt2spk)
+                print("{} {}".format(utt_key, utt_key[:21]), file=fd_utt2spk)
                 print("{} {}".format(utt_key, utt_type), file=fd_utt2type)
 
     for type, count in err_counter.most_common():

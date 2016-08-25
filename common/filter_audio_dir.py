@@ -42,7 +42,7 @@ def gen_utts(indir, filenames):
         all_run_out = all(files[f]['utt'] is None for f in filenames)
 
 
-def main(indir, outdir, specs, ignores):
+def main(indir, outdir, specs, ignores, utt_blacklist):
     filenames = set(os.listdir(indir)) - ignores
 
     specs = open(specs, encoding='utf-8')
@@ -52,8 +52,9 @@ def main(indir, outdir, specs, ignores):
     out_files = {filename: open(os.path.join(outdir, filename), 'w', encoding='utf-8') for filename in filenames}
 
     for utt, vals in gen_utts(indir, filenames):
-        if utt.startswith('SES002') and "CC" in utt:
-            pass
+        if utt in utt_blacklist:
+            print("Skipping utt {}, because it is in the blacklist".format(utt), file=sys.stderr)
+            continue
         if key_r.match(utt) is not None and all(r.match(vals[f]) is not None for f,r in val_rd.items()):
             for f in filenames:
                 print("{} {}".format(utt, vals[f]), file=out_files[f])
@@ -63,7 +64,11 @@ if __name__ == "__main__":
     parser.add_argument('indir')
     parser.add_argument('outdir')
     parser.add_argument('specifications')
-
+    parser.add_argument('blacklist', nargs='?', default=None)
+   
     args = parser.parse_args()
+    blacklist= set()
 
-    main(args.indir, args.outdir, args.specifications, {'wav.ark',})
+    if args.blacklist is not None and os.path.isfile(args.blacklist):
+        blacklist = {l.strip() for l in open(args.blacklist, encoding='utf-8')}
+    main(args.indir, args.outdir, args.specifications, {'wav.ark',},blacklist)

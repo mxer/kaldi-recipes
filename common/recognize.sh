@@ -41,24 +41,28 @@ ams=(${ammodels})
 nj=$(cat ${dataset}/spk2utt | wc -l)
 
 for am in "${ams[@]}"; do
+  sam=$(basename ${am}) 
   case $am in
   mono*)
-    job ${am} 26 40 $prev -- utils/mkgraph.sh --mono ${smalllm} exp/${am} exp/${am}/graph_${sname}
+    job ${sam} 110 40 $prev -- utils/mkgraph.sh --mono ${smalllm} exp/${am} exp/${am}/graph_${sname}
     ;;
-  tri*)
-    job ${am} 26 40 $prev -- utils/mkgraph.sh ${smalllm} exp/${am} exp/${am}/graph_${sname}
+  tri*|nnet*)
+    job ${sam} 200 40 $prev -- utils/mkgraph.sh ${smalllm} exp/${am} exp/${am}/graph_${sname}
     ;;
   esac
 
   case $am in
   mono*|tri[1-2]*)
-    job dec_bl_${am} 6 40 LAST -- steps/decode_biglm.sh --nj ${nj} --cmd "$decode_cmd" exp/${am}/graph_${sname} $smalllm/G.fst ${biglm}/G.fst ${dataset} exp/${am}/decode_${sname}_bl_${bname}
+    job dec_bl_${am} 20 40 LAST -- steps/decode_biglm.sh --nj ${nj} --cmd "$big_decode_cmd" exp/${am}/graph_${sname} $smalllm/G.fst ${biglm}/G.fst ${dataset} exp/${am}/decode_${sname}_bl_${bname}
     ;;
   tri[3-4]*)
-    job dec_${am} 6 40 LAST -- steps/decode_fmllr.sh --nj ${nj} --cmd "$decode_cmd" --max-fmllr-jobs ${nj} exp/${am}/graph_${sname} ${dataset} exp/${am}/decode_${sname}
-    job dec_rs_${am} 6 40 dec_${am} -- steps/lmrescore.sh --cmd "$decode_cmd" $smalllm ${biglm} ${dataset} exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
+    job dec_${am} 20 40 LAST -- steps/decode_fmllr.sh --nj ${nj} --cmd "$big_decode_cmd" --max-fmllr-jobs ${nj} exp/${am}/graph_${sname} ${dataset} exp/${am}/decode_${sname}
+    job dec_rs_${am} 20 40 dec_${am} -- steps/lmrescore.sh --cmd "$big_decode_cmd" $smalllm ${biglm} ${dataset} exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
     ;;
+  nnet3/*)
+    job dec_${sam} 10 40 LAST -- steps/nnet3/decode.sh --nj ${nj} --cmd "$big_decode_cmd" --online-ivector-dir exp/nnet3/ivectors_$(basename ${dataset}) exp/${am}/graph_${sname} ${dataset}_hires exp/${am}/decode_${sname} 
+    job dec_rs_${sam} 10 40 LAST -- steps/lmrescore.sh --cmd "$big_decode_cmd" $smalllm ${biglm} ${dataset}_hires exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
   esac
 
-  prev=$am
+  prev=$sam
 done
