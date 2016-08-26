@@ -204,7 +204,7 @@ fi
 
 if [ $stage -le 9 ]; then
   echo "$0: making MFCC features for low-resolution speed-perturbed data"
-  steps/make_mfcc.sh --nj $nj \
+  steps/make_mfcc.sh --nj 500 \
     --cmd "$train_cmd" data/${train_set}_sp
   steps/compute_cmvn_stats.sh data/${train_set}_sp
   echo "$0: fixing input data-dir to remove nonexistent features, in case some "
