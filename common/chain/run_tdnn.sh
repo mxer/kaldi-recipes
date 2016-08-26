@@ -20,7 +20,7 @@ decode_nj=30
 min_seg_len=1.55
 train_set=train_cleaned
 gmm=tri3_cleaned  # the gmm for the target data
-num_threads_ubm=32
+num_threads_ubm=20
 nnet3_affix=_cleaned  # cleanup affix for nnet3 and chain dirs, e.g. _cleaned
 
 # The rest are configs specific to this script.  Most of the parameters
@@ -169,31 +169,31 @@ if [ $stage -le 18 ]; then
 fi
 
 
-
-if [ $stage -le 19 ]; then
-  # Note: it might appear that this data/lang_chain directory is mismatched, and it is as
-  # far as the 'topo' is concerned, but this script doesn't read the 'topo' from
-  # the lang directory.
-  utils/mkgraph.sh --left-biphone --self-loop-scale 1.0 data/lang $dir $dir/graph
-fi
-
-if [ $stage -le 20 ]; then
-  rm $dir/.error 2>/dev/null || true
-  for dset in dev test; do
-      (
-      steps/nnet3/decode.sh --num-threads 4 --nj $decode_nj --cmd "$decode_cmd" \
-          --acwt 1.0 --post-decode-acwt 10.0 \
-          --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_${dset}_hires \
-          --scoring-opts "--min-lmwt 5 " \
-         $dir/graph data/${dset}_hires $dir/decode_${dset} || exit 1;
-      steps/lmrescore_const_arpa.sh --cmd "$decode_cmd" data/lang data/lang_rescore \
-        data/${dset}_hires ${dir}/decode_${dset} ${dir}/decode_${dset}_rescore || exit 1
-    ) || touch $dir/.error &
-  done
-  wait
-  if [ -f $dir/.error ]; then
-    echo "$0: something went wrong in decoding"
-    exit 1
-  fi
-fi
+#
+#if [ $stage -le 19 ]; then
+#  # Note: it might appear that this data/lang_chain directory is mismatched, and it is as
+#  # far as the 'topo' is concerned, but this script doesn't read the 'topo' from
+#  # the lang directory.
+#  utils/mkgraph.sh --left-biphone --self-loop-scale 1.0 data/lang $dir $dir/graph
+#fi
+#
+#if [ $stage -le 20 ]; then
+#  rm $dir/.error 2>/dev/null || true
+#  for dset in dev test; do
+#      (
+#      steps/nnet3/decode.sh --num-threads 4 --nj $decode_nj --cmd "$decode_cmd" \
+#          --acwt 1.0 --post-decode-acwt 10.0 \
+#          --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_${dset}_hires \
+#          --scoring-opts "--min-lmwt 5 " \
+#         $dir/graph data/${dset}_hires $dir/decode_${dset} || exit 1;
+#      steps/lmrescore_const_arpa.sh --cmd "$decode_cmd" data/lang data/lang_rescore \
+#        data/${dset}_hires ${dir}/decode_${dset} ${dir}/decode_${dset}_rescore || exit 1
+#    ) || touch $dir/.error &
+#  done
+#  wait
+#  if [ -f $dir/.error ]; then
+#    echo "$0: something went wrong in decoding"
+#    exit 1
+#  fi
+#fi
 exit 0
