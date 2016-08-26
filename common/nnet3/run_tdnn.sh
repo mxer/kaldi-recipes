@@ -20,12 +20,12 @@ stage=0
 nj=30
 decode_nj=30
 min_seg_len=1.55
-train_set=train_cleaned
-gmm=tri3_cleaned  # this is the source gmm-dir for the data-type of interest; it
+train_set=train_mc
+gmm=tri3_ali  # this is the source gmm-dir for the data-type of interest; it
                   # should have alignments for the specified training data.
-num_threads_ubm=32
-nnet3_affix=_cleaned  # cleanup affix for exp dirs, e.g. _cleaned
-tdnn_affix=  #affix for TDNN directory e.g. "a" or "b", in case we change the configuration.
+num_threads_ubm=20
+nnet3_affix=a  # cleanup affix for exp dirs, e.g. _cleaned
+tdnn_affix=a  #affix for TDNN directory e.g. "a" or "b", in case we change the configuration.
 
 # Options which are not passed through to run_ivector_common.sh
 train_stage=-10
@@ -89,20 +89,20 @@ if [ $stage -le 12 ]; then
     $train_data_dir data/lang $ali_dir $dir
 fi
 
-if [ $stage -le 13 ]; then
-  rm $dir/.error || true 2>/dev/null
-  for dset in dev test; do
-   (
-    steps/nnet3/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 4 \
-        --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_${dset}_hires \
-      ${graph_dir} data/${dset}_hires ${dir}/decode_${dset} || exit 1
-    steps/lmrescore_const_arpa.sh --cmd "$decode_cmd" data/lang data/lang_rescore \
-       data/${dset}_hires ${dir}/decode_${dset} ${dir}/decode_${dset}_rescore || exit 1
-    ) || touch $dir/.error &
-  done
-  wait
-  [ -f $dir/.error ] && echo "$0: there was a problem while decoding" && exit 1
-fi
+#if [ $stage -le 13 ]; then
+#  rm $dir/.error || true 2>/dev/null
+#  for dset in dev test; do
+#   (
+#    steps/nnet3/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 4 \
+#        --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_${dset}_hires \
+#      ${graph_dir} data/${dset}_hires ${dir}/decode_${dset} || exit 1
+#    steps/lmrescore_const_arpa.sh --cmd "$decode_cmd" data/lang data/lang_rescore \
+#       data/${dset}_hires ${dir}/decode_${dset} ${dir}/decode_${dset}_rescore || exit 1
+#    ) || touch $dir/.error &
+#  done
+#  wait
+#  [ -f $dir/.error ] && echo "$0: there was a problem while decoding" && exit 1
+#fi
 
 
 exit 0;
