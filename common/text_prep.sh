@@ -15,10 +15,10 @@ if [ $# != 0 ]; then
    exit 1;
 fi
 
-mkdir -p data/text/
-common/preprocess_corpus.py data-prep/text/text.orig.xz | common/count_words.py | grep -v "[0-9]" > data/text/topwords
+#common/preprocess_corpus.py data-prep/text/text.orig.xz | common/count_words.py | grep -v "[0-9]" > data/text/topwords
 
 mkdir -p data/text/split
 common/preprocess_corpus.py data-prep/text/text.orig.xz | xzcat | split -l 100000 --numeric-suffixes=1000 -a4 - data/text/split/
+cat data/text/split/* | xz -0 | common/count_words.py > data/text/topwords
 count=$(ls -1 data/text/split/ | sort -n | grep -E "[0-9]+"| tail -n1)
 echo "$count" > data/text/split/numjobs
