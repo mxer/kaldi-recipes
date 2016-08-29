@@ -4,6 +4,7 @@ export LC_ALL=C
 
 # Begin configuration section.
 cmd=run.pl
+use_predict_lex=false
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -15,6 +16,7 @@ if [ $# != 2 ]; then
    echo "usage: common/train_joint_morfessor_segmentation.sh input_size_lex alpha"
    echo "e.g.:  common/train_joint_morfessor_segmentation.sh 300 2"
    echo "main options (for others, see top of script file)"
+   echo "    --use-predict-lex # Use the real top n words, predicting missing pronuns with phonetisaurus"
    echo "    --cmd (run.pl|queue.pl...)      # specify how to run the sub-processes."
    exit 1;
 fi
@@ -22,13 +24,24 @@ fi
 lex_size=$1
 alpha=$2
 
-name=morphjoin_${lex_size}_${alpha}
+extra=""
+if $use_predict_lex; then
+    extra="_pr"
+fi
+name=morphjoin${extra}_${lex_size}_${alpha}
 
 dir=data/segmentation/$name
 mkdir -p $dir
 mkdir -p data/dicts/$name
 
-cut -f1 data/text/topwords | common/filter_lex.py data-prep/lexicon/lexicon.txt - - /dev/null | head -n${lex_size}000 | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+if $use_predict_lex; then
+  tmpdir=$(mktemp -d)
+  cut -f1 data/text/topwords | head -n${lex_size}000 > $dir/morfessor_invocab
+  common/make_dict.sh $dir/morfessor_invocab $dir/morphlex
+  morfessjoint-train -t $dir/morphlex/lexicon.txt -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+else
+  cut -f1 data/text/topwords | common/filter_lex.py data-prep/lexicon/lexicon.txt - - /dev/null | head -n${lex_size}000 | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+fi
 
 last=$(cat data/text/split/numjobs)
 
