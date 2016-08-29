@@ -2,7 +2,7 @@
 import argparse
 
 
-def main(in_lex, vocab, out_lex, oov):
+def main(in_lex, vocab, out_lex, oov, nfirst=None):
     d = {}
     for line in in_lex:
         key, trans = line.strip().split(None, 1)
@@ -10,10 +10,14 @@ def main(in_lex, vocab, out_lex, oov):
             d[key] = set()
         d[key].add(trans)
 
+    printed = 0
     for line in vocab:
+        if nfirst is not None and printed >= nfirst:
+            break
         word = line.strip().split()[0]
 
         if word in d:
+            printed += 1
             for trans in d[word]:
                 print("{}\t{}".format(word, trans), file=out_lex)
         else:
@@ -26,6 +30,7 @@ if __name__ == "__main__":
     parser.add_argument('invocab', type=argparse.FileType('r', encoding='utf-8'))
     parser.add_argument('outlex', type=argparse.FileType('w', encoding='utf-8'))
     parser.add_argument('oovlist', type=argparse.FileType('w', encoding='utf-8'))
+    parser.add_argument("--nfirst", type=int, default=None)
     args = parser.parse_args()
 
-    main(args.inlex, args.invocab, args.outlex, args.oovlist)
+    main(args.inlex, args.invocab, args.outlex, args.oovlist, args.nfirst)
