@@ -38,9 +38,9 @@ if $use_predict_lex; then
   tmpdir=$(mktemp -d)
   cut -f1 data/text/topwords | head -n${lex_size}000 > $dir/morfessor_invocab
   common/make_dict.sh $dir/morfessor_invocab $dir/morphlex
-  morfessjoint-train -t $dir/morphlex/lexicon.txt -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+  grep -v "^<" $dir/morphlex/lexicon.txt | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 else
-  cut -f1 data/text/topwords | common/filter_lex.py data-prep/lexicon/lexicon.txt - - /dev/null | head -n${lex_size}000 | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+  cut -f1 data/text/topwords | common/filter_lex.py --nfirst=${lex_size}000 data-prep/lexicon/lexicon.txt - - /dev/null | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 fi
 
 last=$(cat data/text/split/numjobs)
