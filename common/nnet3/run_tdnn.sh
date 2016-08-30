@@ -21,7 +21,7 @@ nj=30
 decode_nj=30
 min_seg_len=1.55
 train_set=train_mc
-gmm=tri3_ali  # this is the source gmm-dir for the data-type of interest; it
+gmm=tri3  # this is the source gmm-dir for the data-type of interest; it
                   # should have alignments for the specified training data.
 num_threads_ubm=20
 nnet3_affix=a  # cleanup affix for exp dirs, e.g. _cleaned
@@ -46,7 +46,7 @@ where "nvcc" is installed.
 EOF
 fi
 
-local/nnet3/run_ivector_common.sh --stage $stage \
+common/nnet3/run_ivector_common.sh --stage $stage \
                                   --nj $nj \
                                   --min-seg-len $min_seg_len \
                                   --train-set $train_set \
@@ -65,7 +65,7 @@ train_ivector_dir=exp/nnet3${nnet3_affix}/ivectors_${train_set}_sp_hires_comb
 
 
 for f in $train_data_dir/feats.scp $train_ivector_dir/ivector_online.scp \
-     $graph_dir/HCLG.fst $ali_dir/ali.1.gz $gmm_dir/final.mdl; do
+     $ali_dir/ali.1.gz $gmm_dir/final.mdl; do
   [ ! -f $f ] && echo "$0: expected file $f to exist" && exit 1
 done
 
@@ -86,7 +86,7 @@ if [ $stage -le 12 ]; then
     --cmd "$decode_cmd" \
     --relu-dim "$relu_dim" \
     --remove-egs "$remove_egs" \
-    $train_data_dir data/lang $ali_dir $dir
+    $train_data_dir data/lang_train $ali_dir $dir
 fi
 
 #if [ $stage -le 13 ]; then

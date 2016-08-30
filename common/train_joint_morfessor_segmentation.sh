@@ -68,7 +68,7 @@ sort -u $dir/tmp_lex2 > data/dicts/$name/lexicon.txt
 cp data/dict_train/*sil* data/dicts/$name/
 
 
-cat $dir/tmp/* > corpus
+cat $dir/tmp/* > $dir/corpus
 rm -Rf $dir/tmp
 
 #rm -Rf $dir/tmp_lex* $dir/lex_keys $dir/lex_vals

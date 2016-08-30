@@ -14,7 +14,7 @@ min_seg_len=1.55  # min length in seconds... we do this because chain training
                   # will discard segments shorter than 1.5 seconds.   Must remain in sync
                   # with the same option given to prepare_lores_feats_and_alignments.sh
 train_set=train_mc   # you might set this to e.g. train.
-gmm=tri3_ali          # This specifies a GMM-dir from the features of the type you're training the system on;
+gmm=tri3          # This specifies a GMM-dir from the features of the type you're training the system on;
                          # it should contain alignments for 'train_set'.
 
 num_threads_ubm=20
@@ -231,7 +231,7 @@ if [ $stage -le 11 ]; then
   fi
   echo "$0: aligning with the perturbed, short-segment-combined low-resolution data"
   steps/align_fmllr.sh --nj $nj --cmd "$train_cmd" \
-         data/${train_set}_sp_comb data/lang $gmm_dir $ali_dir
+         data/${train_set}_sp_comb data/lang_train $gmm_dir $ali_dir
 fi
 
 

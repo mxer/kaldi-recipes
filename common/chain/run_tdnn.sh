@@ -18,16 +18,16 @@ stage=0
 nj=30
 decode_nj=30
 min_seg_len=1.55
-train_set=train_cleaned
-gmm=tri3_cleaned  # the gmm for the target data
+train_set=train_mc
+gmm=tri3  # the gmm for the target data
 num_threads_ubm=20
-nnet3_affix=_cleaned  # cleanup affix for nnet3 and chain dirs, e.g. _cleaned
+nnet3_affix=a  # cleanup affix for nnet3 and chain dirs, e.g. _cleaned
 
 # The rest are configs specific to this script.  Most of the parameters
 # are just hardcoded at this level, in the commands below.
 train_stage=-10
 tree_affix=  # affix for tree directory, e.g. "a" or "b", in case we change the configuration.
-tdnn_affix=  #affix for TDNN directory, e.g. "a" or "b", in case we change the configuration.
+tdnn_affix=a  #affix for TDNN directory, e.g. "a" or "b", in case we change the configuration.
 common_egs_dir=  # you can set this to use previously dumped egs.
 
 # End configuration section.
@@ -46,7 +46,7 @@ where "nvcc" is installed.
 EOF
 fi
 
-local/nnet3/run_ivector_common.sh --stage $stage \
+common/nnet3/run_ivector_common.sh --stage $stage \
                                   --nj $nj \
                                   --min-seg-len $min_seg_len \
                                   --train-set $train_set \
@@ -76,7 +76,7 @@ if [ $stage -le 14 ]; then
   # topo file. [note, it really has two states.. the first one is only repeated
   # once, the second one has zero or more repeats.]
   if [ -d data/lang_chain ]; then
-    if [ data/lang_chain/L.fst -nt data/lang/L.fst ]; then
+    if [ data/lang_chain/L.fst -nt data/lang_train/L.fst ]; then
       echo "$0: data/lang_chain already exists, not overwriting it; continuing"
     else
       echo "$0: data/lang_chain already exists and seems to be older than data/lang..."
@@ -84,7 +84,7 @@ if [ $stage -le 14 ]; then
       exit 1;
     fi
   else
-    cp -r data/lang data/lang_chain
+    cp -r data/lang_train data/lang_chain
     silphonelist=$(cat data/lang_chain/phones/silence.csl) || exit 1;
     nonsilphonelist=$(cat data/lang_chain/phones/nonsilence.csl) || exit 1;
     # Use our special topology... note that later on may have to tune this
@@ -97,7 +97,7 @@ if [ $stage -le 15 ]; then
   # Get the alignments as lattices (gives the chain training more freedom).
   # use the same num-jobs as the alignments
   steps/align_fmllr_lats.sh --nj 100 --cmd "$train_cmd" ${lores_train_data_dir} \
-    data/lang $gmm_dir $lat_dir
+    data/lang_train $gmm_dir $lat_dir
   rm $lat_dir/fsts.*.gz # save space
 fi
 

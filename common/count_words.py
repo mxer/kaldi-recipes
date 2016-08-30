@@ -7,6 +7,8 @@ import lzma
 import sys
 import unicodedata
 
+from signal import signal, SIGPIPE, SIG_DFL 
+signal(SIGPIPE,SIG_DFL) 
 
 def count_words(inf, outf, nmost, lexicon, inword_punc):
     inword_punc = set(inword_punc)
