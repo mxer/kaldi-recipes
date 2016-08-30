@@ -89,14 +89,14 @@ job makemc_train_cleaned 4 4 clean -- common/make_multichannel_data.sh data-prep
 job ivector_orig 2 40 makemc_train,tra_tri3 -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
                                                                          --train-set train_mc \
                                                                          --gmm tri3 \
-                                                                         --num-threads-ubm=20 \
+                                                                         --num-threads-ubm 20 \
                                                                          --nnet3-affix "_orig"
 
 job tdnn_orig 2 80 ivector_orig -- common/nnet3/run_tdnn.sh --nj ${numjobs} \
                                                             --decode-nj ${numjobs} \
                                                             --train-set train_mc \
                                                             --gmm tri3 \
-                                                            --num-threads-ubm=20 \
+                                                            --num-threads-ubm 20 \
                                                             --nnet3-affix "_orig" \
                                                             --tdnn-affix "a" \
                                                             --stage 12
@@ -105,23 +105,23 @@ job chain_orig 2 80 ivector_orig -- common/chain/run_tdnn.sh --nj ${numjobs} \
                                                             --decode-nj ${numjobs} \
                                                             --train-set train_mc \
                                                             --gmm tri3 \
-                                                            --num-threads-ubm=20 \
+                                                            --num-threads-ubm 20 \
                                                             --nnet3-affix "_orig" \
                                                             --tdnn-affix "a" \
                                                             --tree-affix "a" \
                                                             --stage 14
 
-job ivector_cleaned 2 40 makemc_train,tra_tri3 -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
+job ivector_cleaned 2 40 makemc_train_cleaned,tra_tri3 -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
                                                                          --train-set train_cleaned_mc \
                                                                          --gmm tri3_cleaned \
-                                                                         --num-threads-ubm=20 \
+                                                                         --num-threads-ubm 20 \
                                                                          --nnet3-affix "_cleaned"
 
 job tdnn_cleaned 2 80 ivector_cleaned -- common/nnet3/run_tdnn.sh --nj ${numjobs} \
                                                             --decode-nj ${numjobs} \
                                                             --train-set train_cleaned_mc \
                                                             --gmm tri3_cleaned \
-                                                            --num-threads-ubm=20 \
+                                                            --num-threads-ubm 20 \
                                                             --nnet3-affix "_cleaned" \
                                                             --tdnn-affix "a" \
                                                             --stage 12
@@ -130,7 +130,7 @@ job chain_cleaned 2 80 ivector_cleaned -- common/chain/run_tdnn.sh --nj ${numjob
                                                             --decode-nj ${numjobs} \
                                                             --train-set train_cleaned_mc \
                                                             --gmm tri3_cleaned \
-                                                            --num-threads-ubm=20 \
+                                                            --num-threads-ubm 20 \
                                                             --nnet3-affix "_cleaned" \
                                                             --tdnn-affix "a" \
                                                             --tree-affix "a" \
