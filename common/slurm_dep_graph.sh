@@ -3,6 +3,7 @@
 mkdir -p log
 LAST=""
 declare -A jobmap
+ORIG_IFS=$IFS
 
 function join { local IFS="$1"; shift; echo "$*"; }
 
@@ -50,7 +51,6 @@ then
     deparg="--dependency=afterok:$depp"
 fi
 
-IFS=" "
 ret=$(sbatch -p batch-ivb,batch-wsm,batch-hsw,coin --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
 
 echo $ret
@@ -60,4 +60,5 @@ LAST=$rid
 jobmap["$name"]=$rid
 
 echo $rid >> log/slurm_ids
+IFS=$ORIG_IFS
 }
