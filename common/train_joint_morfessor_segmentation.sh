@@ -48,7 +48,7 @@ last=$(cat data/text/split/numjobs)
 mkdir -p $dir/{log,tmp}
 
 
-$cmd JOB=1000:$last $dir/log/JOB.log morfessor-segment -e utf-8 -l $dir/morfessor.bin data/text/split/JOB --output-newlines --output-format-separator="+ +" --output-format="{analysis} " \| sed "s#^\s*#<s> #g" \| sed "s/\s*$/ <\\/s>/g" \> ${dir}/tmp/JOB.out
+$cmd JOB=1000:$last $dir/log/JOB.log morfessor-segment -e utf-8 -L $dir/morfessor.txt data/text/split/JOB --output-newlines --output-format-separator="+ +" --output-format="{analysis} " \| sed "s#^\s*#<s> #g" \| sed "s/\s*$/ <\\/s>/g" \> ${dir}/tmp/JOB.out
 
 grep -v "^#" $dir/morfessor.txt | sed "s/ + /+ +/g" | tr ' ' '\n' | sort -u > $dir/vocab
 
