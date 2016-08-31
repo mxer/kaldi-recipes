@@ -183,7 +183,7 @@ if [ $stage -le 7 ]; then
   # Also extract iVectors for the test data, but in this case we don't need the speed
   # perturbation (sp) or small-segment concatenation (comb).
   for data in dev test; do
-    steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj "$nj" \
+    steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj "10" \
       data/${data}_hires exp/nnet3${nnet3_affix}/extractor \
       exp/nnet3${nnet3_affix}/ivectors_${data}_hires
   done
