@@ -118,7 +118,7 @@ if [ $stage -le 4 ]; then
   fi
   steps/train_lda_mllt.sh --cmd "$train_cmd" --num-iters 7 --mllt-iters "2 4 6" \
      --splice-opts "--left-context=3 --right-context=3" \
-     3000 10000 $temp_data_root/${train_set}_hires data/lang_train \
+     3000 10000 $temp_data_root/${train_set}_hires data/lang \
       $gmm_dir exp/nnet3${nnet3_affix}/tri5
 fi
 
@@ -231,7 +231,7 @@ if [ $stage -le 11 ]; then
   fi
   echo "$0: aligning with the perturbed, short-segment-combined low-resolution data"
   steps/align_fmllr.sh --nj $nj --cmd "$train_cmd" \
-         data/${train_set}_sp_comb data/lang_train $gmm_dir $ali_dir
+         data/${train_set}_sp_comb data/lang $gmm_dir $ali_dir
 fi
 
 

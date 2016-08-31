@@ -86,7 +86,7 @@ if [ $stage -le 12 ]; then
     --cmd "$decode_cmd" \
     --relu-dim "$relu_dim" \
     --remove-egs "$remove_egs" \
-    $train_data_dir data/lang_train $ali_dir $dir
+    $train_data_dir data/lang $ali_dir $dir
 fi
 
 #if [ $stage -le 13 ]; then
