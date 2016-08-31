@@ -85,9 +85,9 @@ job makemc_train 4 4 utt2dur_train -- common/make_multichannel_data.sh data-prep
 job makemc_train_cleaned 4 4 clean -- common/make_multichannel_data.sh data-prep/audio/wav.scp data/train_cleaned data/train_cleaned_mc
 
 set=train_mc
-job mfcc_$set 4 4 make_subset -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
+job mfcc_$set 4 4 makemc_train -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
 set=train_cleaned_mc
-job mfcc_$set 4 4 make_subset -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 200M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
+job mfcc_$set 4 4 makemc_train_cleaned -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 200M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
 
 job ivector_orig 2 40 mfcc_train_mc,tra_tri3 -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
                                                                          --train-set train_mc \
