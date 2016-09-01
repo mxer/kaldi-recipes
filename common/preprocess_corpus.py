@@ -18,7 +18,7 @@ def preprocess_corpus(inf, outf):
                 continue
             if w == "<s>" or w == "</s>":
                 continue
-            sent.append(w.strip("!.,:;\"<>(){}[]#+"))
+            sent.append(w.strip("!?.,:;\"<>(){}[]#+"))
 
         if len(sent) == 0:
             continue
