@@ -80,16 +80,11 @@ job ali_tri2 2 40 LAST \
 job tra_tri3 2 40 LAST \
  -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss data/train data/lang exp/tri2_ali exp/tri3
 
-job clean 2 40 LAST \
- -- steps/cleanup/clean_and_segment_data.sh --nj ${numjobs} --cmd "$decode_cmd" data/train data/lang exp/tri3 exp/tri3_cleaned data/train_cleaned
-
 job makemc_train 4 4 utt2dur_train -- common/make_multichannel_data.sh data-prep/audio/wav.scp data/train data/train_mc
-job makemc_train_cleaned 4 4 clean -- common/make_multichannel_data.sh data-prep/audio/wav.scp data/train_cleaned data/train_cleaned_mc
 
 set=train_mc
-job mfcc_$set 4 4 makemc_train -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
-set=train_cleaned_mc
-job mfcc_$set 4 4 makemc_train_cleaned -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 200M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
+job mfcc_train_mc 4 4 makemc_train -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/train_mc exp/make_mfcc/train_mc ${mfccdir}
+
 
 job ivector_orig 2 40 mfcc_train_mc,tra_tri3 -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
                                                                          --train-set train_mc \
@@ -116,7 +111,24 @@ job chain_orig 2 80 ivector_orig -- common/chain/run_tdnn.sh --nj ${numjobs} \
                                                             --tree-affix "a" \
                                                             --stage 14
 
-job ivector_cleaned 2 40 mfcc_train_cleaned_mc,tra_tri3,ivector_orig -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
+
+
+# Create a cleaned version of the model, which is supposed to be better for
+job clean 2 40 tra_tri3 \
+ -- steps/cleanup/clean_and_segment_data.sh --nj ${numjobs} --cmd "$decode_cmd" data/train data/lang exp/tri3 exp/tri3_cleaned_work data/train_cleaned
+
+job ali_tri3_cleaned 2 40 LAST \
+ -- steps/align_fmllr.sh --nj ${numjobs} --cmd "$train_cmd" data/train_cleaned data/lang exp/tri3 exp/tri3_ali_cleaned
+
+job tra_tri3_cleaned 2 40 LAST \
+ -- steps/train_sat.sh --cmd "$train_cmd" 5000 100000 data/train_cleaned data/lang exp/tri3_ali_cleaned exp/tri3_cleaned
+
+job makemc_train_cleaned 4 4 clean -- common/make_multichannel_data.sh data-prep/audio/wav.scp data/train_cleaned data/train_cleaned_mc
+
+job mfcc_train_cleaned 4 4 LAST -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 200M" --nj ${numjobs} data/train_cleaned_mc exp/make_mfcc/train_cleaned_mc ${mfccdir}
+
+
+job ivector_cleaned 2 40 tra_tri3_cleaned,mfcc_train_cleaned -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
                                                                          --train-set train_cleaned_mc \
                                                                          --gmm tri3_cleaned \
                                                                          --num-threads-ubm 20 \
