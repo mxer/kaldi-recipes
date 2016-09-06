@@ -41,6 +41,8 @@ accents=false
 mfccdir=mfcc
 numjobs=50
 
+. definitions/best_model
+
 mkdir -p mfcc
 command -v lfs > /dev/null && lfs setstripe -c 6 $mfccdir
 
@@ -53,7 +55,7 @@ done
 
 
 
-numjobs=35
+numjobs=20
 job subset_10kshort 2 4 val_data_train \
  -- utils/subset_data_dir.sh --shortest data/train 10000 data/train_10kshort
 
@@ -64,19 +66,19 @@ job ali_mono 2 40 tra_mono,val_data_train \
  -- steps/align_si.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/mono exp/mono_ali
 
 job tra_tri1 2 40 LAST \
- -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" 2500 30000 data/train data/lang exp/mono_ali exp/tri1
+ -- steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" $tri1_leaves $tri1_gauss data/train data/lang exp/mono_ali exp/tri1
 
 job ali_tri1 2 40 LAST \
  -- steps/align_si.sh --nj ${numjobs} --cmd "$train_cmd" data/train data/lang exp/tri1 exp/tri1_ali
 
 job tra_tri2 2 40 LAST \
- -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" 4000 50000 data/train data/lang exp/tri1_ali exp/tri2
+ -- steps/train_lda_mllt.sh --cmd "$train_cmd" --splice-opts "--left-context=3 --right-context=3" $tri2_leaves $tri2_gauss data/train data/lang exp/tri1_ali exp/tri2
 
 job ali_tri2 2 40 LAST \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd"  data/train data/lang exp/tri2 exp/tri2_ali
 
 job tra_tri3 2 40 LAST \
- -- steps/train_sat.sh --cmd "$train_cmd" 5000 100000 data/train data/lang exp/tri2_ali exp/tri3
+ -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss data/train data/lang exp/tri2_ali exp/tri3
 
 job clean 2 40 LAST \
  -- steps/cleanup/clean_and_segment_data.sh --nj ${numjobs} --cmd "$decode_cmd" data/train data/lang exp/tri3 exp/tri3_cleaned data/train_cleaned
