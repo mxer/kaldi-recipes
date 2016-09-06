@@ -121,7 +121,7 @@ job ali_tri3_cleaned 2 40 LAST \
  -- steps/align_fmllr.sh --nj ${numjobs} --cmd "$train_cmd" data/train_cleaned data/lang exp/tri3 exp/tri3_ali_cleaned
 
 job tra_tri3_cleaned 2 40 LAST \
- -- steps/train_sat.sh --cmd "$train_cmd" 5000 100000 data/train_cleaned data/lang exp/tri3_ali_cleaned exp/tri3_cleaned
+ -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss data/train_cleaned data/lang exp/tri3_ali_cleaned exp/tri3_cleaned
 
 job makemc_train_cleaned 4 4 clean -- common/make_multichannel_data.sh data-prep/audio/wav.scp data/train_cleaned data/train_cleaned_mc
 

@@ -2,6 +2,11 @@
 import sys
 
 for line in sys.stdin:
-    key, val = line.split(None, 1)
+    try:
+        key, val = line.strip().split(None, 1)
+    except ValueError:
+        key = line.strip
+        val = ""
 
     print("{} {}".format(key, val.lower().replace("+ +","").replace(" +", "").replace("+ ", ""), end=""))
+
