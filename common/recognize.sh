@@ -60,8 +60,9 @@ for am in "${ams[@]}"; do
     job dec_${am} 1 40 LAST -- steps/decode_fmllr.sh --nj ${nj} --cmd "$big_decode_cmd" --max-fmllr-jobs ${nj} exp/${am}/graph_${sname} ${dataset} exp/${am}/decode_${sname}
     job dec_rs_${am} 1 40 dec_${am} -- steps/lmrescore.sh --cmd "$big_decode_cmd" $smalllm ${biglm} ${dataset} exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
     ;;
-  nnet3/*)
-    job dec_${sam} 1 40 LAST -- steps/nnet3/decode.sh --nj ${nj} --cmd "$big_decode_cmd" --online-ivector-dir exp/nnet3/ivectors_$(basename ${dataset}) exp/${am}/graph_${sname} ${dataset}_hires exp/${am}/decode_${sname} 
+  nnet3*)
+    nndir=$(dirname ${am})
+    job dec_${sam} 1 40 LAST -- steps/nnet3/decode.sh --nj ${nj} --cmd "$big_decode_cmd" --online-ivector-dir exp/${nndir}/ivectors_$(basename ${dataset}) exp/${am}/graph_${sname} ${dataset}_hires exp/${am}/decode_${sname}
     job dec_rs_${sam} 1 40 LAST -- steps/lmrescore.sh --cmd "$big_decode_cmd" $smalllm ${biglm} ${dataset}_hires exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
   esac
 
