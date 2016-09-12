@@ -40,7 +40,7 @@ ams=(${ammodels})
 
 #nj=$(cat ${dataset}/spk2utt | wc -l)
 nj=10
-
+extra_args=""
 for am in "${ams[@]}"; do
   sam=$(basename ${am}) 
   case $am in
@@ -50,6 +50,8 @@ for am in "${ams[@]}"; do
   tri*|nnet*)
     job ${sam} 50 40 $prev -- utils/mkgraph.sh ${smalllm} exp/${am} exp/${am}/graph_${sname}
     ;;
+  chain*)
+    job ${sam} 50 40 $prev -- utils/mkgraph.sh --left-biphone --self-loop-scale 1.0 ${smalllm} exp/${am} exp/${am}/graph_${sname}
   esac
 
   case $am in
@@ -57,13 +59,21 @@ for am in "${ams[@]}"; do
     job dec_bl_${am} 1 40 LAST -- steps/decode_biglm.sh --nj ${nj} --cmd "$big_decode_cmd" exp/${am}/graph_${sname} $smalllm/G.fst ${biglm}/G.fst ${dataset} exp/${am}/decode_${sname}_bl_${bname}
     ;;
   tri[3-4]*)
-    job dec_${am} 1 40 LAST -- steps/decode_fmllr.sh --nj ${nj} --cmd "$big_decode_cmd" --max-fmllr-jobs ${nj} exp/${am}/graph_${sname} ${dataset} exp/${am}/decode_${sname}
+    job dec_${am} 1 40 LAST -- steps/decode_fmllr.sh --nj ${nj} --cmd "$decode_cmd" --max-fmllr-jobs ${nj} exp/${am}/graph_${sname} ${dataset} exp/${am}/decode_${sname}
     job dec_rs_${am} 1 40 dec_${am} -- steps/lmrescore.sh --cmd "$big_decode_cmd" $smalllm ${biglm} ${dataset} exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
     ;;
   nnet3*)
     nndir=$(dirname ${am})
-    job dec_${sam} 1 40 LAST -- steps/nnet3/decode.sh --nj ${nj} --cmd "$big_decode_cmd" --online-ivector-dir exp/${nndir}/ivectors_$(basename ${dataset}) exp/${am}/graph_${sname} ${dataset}_hires exp/${am}/decode_${sname}
+    suffix=$(echo "$nndir" | grep -o "_.*")
+    job dec_${sam} 1 40 LAST -- steps/nnet3/decode.sh --nj ${nj} --cmd "$decode_cmd" --num-threads 4 --online-ivector-dir exp/nnet3${suffix}/ivectors_$(basename ${dataset})_hires exp/${am}/graph_${sname} ${dataset}_hires exp/${am}/decode_${sname}
     job dec_rs_${sam} 1 40 LAST -- steps/lmrescore.sh --cmd "$big_decode_cmd" $smalllm ${biglm} ${dataset}_hires exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
+    ;;
+  chain*)
+    nndir=$(dirname ${am})
+    suffix=$(echo "$nndir" | grep -o "_.*")
+    job dec_${sam} 1 40 LAST -- steps/nnet3/decode.sh --nj ${nj} --cmd "$decode_cmd" --post-decode-acwt 10.0 --acwt 1.0 --scoring-opts "--min-lmwt 1" --num-threads 4 --online-ivector-dir exp/nnet3${suffix}/ivectors_$(basename ${dataset})_hires exp/${am}/graph_${sname} ${dataset}_hires exp/${am}/decode_${sname}
+    job dec_rs_${sam} 1 40 LAST -- steps/lmrescore.sh --cmd "$big_decode_cmd" $smalllm ${biglm} ${dataset}_hires exp/${am}/decode_${sname} exp/${am}/decode_${sname}_rs_${bname}
+    ;;
   esac
 
   prev=$sam
