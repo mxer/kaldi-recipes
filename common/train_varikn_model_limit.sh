@@ -29,11 +29,16 @@ outfile=$5
 
 tmpdir=$(mktemp -d)
 
-cat $vocab > $tmpdir/vocab
+cut -f1 $vocab > $tmpdir/vocab
 echo "<s>" >> $tmpdir/vocab
 echo "</s>" >> $tmpdir/vocab
 
+orderflag=""
+if [ $order -gt 1 ]; then
+orderflag="-n ${order}"
+fi
+
 common/corpus_split_varikn.py ${corpus} 100000 ${tmpdir}/dev ${tmpdir}/train
-varigram_kn -3 -N -n ${order} -D 0.01 -V ${l}000000 -a -B ${tmpdir}/vocab -C -o ${tmpdir}/dev -O "0 0 1 2 4 6" ${tmpdir}/train - | xz > ${outfile}
+varigram_kn -3 -N ${orderflag} -D 0.01 -V ${l}000000 -a -B ${tmpdir}/vocab -C -o ${tmpdir}/dev -O "0 0 1 2 4 6" ${tmpdir}/train - | xz > ${outfile}
 
 rm -Rf ${tmpdir}
