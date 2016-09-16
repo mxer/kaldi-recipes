@@ -20,7 +20,7 @@ JOB_PREFIX=$(cat id)_
 
 mkdir -p data/segmentation/word
 job make_word_segm 4 4 NONE -- common/preprocess_corpus.py data-prep/text/text.orig.xz data/segmentation/word/corpus.xz
-for size in "100" "200"; do
+for size in "100" "200" "400" "600" "800" "1000" "1200" "1400" "1600" "1800" "2000"; do
     if [ -e data/dicts/word_${size}k ]; then rm -Rf data/dicts/word_${size}k; fi
     if [ -e data/langs/word_${size}k ]; then rm -Rf data/langs/word_${size}k; fi
     mkdir -p data/dicts/word_${size}k
