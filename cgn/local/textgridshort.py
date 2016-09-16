@@ -44,28 +44,8 @@ class TextGridShort(object):
             for i, record in enumerate(self._streams[speaker]):
                 text = record[2].strip()
 
-                # if text == ".":
-                #     continue
-                #
-                # if "*" in text:
-                #     continue
-                #
-                # if "ggg" in text:
-                #     continue
-                #
-                # if "xxx" in text:
-                #     continue
-                #
-                # if "Xxx" in text:
-                #     continue
-
                 if len(text) == 0:
                     continue
-
-                # text = text+" "
-                # text = re.sub(r"(?<=\S)\...\s", " |... ", text)
-                # text = re.sub(r"(?<=\S)\?\s", " |? ", text)
-                # text = re.sub(r"(?<!\s|[|.])\.\s", " |. ", text)
 
                 if int(record[1]) - int(record[0]) < 0.11:
                     continue
@@ -75,4 +55,5 @@ class TextGridShort(object):
 
 if __name__ == "__main__":
     s = TextGridShort(sys.argv[1])
-    print(sys.argv[1], " ".join(str(len(s._streams[k])) for k in sorted(s._streams.keys())))
+    for k,start,end,text in s.records():
+        print("{} {}-{} {}".format(k,start,end,text))
