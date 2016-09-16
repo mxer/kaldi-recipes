@@ -26,7 +26,7 @@ lexfile=$4
 
 mkdir -p $(model_dir)
 
-common/preprocess_corpus.py $corpus | common/count_words.py --lexicon=data-prep/lexicon/lexicon.txt --nmost=${input_vocab_size} | cut -f1 > ${model_dir}/train_list
+common/preprocess_corpus.py $corpus | common/count_words.py --lexicon=data/lexicon/lexicon.txt --nmost=${input_vocab_size} | cut -f1 > ${model_dir}/train_list
 
 morfessor-train -e utf-8 -d ones -s ${model_dir}/morfessor.bin -S ${model_dir}/morfessor.txt ${model_dir}/train_list
 

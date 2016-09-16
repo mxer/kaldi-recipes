@@ -40,7 +40,7 @@ if $use_predict_lex; then
   common/make_dict.sh $dir/morfessor_invocab $dir/morphlex
   grep -v "^<" $dir/morphlex/lexicon.txt | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 else
-  cut -f1 data/text/topwords | common/filter_lex.py --nfirst=${lex_size}000 data-prep/lexicon/lexicon.txt - - /dev/null | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+  cut -f1 data/text/topwords | common/filter_lex.py --nfirst=${lex_size}000 data/lexicon/lexicon.txt - - /dev/null | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 fi
 
 last=$(cat data/text/split/numjobs)

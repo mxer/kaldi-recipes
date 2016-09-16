@@ -23,9 +23,9 @@ outdir=$2
 
 tmpdir=$(mktemp -d)
 echo "Tmpdir: ${tmpdir}"
-cat data-prep/lexicon/lexicon.txt definitions/dict_prep/lex | common/filter_lex.py - ${vocab} ${tmpdir}/found.lex ${tmpdir}/oov
+cat data/lexicon/lexicon.txt definitions/dict_prep/lex | common/filter_lex.py - ${vocab} ${tmpdir}/found.lex ${tmpdir}/oov
 
-phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov | sed "s/\t$/\tSIL/" > ${tmpdir}/oov.lex
+phonetisaurus-g2pfst --print_scores=false --model=data/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov | sed "s/\t$/\tSIL/" > ${tmpdir}/oov.lex
 
 mkdir -p ${outdir}
 cat ${tmpdir}/found.lex ${tmpdir}/oov.lex definitions/dict_prep/lex | sort -u > ${outdir}/lexicon.txt

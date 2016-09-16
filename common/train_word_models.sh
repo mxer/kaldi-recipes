@@ -25,7 +25,7 @@ for size in "100" "200" "400" "600" "800" "1000" "1200" "1400" "1600" "1800" "20
     if [ -e data/langs/word_${size}k ]; then rm -Rf data/langs/word_${size}k; fi
     mkdir -p data/dicts/word_${size}k
     mkdir -p data/langs/word_${size}k
-    job make_vocab_${size}k 4 4 make_word_segm -- common/count_words.py --lexicon=data-prep/lexicon/lexicon.txt --nmost=${size}000 data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab
+    job make_vocab_${size}k 4 4 make_word_segm -- common/count_words.py --lexicon=data/lexicon/lexicon.txt --nmost=${size}000 data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab
     job make_lex_${size}k 4 4 make_vocab_${size}k -- common/make_dict.sh data/dicts/word_${size}k/vocab data/dicts/word_${size}k
     job make_lang_${size}k 4 4 make_lex_${size}k -- utils/prepare_lang.sh --phone-symbol-table data/lang/phones.txt data/dicts/word_${size}k "<UNK>" data/langs/word_${size}k/local data/langs/word_${size}k
 

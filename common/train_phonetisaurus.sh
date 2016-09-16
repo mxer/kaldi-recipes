@@ -13,7 +13,7 @@ echo "$0 $@"  # Print the command line for logging
 
 if [ $# != 2 ]; then
    echo "usage: common/train_phonetisaurus lexicon_in wfst_out"
-   echo "e.g.:  common/train_phonetisaurus data-prep/lexicon/lexicon.txt data-prep/lexicon/g2p_wfsa"
+   echo "e.g.:  common/train_phonetisaurus data/lexicon/lexicon.txt data/lexicon/g2p_wfsa"
    echo "main options (for others, see top of script file)"
    exit 1;
 fi

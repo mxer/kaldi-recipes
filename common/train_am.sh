@@ -27,6 +27,14 @@ if [ ! -d "data-prep" ]; then
 fi
 
 rm -Rf data mfcc
+mkdir data
+
+
+lex_name="lexicon"
+if [ -f definitions/lexicon ]; then
+  lex_name=$(cat definitions/lexicon)
+fi
+ln -s ../data-prep/${lex_name}/ data/lexicon
 
 job make_subset 4 1 NONE -- common/data_subset.sh
 job make_lex 4 4 make_subset -- common/make_dict.sh data/train/vocab data/dict

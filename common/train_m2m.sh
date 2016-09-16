@@ -13,7 +13,7 @@ echo "$0 $@"  # Print the command line for logging
 
 if [ $# != 2 ]; then
    echo "usage: common/train_m2m.sh lexicon m2mdir"
-   echo "e.g.:  common/train_m2m.sh data-prep/lexicon/lexicon.txt data/m2m/fix2"
+   echo "e.g.:  common/train_m2m.sh data/lexicon/lexicon.txt data/m2m/fix2"
    echo "main options (for others, see top of script file)"
 
    exit 1;

@@ -26,14 +26,14 @@ tmpdir=$(mktemp -d)
 echo "Tmpdir: ${tmpdir}"
 
 #First take the complete words that are already in the dict
-cat data-prep/lexicon/lexicon.txt definitions/dict_prep/lex | common/filter_lex.py - ${vocab} ${tmpdir}/complete_words.lex ${tmpdir}/oov1
+cat data/lexicon/lexicon.txt definitions/dict_prep/lex | common/filter_lex.py - ${vocab} ${tmpdir}/complete_words.lex ${tmpdir}/oov1
 
 
 common/make_m2m_lex.py ${m2m} ${tmpdir}/oov1 ${tmpdir}/partwords.lex ${tmpdir}/oov2
 
 echo "$(wc -l ${tmpdir}/oov2) morphs were not found in dict and will be estimated by phonetisaurus"
 
-phonetisaurus-g2pfst --print_scores=false --model=data-prep/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov2 | sed "s/\t$/\tSIL/" > ${tmpdir}/phonetisaurus.lex
+phonetisaurus-g2pfst --print_scores=false --model=data/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov2 | sed "s/\t$/\tSIL/" > ${tmpdir}/phonetisaurus.lex
 
 mkdir -p ${outdir}
 cat ${tmpdir}/complete_words.lex ${tmpdir}/partwords.lex ${tmpdir}/phonetisaurus.lex definitions/dict_prep/lex | sort -u > ${outdir}/lexicon.txt
