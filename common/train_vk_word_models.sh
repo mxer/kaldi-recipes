@@ -43,8 +43,8 @@ for size in $(seq 200 200 2000); do
     mkdir -p data/lm/word/vk/${size}k_${bigsize}M
 
     job vk_${size}k_${smallsize}M 50 24 make_vocab_${size}k -- common/train_varikn_model_limit.sh data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${smallsize} ${max_lm_order} data/lm/word/vk/${size}k_${smallsize}M/arpa.xz
-    job recog_lang_${size}k_${smallsize}M 25 1 LAST,make_lang_${size}k -- common/make_recog_lang.sh data/lm/word/vk/${size}k_${smallsize}M/arpa.xz data/langs/word_${size}k data/recog_langs/word_v_${size}k_${smallsize}M
+    job recog_lang_${size}k_${smallsize}M 25 1 vk_${size}k_${smallsize}M,make_lang_${size}k -- common/make_recog_lang.sh data/lm/word/vk/${size}k_${smallsize}M/arpa.xz data/langs/word_${size}k data/recog_langs/word_v_${size}k_${smallsize}M
 
     job vk_${size}k_${bigsize}M 50 24 make_vocab_${size}k -- common/train_varikn_model_limit.sh data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${bigsize} ${max_lm_order} data/lm/word/vk/${size}k_${bigsize}M/arpa.xz
-    job recog_lang_${size}k_${bigsize}M 25 1 LAST,make_lang_${size}k -- common/make_recog_lang.sh data/lm/word/vk/${size}k_${bigsize}M/arpa.xz data/langs/word_${size}k data/recog_langs/word_v_${size}k_${bigsize}M
+    job recog_lang_${size}k_${bigsize}M 25 1 vk_${size}k_${bigsize}M,make_lang_${size}k -- common/make_recog_lang.sh data/lm/word/vk/${size}k_${bigsize}M/arpa.xz data/langs/word_${size}k data/recog_langs/word_v_${size}k_${bigsize}M
 done
