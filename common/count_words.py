@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import locale
+locale.setlocale(locale.LC_ALL, 'C')
 import argparse
 import codecs
 import collections
@@ -17,7 +19,7 @@ def count_words(inf, outf, nmost, lexicon, inword_punc):
         lexicon = {p.split()[0] for p in lexicon}
         chars_in_lex = set(itertools.chain(*lexicon))
 
-    inf = lzma.open(inf, 'rt', encoding='utf-8')
+#    inf = lzma.open(inf, 'rt', encoding='utf-8')
     c = collections.Counter()
     for line in inf:
         for word in line.split():
@@ -32,13 +34,13 @@ def count_words(inf, outf, nmost, lexicon, inword_punc):
     if "</s>" in c:
         del c["</s>"]
 
-    for k,c in c.most_common(nmost):
+    for k,c in sorted(c.items(), key=lambda x: (-x[1], locale.strxfrm(x[0]))):
         print("{}\t{}".format(k,c), file=outf)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('infile', nargs='?', type=argparse.FileType('rb'), default=sys.stdin.buffer)
+    parser.add_argument('infile', nargs='?', type=argparse.FileType('r', encoding='utf-8'), default=codecs.getreader('utf-8')(sys.stdin.buffer))
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('w', encoding='utf-8'), default=codecs.getwriter('utf-8')(sys.stdout.buffer))
     parser.add_argument("--nmost", type=int, default=None)
     parser.add_argument("--lexicon", type=argparse.FileType('r', encoding='utf-8'), default=None, help="Accept always items that are in this lexicon")

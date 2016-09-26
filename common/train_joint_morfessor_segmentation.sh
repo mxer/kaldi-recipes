@@ -38,9 +38,9 @@ if $use_predict_lex; then
   tmpdir=$(mktemp -d)
   cut -f1 data/text/topwords | head -n${lex_size}000 > $dir/morfessor_invocab
   common/make_dict.sh $dir/morfessor_invocab $dir/morphlex
-  grep -v "^<" $dir/morphlex/lexicon.txt | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+  grep -v "^<" $dir/morphlex/lexicon.txt | morfessjoint-train -w ${alpha} -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 else
-  cut -f1 data/text/topwords | common/filter_lex.py --nfirst=${lex_size}000 data/lexicon/lexicon.txt - - /dev/null | morfessjoint-train -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+  cut -f1 data/text/topwords | common/filter_lex.py --nfirst=${lex_size}000 data/lexicon/lexicon.txt - - /dev/null | morfessjoint-train -w ${alpha} -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 fi
 
 last=$(cat data/text/split/numjobs)
@@ -65,10 +65,10 @@ sed "s/^/+/g" < $dir/lex_keys | sed "s/$/+/g" | paste - $dir/lex_vals >> $dir/tm
 common/filter_lex.py $dir/tmp_lex $dir/vocab $dir/tmp_lex2 $dir/oov
 cat definitions/dict_prep/lex >> $dir/tmp_lex2
 sort -u $dir/tmp_lex2 > data/dicts/$name/lexicon.txt
-cp data/dict_train/*sil* data/dicts/$name/
+cp data/dict/*sil* data/dicts/$name/
 
 
-cat $dir/tmp/* > $dir/corpus
+cat $dir/tmp/* | xz > $dir/corpus.xz
 rm -Rf $dir/tmp
 
 #rm -Rf $dir/tmp_lex* $dir/lex_keys $dir/lex_vals
