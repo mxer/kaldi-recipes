@@ -10,6 +10,8 @@ import sys
 
 def main(wordmap,infile,outfile):
     wordmap = {p.split()[0]: p.strip().split(None,1)[1] for p in wordmap}
+    wordmap["<s>"]  = "<s>"
+    wordmap["</s>"] = "</s>"
 
     outfile = lzma.open(outfile, 'wt', encoding='utf-8')
     for line in lzma.open(infile, 'rt', encoding='utf-8'):

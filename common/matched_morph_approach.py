@@ -25,7 +25,7 @@ def main(model, toplist, origlex,jointlex, wordmap):
     new_lex = {}
 
     tof = open('tmpout', 'w', encoding='utf-8')
-    counts = [0]*10
+    counts = [0]*100
     for k,v in origlex.items():
         counts[len(v)] += 1
 
@@ -36,7 +36,7 @@ def main(model, toplist, origlex,jointlex, wordmap):
     for i,c in enumerate(counts):
         print("{} times {} transcriptions".format(c,i))
 
-    jcounts = [0]*10
+    jcounts = [0]*100
     for k,v in jointlex.items():
         jcounts[len(v)] += 1
 
