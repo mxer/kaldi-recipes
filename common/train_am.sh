@@ -36,9 +36,14 @@ if [ -f definitions/lexicon ]; then
 fi
 ln -s ../data-prep/${lex_name}/ data/lexicon
 
+pdp=true
+if [ -f definitions/position_dependent_phones ]; then
+  pdp=$(definitions/position_dependent_phones)
+fi
+
 job make_subset 4 1 NONE -- common/data_subset.sh
 job make_lex 4 4 make_subset -- common/make_dict.sh data/train/vocab data/dict
-job make_lang 4 4 make_lex -- utils/prepare_lang.sh data/dict "<UNK>" data/lang/local data/lang
+job make_lang 4 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones $pdp data/dict "<UNK>" data/lang/local data/lang
 job text_prep 4 24 NONE -- common/text_prep.sh
 
 #ln -s ../data-prep/lexicon_lc_na data/lexicon
