@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 import sys
 
 for line in sys.stdin:
@@ -8,5 +9,9 @@ for line in sys.stdin:
         key = line.strip
         val = ""
 
-    print("{} {}".format(key, val.lower().replace("+ +","").replace(" +", "").replace("+ ", ""), end=""))
+    val = val.lower().replace("+ +","").replace(" +", "").replace("+ ", "")
+
+    val = re.sub("#[0-9,]+", "", val)
+
+    print("{} {}".format(key, val, end=""))
 
