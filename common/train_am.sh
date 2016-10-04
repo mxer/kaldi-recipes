@@ -38,7 +38,7 @@ ln -s ../data-prep/${lex_name}/ data/lexicon
 
 pdp=true
 if [ -f definitions/position_dependent_phones ]; then
-  pdp=$(definitions/position_dependent_phones)
+  pdp=$(cat definitions/position_dependent_phones)
 fi
 
 job make_subset 4 1 NONE -- common/data_subset.sh

@@ -14,7 +14,7 @@ def main(wordmap,infile,outfile):
     wordmap["</s>"] = "</s>"
 
     for line in infile:
-        print(" ".join(wordmap[w] for w in line.strip().split()), file=outfile)
+        print(" ".join((wordmap[w] if w in wordmap else "UNK") for w in line.strip().split()), file=outfile)
 
 
 if __name__ == "__main__":

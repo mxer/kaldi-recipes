@@ -14,7 +14,7 @@ def main(vocab, text):
             if word not in vocab:
                 count_oov += 1
 
-    print("OOV rate {}".format(float(count_oov) / float(count)))
+    print("{}".format(float(count_oov) / float(count)))
 
 
 if __name__ == "__main__":

@@ -37,8 +37,8 @@ rm -f $dictdir/lexicon.txt $dictdir/lexiconp.txt
 
 sort -u -o $tmpdir/inlex $tmpdir/inlex
 
-#common/matched_morph_approach.py $indir/morfessor.bin data/text/topwords $tmpdir/inlex $indir/outlex $outdir/wordmap1
-#common/matched_morph_approach_stage2.py $outdir/wordmap1 $indir/outlex $outdir/wordmap2 $outdir/lex
+common/matched_morph_approach.py $indir/morfessor.bin data/text/topwords $tmpdir/inlex $indir/outlex $outdir/wordmap1
+common/matched_morph_approach_stage2.py $outdir/wordmap1 $indir/outlex $outdir/wordmap2 $outdir/lex
 
 
 last=$(cat data/text/split/numjobs)

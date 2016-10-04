@@ -15,6 +15,10 @@ def main(inp_f, target_lines, of1, of2):
     c = 0
     for line in lzma.open(inp_f, 'rt', encoding='utf-8'):
         line = line.strip()
+        if not line.startswith("<s>"):
+            line = "<s> " + line
+        if not line.endswith("</s>"):
+            line = line + " </s>"
 
         if random.random() < p and c < target_lines:
             print(line, file=of1)

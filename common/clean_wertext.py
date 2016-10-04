@@ -9,7 +9,7 @@ for line in sys.stdin:
         key = line.strip
         val = ""
 
-    val = val.lower().replace("+ +","").replace(" +", "").replace("+ ", "")
+    val = val.lower().replace("+ +","").replace(" +", "").replace("+ ", "").replace(" |", "")
 
     val = re.sub("#[0-9,]+", "", val)
 
