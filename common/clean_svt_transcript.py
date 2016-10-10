@@ -15,7 +15,7 @@ def transform(i,o):
             if t.startswith("<"):
                 continue
             ntrans.append(t.lower())
-        print("{} {}".format(key, " ".join(ntrans)))
+        print("{} {}".format(key, " ".join(ntrans)), file=o)
 
 
 if __name__ == "__main__":
