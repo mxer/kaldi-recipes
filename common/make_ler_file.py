@@ -9,7 +9,11 @@ def transform(i,o):
     for line in i:
         if len(line.strip()) == 0:
             continue
-        key, trans = line.strip().split(None, 1)
+        try:
+            key, trans = line.strip().split(None, 1)
+        except ValueError:
+            key = line.strip()
+            trans = ""
         print("{} {}".format(key, " ".join(list(trans.replace(' ', '_')))))
 
 

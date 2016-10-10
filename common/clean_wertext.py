@@ -6,7 +6,7 @@ for line in sys.stdin:
     try:
         key, val = line.strip().split(None, 1)
     except ValueError:
-        key = line.strip
+        key = line.strip()
         val = ""
 
     val = val.lower().replace("+ +","").replace(" +", "").replace("+ ", "").replace(" |", "")
