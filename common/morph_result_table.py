@@ -1,8 +1,11 @@
 import subprocess
 
+import sys
+
 
 def get_result(dir):
     try:
+        print("grep WER {}/wer_* | utils/best_wer.sh".format(dir), file=sys.stderr)
         c = subprocess.run("grep WER {}/wer_* | utils/best_wer.sh".format(dir), shell=True, stdout=subprocess.PIPE)
         result = float(c.stdout.split()[1])
         return result
