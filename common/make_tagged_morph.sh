@@ -41,15 +41,15 @@ common/matched_morph_approach.py $indir/morfessor.bin data/text/topwords $tmpdir
 common/matched_morph_approach_stage2.py $outdir/wordmap1 $indir/outlex $outdir/wordmap2 $outdir/lex
 
 
-last=$(cat data/text/split/numjobs)
+last=$(cat data/text/splits/numjobs)
 
 mkdir -p $outdir/{log,tmp}
 
 
-$cmd JOB=1000:$last $outdir/log/JOB.log common/matched_morph_approach_stage3.py $outdir/wordmap2 data/text/split/JOB  ${outdir}/tmp/JOB.out
+$cmd JOB=100:$last $outdir/log/JOB.log common/matched_morph_approach_stage3.py $outdir/wordmap2 data/text/splits/JOB  ${outdir}/tmp/JOB.out
 
 cat $outdir/tmp/* | xz > $outdir/corpus.xz
-rm -Rf $outdir/tmp
+#rm -Rf $outdir/tmp
 
 sort -u < $outdir/lex > $dictdir/lexicon.txt
 cut -f1 $outdir/lex | sort -u > $outdir/vocab

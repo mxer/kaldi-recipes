@@ -54,10 +54,10 @@ fi
 extrashortpart=""
 if [ ${time} -le 4 ]
 then
-    extrashortpart="short-ivb,short-wsm,short-hsw"
+    extrashortpart=",short-ivb,short-wsm,short-hsw"
 fi
 
-ret=$(sbatch -p batch-ivb,batch-wsm,batch-hsw,coin,short-ivb,short-wsm,short-hsw --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
+ret=$(sbatch -p batch-ivb,batch-wsm,batch-hsw,coin${extrashortpart} --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
 
 echo $ret
 rid=$(echo $ret | awk '{print $4;}')

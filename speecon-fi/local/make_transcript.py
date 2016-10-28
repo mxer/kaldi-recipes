@@ -9,7 +9,7 @@ def main(dir):
             key, sent = line.strip().split(None, 1)
             if len(sent) > 0 and sent[0] == "*":
                 sent = sent[1:]
-
+            sent = sent.replace("[sta]", " ").replace("  ", " ").replace("  ", " ")
             sent = sent.replace("_", "")
             print("{} {}".format(key, sent), file=out_f)
 

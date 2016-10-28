@@ -3,9 +3,21 @@
 . ./cmd.sh
 . common/slurm_dep_graph.sh
 
-for size in $(seq 1000 200 2000); do
-  for alpha in $(seq 1 4); do
-    job jo_mo_${size}_${alpha} 4 80 NONE -- common/train_joint_morfessor_segmentation.sh --cmd "slurm.pl --mem 4G" ${size} $alpha
-#    job jo_mo_pr_${size}_${alpha} 4 80 NONE -- common/train_joint_morfessor_segmentation.sh --cmd "slurm.pl --mem 4G" --use-predict-lex true ${size} $alpha
+for size in $(seq 400 400 2000); do
+  for alpha in $(seq 1 8); do
+    if [ ! -f data/segmentation/morphjoin_${size}_${alpha}/corpus.xz ]; then
+      stage=0
+      if [ -f data/segmentation/morphjoin_${size}_${alpha}/morfessor.txt ]; then 
+        stage=1 
+      fi
+      job jo_mo_${size}_${alpha} 4 80 NONE -- common/train_joint_morfessor_segmentation.sh --stage $stage --cmd "slurm.pl --mem 4G" ${size} $alpha
+    fi
+    if [ ! -f data/segmentation/morphjoin_pr_${size}_${alpha}/corpus.xz ]; then
+      stage=0
+      if [ -f data/segmentation/morphjoin_pr_${size}_${alpha}/morfessor.txt ]; then 
+        stage=1 
+      fi
+      job jo_mo_pr_${size}_${alpha} 4 80 NONE -- common/train_joint_morfessor_segmentation.sh --stage $stage --cmd "slurm.pl --mem 4G" --use-predict-lex true ${size} $alpha
+    fi
   done
 done
