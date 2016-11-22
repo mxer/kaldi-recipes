@@ -3,9 +3,12 @@
 . ./cmd.sh
 . common/slurm_dep_graph.sh
 
-for size in $(seq 400 400 2000); do
-  for alpha in $(seq 1 4); do
-      for d in "ones" "log" "none"; do
+JOB_PREFIX=$(cat id)_
+
+
+for size in "1200"; do
+  for alpha in "0.01" "0.1"; do
+      for d in "ones" "log"; do
 
 
     if [ ! -f data/segmentation/morfessor_${d}_${size}_${alpha}/corpus.xz ]; then

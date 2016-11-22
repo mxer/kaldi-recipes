@@ -1,0 +1,2 @@
+^((?!ch[1-3]).)*$
+utt2type ^(S0|S1|S2|S3|CC|CD|CM|CN|CT|ED|EN|ET|F0|F1|F2|F3|sanasto-train).*$

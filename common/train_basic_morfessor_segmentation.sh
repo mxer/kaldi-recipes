@@ -33,7 +33,7 @@ mkdir -p data/dicts/$name
 
 if [ $stage -le 0 ]; then
 
-head -n ${lex_size}000 data/text/topwords  | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | morfessor-train -w ${alpha} -d ${dampening} -s $dir/morfessor.bin -S $dir/morfessor.txt -t -
+head -n ${lex_size}000 data/text/topwords  | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | morfessor-train -w ${alpha} -d ${dampening} -s $dir/morfessor.bin -S $dir/morfessor.txt --traindata-list --encoding="utf-8" -
 fi
 
 last=$(cat data/text/split/numjobs)

@@ -6,6 +6,7 @@ export LC_ALL=C
 cmd=run.pl
 use_predict_lex=false
 stage=0
+log=false
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -26,9 +27,13 @@ lex_size=$1
 alpha=$2
 
 extra=""
-if $use_predict_lex; then
-    extra="_pr"
+if $log; then
+    extra="${extra}_log"
 fi
+if $use_predict_lex; then
+    extra="${extra}_pr"
+fi
+
 name=morphjoin${extra}_${lex_size}_${alpha}
 
 dir=data/segmentation/$name
@@ -37,13 +42,18 @@ mkdir -p data/dicts/$name
 
 if [ $stage -le 0 ]; then
 
+dampflag="-d ones"
+if $log; then
+  dampflag="-d log"
+fi
+
 if $use_predict_lex; then
   tmpdir=$(mktemp -d)
   cut -f1 data/text/topwords | head -n${lex_size}000 > $dir/morfessor_invocab
   common/make_dict.sh $dir/morfessor_invocab $dir/morphlex
-  grep -v "^<" $dir/morphlex/lexicon.txt | morfessjoint-train -w ${alpha} -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+  grep -v "^<" $dir/morphlex/lexicon.txt | morfessjoint-train ${dampflag} --countfile data/text/topwords -w ${alpha} -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 else
-  cut -f1 data/text/topwords | common/filter_lex.py --nfirst=${lex_size}000 data/lexicon/lexicon.txt - - /dev/null | morfessjoint-train -w ${alpha} -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
+  cut -f1 data/text/topwords | common/filter_lex.py --nfirst=${lex_size}000 data/lexicon/lexicon.txt - - /dev/null | morfessjoint-train ${dampflag} --countfile data/text/topwords -w ${alpha} -t - -x $dir/outlex -s $dir/morfessor.bin -S $dir/morfessor.txt
 fi
 fi
 

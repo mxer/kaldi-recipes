@@ -5,6 +5,7 @@ set -e
 export LC_ALL=C
 
 # Begin configuration section.
+init_d=0.02
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -26,12 +27,11 @@ l=$3
 order=$4
 outfile=$5
 
+mkdir -p $(dirname $outfile)
 
 tmpdir=$(mktemp -d)
 
-cut -f1 $vocab > $tmpdir/vocab
-echo "<s>" >> $tmpdir/vocab
-echo "</s>" >> $tmpdir/vocab
+sed "s/ /	/" $vocab <(echo "<s>") <(echo "</s>") | grep -v "<UNK>" | grep -v "#" | grep -v "<eps>" | cut -f1 | sort -u > $tmpdir/vocab
 
 orderflag=""
 if [ $order -gt 1 ]; then
@@ -39,6 +39,6 @@ orderflag="-n ${order}"
 fi
 
 common/corpus_split_varikn.py ${corpus} 100000 ${tmpdir}/dev ${tmpdir}/train
-varigram_kn -3 -N ${orderflag} -D 0.01 -V ${l}000000 -a -B ${tmpdir}/vocab -C -o ${tmpdir}/dev -O "0 0 1 2 4 6" ${tmpdir}/train - | xz > ${outfile}
+varigram_kn -3 -N ${orderflag} -D ${init_d} -V ${l}000000 -a -B ${tmpdir}/vocab -C -o ${tmpdir}/dev -O "0 0 1 2" ${tmpdir}/train - | xz > ${outfile}
 
 rm -Rf ${tmpdir}

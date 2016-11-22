@@ -1,0 +1,10 @@
+#!/bin/bash
+small_contexts=5
+small_initd=0.05
+small_mem=5
+small_max_order=30
+
+big_contexts=20
+big_initd=0.01
+big_mem=12
+big_max_order=30

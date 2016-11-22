@@ -1,14 +1,19 @@
 #!/bin/bash
 #SBATCH -p coin,short-ivb,short-wsm,short-hsw,batch-hsw,batch-wsm,batch-ivb
 #SBATCH -t 2:00:00
-#SBATCH -n 12
+#SBATCH -n 1
+#SBATCH --cpus-per-task=12
 #SBATCH -N 1
-#SBATCH --mem-per-cpu=4G
+#SBATCH --mem-per-cpu=6G
+#SBATCH -o log/recognize-%j.out
+#SBATCH -e log/recognize-%j.out
+
 
 export LC_ALL=C
 
 # Begin configuration section.
 dataset=data/dev
+skip_scoring=false
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
@@ -35,9 +40,21 @@ sname=$(basename $smalllm)
 bname=$(basename $biglm)
 
 sam=$(basename ${am})
-srun utils/mkgraph.sh ${smalllm} ${am} ${am}/graph_${sname}
+mkgraph_flags=""
+decode_flags=""
+if [ -f ${am}/frame_subsampling_factor ]; then
+mkgraph_flags="--self-loop-scale 1.0"
+decode_flags="--post-decode-acwt 10.0 --acwt 1.0"
+fi
+srun -n1 utils/mkgraph.sh --remove-oov $mkgraph_flags ${smalllm} ${am} ${am}/graph_${sname}
 
 nndir=$(dirname ${am})
 suffix=$(echo "$nndir" | grep -o "_.*")
-srun steps/nnet3/decode.sh --nj 3  --post-decode-acwt 10.0 --acwt 1.0 --scoring-opts "--min-lmwt 1" --num-threads 4 --online-ivector-dir exp/nnet3${suffix}/ivectors_$(basename ${dataset})_hires ${am}/graph_${sname} ${dataset}_hires ${am}/decode_${sname}
-srun steps/lmrescore_const_arpa.sh  $smalllm ${biglm} ${dataset}_hires ${am}/decode_${sname} ${am}/decode_${sname}_ca_${bname}
+
+dsname=$(basename $dataset)
+dsextra=""
+if [ "$dsname" != "dev" ]; then 
+dsextra=_$dsname
+fi
+srun -n1 steps/nnet3/decode.sh --beam 20.0 --lattice-beam 12.0 --skip-scoring $skip_scoring --nj 5 $decode_flags --scoring-opts "--min-lmwt 1" --online-ivector-dir exp/nnet3${suffix}/ivectors_$(basename ${dataset})_hires ${am}/graph_${sname} ${dataset}_hires ${am}/decode${dsextra}_${sname}
+srun -n1 steps/lmrescore_const_arpa.sh --skip-scoring $skip_scoring $smalllm ${biglm} ${dataset}_hires ${am}/decode${dsextra}_${sname} ${am}/decode${dsextra}_${sname}_ca_${bname}

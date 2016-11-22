@@ -26,7 +26,7 @@ if [ ! -d "data-prep" ]; then
  error_exit "The directory data-prep needs to exist. Run local/data_prep.sh"
 fi
 
-rm -Rf data mfcc
+#rm -Rf data mfcc
 mkdir data
 
 
@@ -60,7 +60,7 @@ mkdir -p mfcc
 command -v lfs > /dev/null && lfs setstripe -c 6 $mfccdir
 
 for set in "train" "dev" "test"; do
- job mfcc_$set 4 4 make_subset -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 50M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
+ job mfcc_$set 4 4 make_subset -- steps/make_mfcc.sh --cmd "${base_cmd} --mem 500M" --nj ${numjobs} data/${set} exp/make_mfcc/${set} ${mfccdir}
  job cmvn_$set 4 4 LAST      -- steps/compute_cmvn_stats.sh data/${set} exp/make_mfcc/${set} ${mfccdir}
  job val_data_$set 4 4 LAST  -- utils/validate_data_dir.sh data/${set}
  job utt2dur_$set 4 4 LAST   -- utils/data/get_utt2dur.sh data/${set}

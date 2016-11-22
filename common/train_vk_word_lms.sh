@@ -29,6 +29,17 @@ if [ -f definitions/max_lm_order ]; then
   max_lm_order=$(cat definitions/max_lm_order)
 fi
 
+d5M=0.01
+if [ -f definitions/5M_lm_d ]; then
+  d5M=$(cat definitions/5M_lm_d)
+fi
+
+d50M=0.001
+if [ -f definitions/50M_lm_d ]; then
+  d50M=$(cat definitions/50M_lm_d)
+fi
+
+
 for size in $(seq 200 200 2000); do
     mkdir -p data/dicts/word_${size}k
 
@@ -37,6 +48,6 @@ for size in $(seq 200 200 2000); do
     mkdir -p data/lm/word/vk/${size}k_${smallsize}M
     mkdir -p data/lm/word/vk/${size}k_${bigsize}M
 
-    job vk_${size}k_${smallsize}M 45 24 NONE -- common/train_varikn_model_limit.sh data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${smallsize} ${max_lm_order} data/lm/word/vk/${size}k_${smallsize}M/arpa.xz
-    job vk_${size}k_${bigsize}M 45 24 NONE -- common/train_varikn_model_limit.sh data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${bigsize} ${max_lm_order} data/lm/word/vk/${size}k_${bigsize}M/arpa.xz
+ #   job vk_${size}k_${smallsize}M 25 18 NONE -- common/train_varikn_model_limit.sh --init-d $d5M data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${smallsize} ${max_lm_order} data/lm/word/vk/${size}k_${smallsize}M/arpa.xz
+    job vk_${size}k_${bigsize}M 65 18 NONE -- common/train_varikn_model_limit.sh --init-d $d50M data/segmentation/word/corpus.xz data/dicts/word_${size}k/vocab ${bigsize} ${max_lm_order} data/lm/word/vk/${size}k_${bigsize}M/arpa.xz
 done

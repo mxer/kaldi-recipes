@@ -13,6 +13,7 @@ nj=30
 min_seg_len=1.55  # min length in seconds... we do this because chain training
                   # will discard segments shorter than 1.5 seconds.   Must remain in sync
                   # with the same option given to prepare_lores_feats_and_alignments.sh
+orig_train_set=train
 train_set=train_mc   # you might set this to e.g. train.
 gmm=tri3          # This specifies a GMM-dir from the features of the type you're training the system on;
                          # it should contain alignments for 'train_set'.
@@ -29,7 +30,7 @@ nnet3_affix=a     # affix for exp/nnet3 directory to put iVector stuff in, so it
 gmm_dir=exp/${gmm}
 ali_dir=exp/${gmm}_ali_${train_set}_sp_comb
 
-for f in data/${train_set}/feats.scp ${gmm_dir}/final.mdl; do
+for f in data/${orig_train_set}/feats.scp ${gmm_dir}/final.mdl; do
   if [ ! -f $f ]; then
     echo "$0: expected file $f to exist"
     exit 1
@@ -71,8 +72,8 @@ if [ $stage -le 2 ]; then
   utils/data/perturb_data_dir_volume.sh data/${train_set}_sp_hires
 
   for datadir in ${train_set}_sp dev test; do
-    steps/make_mfcc.sh --nj 500 --mfcc-config conf/mfcc_hires.conf \
-      --cmd "$train_cmd" data/${datadir}_hires
+    steps/make_mfcc.sh --nj 400 --mfcc-config conf/mfcc_hires.conf \
+      --cmd "$mfcc_cmd" data/${datadir}_hires
     steps/compute_cmvn_stats.sh data/${datadir}_hires
     utils/fix_data_dir.sh data/${datadir}_hires
   done
@@ -99,11 +100,11 @@ if [ $stage -le 4 ]; then
   temp_data_root=exp/nnet3${nnet3_affix}/tri5
   mkdir -p $temp_data_root
 
-  utils/data/subset_data_dir.sh --utt-list data/${train_set}/feats.scp \
+  utils/data/subset_data_dir.sh --utt-list data/${orig_train_set}/feats.scp \
           data/${train_set}_sp_hires $temp_data_root/${train_set}_hires
 
   # note: essentially all the original segments should be in the hires data.
-  n1=$(wc -l <data/${train_set}/feats.scp)
+  n1=$(wc -l <data/${orig_train_set}/feats.scp)
   n2=$(wc -l <$temp_data_root/${train_set}_hires/feats.scp)
   if [ $n1 != $n1 ]; then
     echo "$0: warning: number of feats $n1 != $n2, if these are very different it could be bad."
@@ -140,7 +141,7 @@ if [ $stage -le 5 ]; then
 
   echo "$0: training the diagonal UBM."
   # Use 512 Gaussians in the UBM.
-  steps/online/nnet2/train_diag_ubm.sh --cmd "$train_cmd" --nj 30 \
+  steps/online/nnet2/train_diag_ubm.sh --cmd "$train_cmd" --nj $nj \
     --num-frames 700000 \
     --num-threads $num_threads_ubm \
     ${temp_data_root}/${train_set}_sp_hires_subset 512 \
@@ -152,7 +153,7 @@ if [ $stage -le 6 ]; then
   # can be sensitive to the amount of data.  The script defaults to an iVector dimension of
   # 100.
   echo "$0: training the iVector extractor"
-  steps/online/nnet2/train_ivector_extractor.sh --cmd "$train_cmd" --nj 10 \
+  steps/online/nnet2/train_ivector_extractor.sh --cmd "slurm.pl --mem 4G" --nj $nj \
     data/${train_set}_sp_hires exp/nnet3${nnet3_affix}/diag_ubm exp/nnet3${nnet3_affix}/extractor || exit 1;
 fi
 
@@ -183,7 +184,7 @@ if [ $stage -le 7 ]; then
   # Also extract iVectors for the test data, but in this case we don't need the speed
   # perturbation (sp) or small-segment concatenation (comb).
   for data in dev test; do
-    steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj "10" \
+    steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj $[$nj/2] \
       data/${data}_hires exp/nnet3${nnet3_affix}/extractor \
       exp/nnet3${nnet3_affix}/ivectors_${data}_hires
   done
@@ -204,8 +205,8 @@ fi
 
 if [ $stage -le 9 ]; then
   echo "$0: making MFCC features for low-resolution speed-perturbed data"
-  steps/make_mfcc.sh --nj 500 \
-    --cmd "$train_cmd" data/${train_set}_sp
+  steps/make_mfcc.sh --nj 100 \
+    --cmd "$mfcc_cmd" data/${train_set}_sp
   steps/compute_cmvn_stats.sh data/${train_set}_sp
   echo "$0: fixing input data-dir to remove nonexistent features, in case some "
   echo ".. speed-perturbed segments were too short."

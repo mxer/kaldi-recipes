@@ -4,8 +4,6 @@ data
 data-prep
 mfcc
 exp
-cmd.sh
-path.sh
 slurm*.out
-slurm.conf
 log
+core.*

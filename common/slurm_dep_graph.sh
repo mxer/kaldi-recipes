@@ -4,11 +4,12 @@ mkdir -p log
 LAST=""
 declare -A jobmap
 ORIG_IFS=$IFS
+JOB_PREFIX=$(cat id)_
 
 function join { local IFS="$1"; shift; echo "$*"; }
 
 function job {
-name=$1
+sdg_name=$1
 mem=$2
 time=$3
 after=$4
@@ -57,14 +58,16 @@ then
     extrashortpart=",short-ivb,short-wsm,short-hsw"
 fi
 
-ret=$(sbatch -p batch-ivb,batch-wsm,batch-hsw,coin${extrashortpart} --job-name="${JOB_PREFIX^^}${name}" -e "log/${name}-%j.out" -o "log/${name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
+ret=$(sbatch -x pe63 -p batch-ivb,batch-wsm,batch-hsw,coin${extrashortpart} --job-name="${JOB_PREFIX^^}${sdg_name}" -e "log/${sdg_name}-%j.out" -o "log/${sdg_name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
 
 echo $ret
 rid=$(echo $ret | awk '{print $4;}')
 LAST=$rid
 
-jobmap["$name"]=$rid
+jobmap["$sdg_name"]=$rid
 
 echo $rid >> log/slurm_ids
 IFS=$ORIG_IFS
 }
+
+

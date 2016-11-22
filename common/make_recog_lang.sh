@@ -3,7 +3,7 @@
 export LC_ALL=C
 
 # Begin configuration section.
-inwordbackoff=false
+inwordbackoff=true
 # End configuration options.
 
 echo "$0 $@"  # Print the command line for logging
