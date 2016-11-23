@@ -31,7 +31,7 @@ if [ ! -d "data-prep" ]; then
 fi
 
 #rm -Rf data mfcc
-mkdir data
+mkdir -p data
 
 
 lex_name="lexicon"
@@ -40,20 +40,12 @@ if [ -f definitions/lexicon ]; then
 fi
 ln -s ../data-prep/${lex_name}/ data/lexicon
 
-pdp=true
-if [ -f definitions/position_dependent_phones ]; then
-  pdp=$(cat definitions/position_dependent_phones)
-fi
-
 job make_subset 1 1 NONE -- common/data_subset.sh
 job make_lex 1 4 make_subset -- common/make_dict.sh data/train/vocab data/dict
-job make_lang 1 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones $pdp data/dict "<UNK>" data/lang/local data/lang
+job make_lang 1 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones false data/dict "<UNK>" data/lang/local data/lang
+job make_lang_pip 1 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones true data/dict "<UNK>" data/lang_pip/local data/lang_pip
+job make_phone_map 1 1 make_lang,make_lang_pip -- common/make_phone_map.sh data/lang data/lang_pip
 job text_prep 1 24 NONE -- common/text_prep.sh
-
-#ln -s ../data-prep/lexicon_lc_na data/lexicon
-#lex_req=prep_lex_lc_na
-lowercase=true
-accents=false
 
 mfccdir=mfcc
 numjobs=50
@@ -61,6 +53,7 @@ numjobs=50
 . definitions/best_model
 
 mkdir -p mfcc
+mkdir -p tmp
 command -v lfs > /dev/null && lfs setstripe -c 6 $mfccdir
 
 for set in "train" "dev" "test"; do
@@ -95,6 +88,12 @@ job ali_tri2 1 4 LAST \
 
 job tra_tri3 1 4 LAST \
  -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss data/train data/lang exp/tri2_ali exp/tri3
+
+job ali_tri3 1 4 LAST \
+ -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd"  data/train data/lang exp/tri3 exp/tri3_ali
+
+job tra_tri3_pip 1 4 LAST \
+ -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss --phone-map data/lang_pip/phone_map  data/train data/lang_pip exp/tri3_ali exp/tri3_pip
 
 SLURM_EXTRA_ARGS=""
 job makemc_train 1 4 utt2dur_train -- common/make_multichannel_data.sh data-prep/audio/wav.scp data/train data/train_mc
@@ -153,6 +152,8 @@ job makemc_train_cleaned 4 4 clean -- common/make_multichannel_data.sh data-prep
 
 job mfcc_train_cleaned 4 4 LAST -- steps/make_mfcc.sh --cmd "slurm.pl --mem 200M" --nj ${numjobs} data/train_cleaned_mc exp/make_mfcc/train_cleaned_mc ${mfccdir}
 
+job tra_tri3_cleaned_pip 2 4 ali_tri3_cleaned \
+ -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss --phone-map data/lang_pip/phone_map  data/train_cleaned data/lang_pip exp/tri3_ali_cleaned exp/tri3_cleaned_pip
 
 SLURM_EXTRA_ARGS="-n ${numjobs} -N1"
 job ivector_cleaned 2 40 tra_tri3_cleaned,mfcc_train_cleaned -- common/nnet3/run_ivector_common.sh --nj ${numjobs} \
