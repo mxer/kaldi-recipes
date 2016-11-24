@@ -13,10 +13,10 @@ if [ $# != 0 ]; then
    exit 1;
 fi
 
-#. ./cmd.sh ## You'll want to change cmd.sh to something that will work on your system.
+. ./cmd.sh ## You'll want to change cmd.sh to something that will work on your system.
            ## This relates to the queue.
 
-train_cmd="run.pl"
+train_cmd="srun run.pl"
 base_cmd=$train_cmd
 decode_cmd=$train_cmd
 
@@ -47,8 +47,8 @@ job make_subset 1 1 NONE -- common/data_subset.sh
 job make_mc 1 1 LAST -- common/make_multichannel_data.sh data-prep/audio/wav.scp data/train data/train_mc
 
 job make_lex 1 4 make_subset -- common/make_dict.sh data/train/vocab data/dict
-job make_lang 1 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones false data/dict "<UNK>" data/lang/local data/lang
-job make_lang_pip 1 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones true data/dict "<UNK>" data/lang_pip/local data/lang_pip
+job make_lang 1 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones true data/dict "<UNK>" data/lang/local data/lang
+job make_lang_pip 1 4 make_lex -- utils/prepare_lang.sh --position-dependent-phones false data/dict "<UNK>" data/lang_pip/local data/lang_pip
 job make_phone_map 1 1 make_lang,make_lang_pip -- common/make_phone_map.sh data/lang data/lang_pip
 job text_prep 1 24 NONE -- common/text_prep.sh
 
@@ -83,7 +83,7 @@ job subset_10kshort 1 4 utt2dur_train \
  -- utils/subset_data_dir.sh --shortest data/train 10000 data/train_10kshort
 
 # Train basic iterations
-SLURM_EXTRA_ARGS="-n ${numjobs} -N1"
+SLURM_EXTRA_ARGS="-c ${numjobs}"
 job tra_mono 1 4 subset_10kshort,make_lang \
  -- steps/train_mono.sh --boost-silence 1.25 --nj ${numjobs} --cmd "$train_cmd" data/train_10kshort data/lang exp/mono
 
@@ -109,25 +109,26 @@ job ali_tri3 1 4 LAST \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd"  data/train data/lang exp/tri3 exp/tri3_ali
 
 # Train also version of tri3 with position-independent-phones
-job tra_tri3_pip 1 4 ali_tri3,make_phone_map \
- -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss --phone-map data/lang_pip/phone_map  data/train data/lang_pip exp/tri3_ali exp/tri3_pip
+job tra_tri3_pip 1 4 tra_tri3,make_phone_map \
+ -- steps/train_sat.sh --cmd "$train_cmd" --phone-map data/lang_pip/phone_map $tri3_leaves $tri3_gauss data/train data/lang_pip exp/tri3 exp/tri3_pip
 
 
 
-SLURM_EXTRA_ARGS="-n ${numjobs} -N1"
+SLURM_EXTRA_ARGS=""
 # Create a cleaned version of the model, which is supposed to be better for
-job clean 2 40 tra_tri3 \
- -- steps/cleanup/clean_and_segment_data.sh --nj ${numjobs} --cmd "$decode_cmd" data/train data/lang exp/tri3 exp/tri3_cleaned_work data/train_cleaned
+job clean 2 4 tra_tri3 \
+ -- steps/cleanup/clean_and_segment_data.sh --nj 200 --cmd "slurm.pl --mem 2G" data/train data/lang exp/tri3 exp/tri3_cleaned_work data/train_cleaned
 
-job ali_tri3_cleaned 2 40 LAST \
+SLURM_EXTRA_ARGS="-c ${numjobs}"
+job ali_tri3_cleaned 2 4 LAST \
  -- steps/align_fmllr.sh --nj ${numjobs} --cmd "$train_cmd" data/train_cleaned data/lang exp/tri3 exp/tri3_ali_cleaned
 
-job tra_tri3_cleaned 2 40 LAST \
+job tra_tri3_cleaned 2 4 LAST \
  -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss data/train_cleaned data/lang exp/tri3_ali_cleaned exp/tri3_cleaned
 
 # Train also version of tri3 with position-independent-phones
-job tra_tri3_cleaned_pip 2 4 ali_tri3_cleaned \
- -- steps/train_sat.sh --cmd "$train_cmd" $tri3_leaves $tri3_gauss --phone-map data/lang_pip/phone_map  data/train_cleaned data/lang_pip exp/tri3_ali_cleaned exp/tri3_cleaned_pip
+job tra_tri3_cleaned_pip 2 4 tra_tri3_cleaned \
+ -- steps/train_sat.sh --cmd "$train_cmd" --phone-map data/lang_pip/phone_map $tri3_leaves $tri3_gauss data/train_cleaned data/lang_pip exp/tri3_cleaned exp/tri3_cleaned_pip
 
 
 #Create data directories for NNET training
@@ -144,53 +145,55 @@ job mfcc_hires_$set 1 4 LAST \
  -- steps/make_mfcc.sh --mfcc-config conf/mfcc_hires.conf --cmd "$mfcc_cmd" --nj ${numjobs} data/${set}_hires
 job cmvn_hires_$set 1 1 LAST     -- steps/compute_cmvn_stats.sh data/${set}_hires
 job fix_hires_$set 1 1 LAST      -- utils/fix_data_dir.sh data/${set}_hires
-job val_data_$set_hires 1 1 LAST -- utils/validate_data_dir.sh data/${set}_hires
+job val_data_${set}_hires 1 1 LAST -- utils/validate_data_dir.sh data/${set}_hires
 
 job comb_segments_$set 1 1 LAST \
  -- utils/data/combine_short_segments.sh data/${set}_hires $min_seg_len data/${set}_hires_comb
-job cp_cmvn_$set 1 1 LAST             -- cp data/${set}_hires/cmvn.scp data/${set}_hires_comb/
-job fix_hires_$set_comb 1 1 LAST      -- utils/fix_data_dir.sh data/${set}_hires_comb
-job val_data_$set_hires_comb 1 1 LAST -- utils/validate_data_dir.sh data/${set}_hires_comb
+job cp_cmvn_$set 1 1 LAST             -- steps/compute_cmvn_stats.sh data/${set}_hires_comb
+job fix_hires_${set}_comb 1 1 LAST      -- utils/fix_data_dir.sh data/${set}_hires_comb
+job val_data_${set}_hires_comb 1 1 LAST -- utils/validate_data_dir.sh --no-wav data/${set}_hires_comb
 
-job get_orig_subset 1 1 val_data_$set_hires -- utils/data/subset_data_dir.sh --utt-list data/train_mc/feats.scp data/${set}_hires data/train_hires
+job get_orig_subset 1 1 val_data_${set}_hires -- utils/data/subset_data_dir.sh --utt-list data/train_mc/feats.scp data/${set}_hires data/train_hires
 
-job max2 1 1 LAST -- utils/data/modify_speaker_info.sh --utts-per-spk-max 2 \
+job max2 1 1 val_data_${set}_hires_comb -- utils/data/modify_speaker_info.sh --utts-per-spk-max 2 \
     data/${set}_hires_comb data/${set}_hires_comb_max2
 
 #IVECTOR training
 numjobs=10
-SLURM_EXTRA_ARGS="-n ${numjobs} -N1"
+SLURM_EXTRA_ARGS="-c ${numjobs}"
 job ali_tri3_mc 1 4 tra_tri3,utt2dur_train_mc \
  -- steps/align_si.sh  --nj ${numjobs} --cmd "$train_cmd"  data/train_mc data/lang exp/tri3 exp/tri3_ali_mc
 
 mkdir -p exp/ivector/tri5
-job train_lda_mllt_iv 4 4 val_data_$set_hires,ali_tri3_mc \
+job train_lda_mllt_iv 4 4 val_data_${set}_hires,ali_tri3_mc \
  -- steps/train_lda_mllt.sh --cmd "$train_cmd" --num-iters 7 --mllt-iters "2 4 6" \
                             --splice-opts "--left-context=3 --right-context=3" \
                             3000 10000 data/train_hires data/lang \
                             exp/tri3_ali_mc exp/ivector/tri5
 
 mkdir -p exp/ivector/diag_ubm
-job diag_ubm 4 4 train_lda_mllt_iv,val_data_$set_hires \
- -- steps/online/nnet2/train_diag_ubm.sh --cmd "$train_cmd" --nj $nj \
+job diag_ubm 4 4 train_lda_mllt_iv,val_data_${set}_hires \
+ -- steps/online/nnet2/train_diag_ubm.sh --cmd "$train_cmd" --nj $numjobs \
     --num-frames 700000 \
     --num-threads $numjobs \
     data/${set}_hires 512 \
     exp/ivector/tri5 exp/ivector/diag_ubm
 
+SLURM_EXTRA_ARGS=""
 job iv_extractor 4 4 LAST \
-  -- steps/online/nnet2/train_ivector_extractor.sh --cmd "$train_cmd" --nj $nj \
+  -- steps/online/nnet2/train_ivector_extractor.sh --cmd "run.pl --max-jobs-run $[$numjobs/4]" --num-processes 1 --nj $numjobs \
     data/${set}_hires exp/ivector/diag_ubm exp/ivector/extractor
 
 
+SLURM_EXTRA_ARGS="-c ${numjobs}"
 job iv_train 4 4 iv_extractor,max2 \
- -- steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj $nj \
+ -- steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj $numjobs \
                                                   data/${set}_hires_comb_max2 exp/ivector/extractor \
                                                   exp/ivector/ivectors_${set}_hires_comb
 
 for set in "dev" "test"; do
   job iv_${set} 4 4 iv_extractor,val_data_$set_hires \
-   -- steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj $nj \
+   -- steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj $numjobs \
                                                   data/${set}_hires exp/ivector/extractor \
                                                   exp/ivector/ivectors_${set}_hires
 done

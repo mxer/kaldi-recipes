@@ -20,4 +20,4 @@ fi
 old_lang=$1
 new_lang=$2
 
-paste -d" " <(cut -f2 -d" " $old_lang/phones.txt) <(cut -f1 -d" " ${old_lang}/phones.txt | cut -f1 -d"_" | utils/apply_map.pl -f1 ${new_lang}/phones.txt) > $new_lang/phone_map
+paste -d" " <(cut -f2 -d" " $old_lang/phones.txt) <(cut -f1 -d" " ${old_lang}/phones.txt | cut -f1 -d"_" | utils/apply_map.pl -f 1 ${new_lang}/phones.txt) | sed '/0 0/d' > $new_lang/phone_map
