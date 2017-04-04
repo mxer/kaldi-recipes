@@ -1,0 +1,5 @@
+
+prep=cleaned_e
+xconfig_template=definitions/chain/model/tdnn8.xconfig
+relu_dim=600
+num_epochs=2

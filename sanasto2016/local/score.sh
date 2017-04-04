@@ -1,1 +1,0 @@
-../common/score.sh

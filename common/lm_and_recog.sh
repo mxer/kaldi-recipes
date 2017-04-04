@@ -103,5 +103,5 @@ dec_ca_dir=${model}/decode_${name}_${small_contexts}M_ca_${big_contexts}M
 
 if [ ! -f $dec_dir/lat.1.gz ] || [ $dec_dir/lat.1.gz -ot $graph_file ]; then
   job dec_${name} 6 3 mk_${name},ca_${big_contexts}M_${name} -- \
-    common/recognize_new.sh $model $rl_dir_small $rl_dir_big
+    common/recognize5.sh $model $rl_dir_small $rl_dir_big
 fi

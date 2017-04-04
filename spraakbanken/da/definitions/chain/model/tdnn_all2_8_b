@@ -1,0 +1,5 @@
+
+prep=all2_8
+xconfig_template=definitions/chain/model/tdnn8.xconfig
+relu_dim=550
+num_epochs=3

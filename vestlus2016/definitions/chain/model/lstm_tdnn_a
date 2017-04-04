@@ -1,0 +1,8 @@
+
+prep=cleaned_lstm_a
+xconfig_template=definitions/chain/model/lstm_tdnn_a.xconfig
+relu_dim=512
+lstm_dim=256
+num_epochs=8
+label_delay=5
+shrink_value=0.99

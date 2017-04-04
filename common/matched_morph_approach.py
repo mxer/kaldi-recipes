@@ -16,7 +16,7 @@ def read_lex(inf):
 
     return lex
 
-def main(model, toplist, origlex,jointlex, wordmap):
+def main(model, toplist, origlex,jointlex, wordmap, morphsep):
     io = morfessor.MorfessorIO()
     model = io.read_binary_model_file(model)
     jointlex = read_lex(jointlex)
@@ -75,7 +75,7 @@ def main(model, toplist, origlex,jointlex, wordmap):
 
         if target_idx is not None:
             nsegm = ["{}#{}".format(p,i) for p,i in zip(segm,target_idx)]
-            print("{}\t{}".format(word, "+ +".join(nsegm)),file=wordmap)
+            print("{}\t{}".format(word, morphsep.join(nsegm)),file=wordmap)
         else:
             words_todo.append(word)
 
@@ -115,7 +115,7 @@ def main(model, toplist, origlex,jointlex, wordmap):
                     continue
                 target_idx = [{*k} for k in zip(*target_idxs)]
                 nsegm = ["{}#{}".format(p, ",".join(str(a) for a in sorted(i))) for p, i in zip(segm, target_idx)]
-                print("{}\t{}".format(word, "+ +".join(nsegm)), file=wordmap)
+                print("{}\t{}".format(word, morphsep.join(nsegm)), file=wordmap)
                 word_done=True
                 break
         if not word_done:
@@ -125,7 +125,7 @@ def main(model, toplist, origlex,jointlex, wordmap):
 
     for word in words_todo:
         segm = model.viterbi_segment(word)[0]
-        print("{}\t{}".format(word, "+ +".join(segm)), file=wordmap)
+        print("{}\t{}".format(word, morphsep.join(segm)), file=wordmap)
 
 
 if __name__ == "__main__":
@@ -135,7 +135,8 @@ if __name__ == "__main__":
     parser.add_argument('origlex', type=argparse.FileType('r', encoding='utf-8'))
     parser.add_argument('jointlex', type=argparse.FileType('r', encoding='utf-8'))
     parser.add_argument('wordmap', type=argparse.FileType('w', encoding='utf-8'))
+    parser.add_argument('morphsep', default="+ +")
 
     args = parser.parse_args()
 
-    main(args.morfessor_model, args.toplist, args.origlex, args.jointlex, args.wordmap)
+    main(args.morfessor_model, args.toplist, args.origlex, args.jointlex, args.wordmap, args.morphsep)

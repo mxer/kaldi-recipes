@@ -7,7 +7,7 @@ JOB_PREFIX=$(cat id)_
 
 
 for size in "1200"; do
-  for alpha in "0.01" "0.1"; do
+  for alpha in "0.0001" "0.001" "0.01" "0.1" "1" "2"; do
       for d in "ones" "log"; do
 
 

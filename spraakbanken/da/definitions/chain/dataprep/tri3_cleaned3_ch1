@@ -1,0 +1,6 @@
+train_set=data/train_cleaned3
+gmm=exp/tri3_cleaned
+
+speed_perturb=true
+min_seg_len=1.55
+vol_perturb=true

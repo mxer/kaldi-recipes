@@ -28,16 +28,18 @@ def main(wordmapin, jointlex, wordmapout, reallex):
         new_parts = []
 
         for part in parts[1:]:
-            base_word = part.strip("+").split("#")[0]
+            base_word = part.strip("|").strip("+").split("#")[0]
             indices = None
             if "#" in part:
-                indices = [int(x) for x in part.strip("+").split("#")[1].split(",")]
+                indices = [int(x) for x in part.strip("|").strip("+").split("#")[1].split(",")]
 
             num_orig_trans = len(jointlex[base_word])
             if indices is not None and num_orig_trans == len(indices):
                 indices = None
-
-            prefix = "+" if part.startswith("+") else ""
+            
+            prefix = ""
+            if part.startswith("+"): prefix="+"
+            if part.startswith("|"): prefix="|"
             suffix = "+" if part.endswith("+") else ""
 
             index_string = "#{}".format(",".join(str(x) for x in indices)) if indices is not None else ""

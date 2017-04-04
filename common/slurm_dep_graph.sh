@@ -1,6 +1,5 @@
 #!/bin/bash
 
-mkdir -p log
 LAST=""
 declare -A jobmap
 ORIG_IFS=$IFS
@@ -9,6 +8,10 @@ JOB_PREFIX=$(cat id)_
 function join { local IFS="$1"; shift; echo "$*"; }
 
 function job {
+
+SDG_LOG_DIR=${SDG_LOG_DIR:-log}
+mkdir -p $SDG_LOG_DIR
+
 sdg_name=$1
 mem=$2
 time=$3
@@ -38,7 +41,7 @@ done
 ;;
 esac
 
-if [ -n "$DEP_LIST" ]; then
+if [ -n "${DEP_LIST:-}" ]; then
 IFS=',' read -r -a ids <<< "$DEP_LIST"
 for i in ${ids[@]}; do
     dep+=($i)
@@ -58,7 +61,10 @@ then
     extrashortpart=",short-ivb,short-wsm,short-hsw"
 fi
 
-ret=$(sbatch -x pe63 -p batch-ivb,batch-wsm,batch-hsw,coin${extrashortpart} --job-name="${JOB_PREFIX^^}${sdg_name}" -e "log/${sdg_name}-%j.out" -o "log/${sdg_name}-%j.out" -t ${time}:00:00 ${SLURM_EXTRA_ARGS} --mem-per-cpu ${mem}G $deparg "${@}")
+extra_args=${SLURM_EXTRA_ARGS:-}
+echo sbatch -x pe63 -p coin,batch-ivb,batch-wsm,batch-hsw${extrashortpart} --job-name="${JOB_PREFIX^^}${sdg_name}" -e "$SDG_LOG_DIR/${sdg_name}-%j.out" -o "$SDG_LOG_DIR/${sdg_name}-%j.out" -t ${time}:00:00 $extra_args --mem-per-cpu ${mem}G $deparg "${@}"
+ret=$(sbatch -x pe63 -p coin,batch-ivb,batch-wsm,batch-hsw${extrashortpart} --job-name="${JOB_PREFIX^^}${sdg_name}" -e "$SDG_LOG_DIR/${sdg_name}-%j.out" -o "$SDG_LOG_DIR/${sdg_name}-%j.out" -t ${time}:00:00 $extra_args --mem-per-cpu ${mem}G $deparg "${@}")
+
 
 echo $ret
 rid=$(echo $ret | awk '{print $4;}')
@@ -66,7 +72,7 @@ LAST=$rid
 
 jobmap["$sdg_name"]=$rid
 
-echo $rid >> log/slurm_ids
+echo $rid >> $SDG_LOG_DIR/slurm_ids
 IFS=$ORIG_IFS
 }
 

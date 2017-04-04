@@ -6,8 +6,8 @@
 
 JOB_PREFIX=$(cat id)_
 
-for size in $(seq 400 400 2000); do
-  for alpha in $(seq 1 8); do
+for size in 1200; do
+  for alpha in 1 4; do
     if [ ! -f data/segmentation/morphjoin_${size}_${alpha}/corpus.xz ]; then
       stage=0
       if [ -f data/segmentation/morphjoin_${size}_${alpha}/morfessor.txt ]; then 

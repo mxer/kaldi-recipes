@@ -25,10 +25,12 @@ tmpdir=$(mktemp -d)
 echo "Tmpdir: ${tmpdir}"
 cat data/lexicon/lexicon.txt definitions/dict_prep/lex | common/filter_lex.py - ${vocab} ${tmpdir}/found.lex ${tmpdir}/oov
 
-phonetisaurus-g2pfst --print_scores=false --model=data/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov | sed "s/\t$/\tSIL/" > ${tmpdir}/oov.lex
+echo "$(wc -l ${tmpdir}/oov) pronunciations are missing, estimating them with phonetisaurus"
+phonetisaurus-g2pfst --print_scores=false --model=data/lexicon/g2p_wfsa --wordlist=${tmpdir}/oov | sed "s/\t$/\tSPN/" > ${tmpdir}/oov.lex
 
 mkdir -p ${outdir}
 cat ${tmpdir}/found.lex ${tmpdir}/oov.lex definitions/dict_prep/lex | sort -u > ${outdir}/lexicon.txt
+rm -f ${outdir}/lexiconp.txt
 
 echo "SIL" > ${tmpdir}/silence_phones.txt
 cut -f2 definitions/dict_prep/lex >> ${tmpdir}/silence_phones.txt

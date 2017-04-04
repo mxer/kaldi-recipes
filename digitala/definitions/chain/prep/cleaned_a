@@ -1,0 +1,13 @@
+dataprep=tri3_cleaned_a
+
+tree_numleaves=4000
+leftmost_questions_truncate=-1
+
+#egs related options
+chunk_width=150 # frames_per_eg
+chunk_left_context=0
+chunk_right_context=0
+frames_overlap_per_eg=0
+
+#training related options, needed for egs as well
+frames_per_iter=1500000

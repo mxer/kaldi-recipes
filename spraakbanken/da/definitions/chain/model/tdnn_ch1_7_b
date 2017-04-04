@@ -1,0 +1,5 @@
+
+prep=ch1_7
+xconfig_template=definitions/chain/model/tdnn7.xconfig
+relu_dim=550
+num_epochs=3

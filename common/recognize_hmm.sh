@@ -50,6 +50,6 @@ dsextra=""
 if [ "$dsname" != "dev" ]; then 
 dsextra=_$dsname
 fi
-srun -n1 steps/decode_fmllr.sh --skip-scoring $skip_scoring --nj 6 --max-fmllr-jobs 6 ${am}/graph_${sname} ${dataset} ${am}/decode${dsextra}_${sname}
-srun -n1 steps/lmrescore_const_arpa.sh --skip-scoring $skip_scoring $smalllm ${biglm} ${dataset} ${am}/decode${dsextra}_${sname} ${am}/decode${dsextra}_${sname}_ca_${bname}
+srun -n1 steps/decode_fmllr.sh --first-beam 13.0 --first-max-active 4000 --acwt 0.05 --max-active 10000 --lattice-beam 10.0 --scoring-opts "--max_lmwt 30" --skip-scoring $skip_scoring --nj 6 --max-fmllr-jobs 6 ${am}/graph_${sname} ${dataset} ${am}/decode${dsextra}_${sname}
+srun -n1 steps/lmrescore_const_arpa.sh  --scoring-opts "--max_lmwt 30" --skip-scoring $skip_scoring $smalllm ${biglm} ${dataset} ${am}/decode${dsextra}_${sname} ${am}/decode${dsextra}_${sname}_ca_${bname}
 

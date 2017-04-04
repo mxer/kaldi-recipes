@@ -1,0 +1,5 @@
+
+prep=ch1_9
+xconfig_template=definitions/chain/model/tdnn9.xconfig
+relu_dim=650
+num_epochs=1

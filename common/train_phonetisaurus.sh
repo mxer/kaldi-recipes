@@ -26,7 +26,7 @@ tmpdir=$(mktemp -d)
 echo $(date) "Train g2p"
 phonetisaurus-align --s1s2_sep="]" --input=${lexicon_in} -ofile=${tmpdir}/corpus | echo
 
-estimate-ngram -s FixKN -o 7 -t ${tmpdir}/corpus -wl ${tmpdir}/arpa
+estimate-ngram -s FixKN -o 3 -t ${tmpdir}/corpus -wl ${tmpdir}/arpa
 
 phonetisaurus-arpa2wfst --lm=${tmpdir}/arpa --ofile=${wfst_out} --split="]"
 

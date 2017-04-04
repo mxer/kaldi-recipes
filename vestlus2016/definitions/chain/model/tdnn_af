@@ -1,0 +1,10 @@
+
+prep=cleaned_e
+xconfig_template=definitions/chain/model/tdnn8.xconfig
+relu_dim=550
+num_epochs=3
+l2_regularize=0.00005
+num_chunk_per_minibatch=128
+initial_lrate=0.0005
+final_lrate=0.00005
+

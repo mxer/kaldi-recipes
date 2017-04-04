@@ -8,8 +8,10 @@ for line in sys.stdin:
     except ValueError:
         key = line.strip()
         val = ""
-
-    val = val.lower().replace("+ +","").replace(" +", "").replace("+ ", "").replace(" |", "")
+    if "<w>" in val:
+        val = val.lower().replace(" ", "").replace("<w>", " ")
+    else:
+        val = val.lower().replace("+ +","").replace(" +", "").replace("+ ", "").replace(" |", "")
 
     val = re.sub("#[0-9,]+", "", val)
 

@@ -1,0 +1,7 @@
+sub_size=900
+tri1_leaves=2000
+tri1_gauss=20000
+tri2_leaves=3000
+tri2_gauss=30000
+tri3_leaves=4000
+tri3_gauss=50000
